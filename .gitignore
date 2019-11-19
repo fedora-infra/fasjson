@@ -1,0 +1,10 @@
+/build/
+/dist/
+/src/*.egg-info
+__pycache__
+*.pyc
+*.pyo
+.tox
+*.rpm
+*.tar.gz
+MANIFEST

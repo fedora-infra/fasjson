@@ -1,0 +1,4 @@
+include README.md COPYING
+include setup.cfg pyproject.toml Makefile
+include fasjson.wsgi
+recursive-include config *.conf
