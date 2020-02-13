@@ -1,0 +1,152 @@
+---
+- name: Install RPM packages
+  dnf:
+    name: ['openldap-clients', 'docker', 'ipa-client', 'httpd', 'mod_auth_gssapi', 'mod_session', 'python3-mod_wsgi', 'python3-dns', 'python3-flask', 'python3-gssapi', 'python3-ldap', 'python3-pip', 'python3-wheel']
+    state: present
+
+- name: Install python dependencies
+  shell: pip-3 install .
+  args:
+    chdir: /vagrant/
+
+- name: Create freeipa server data folder
+  shell: mkdir -p /var/lib/ipa-data
+
+- name: Tune SELinux Policy for cgroups
+  seboolean: 
+    name: container_manage_cgroup
+    state: yes
+    persistent: yes
+
+- name: Ensure docker deamon is running
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+  become: true
+
+- name: Run freeipa container
+  docker_container:
+      name: freeipa-server-container
+      image: freeipa/freeipa-server:fedora-31
+      state: started
+      hostname: ipa.example.test
+      sysctls:
+        net.ipv6.conf.all.disable_ipv6: 0
+      volumes:
+        - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        - /var/lib/ipa-data:/data:Z
+      tmpfs:
+        - /run
+        - /tmp
+      published_ports:
+        - "80:80"
+        - "443:443"
+        - "389:389"
+        - "636:636"
+        - "88:88"
+        - "464:464"
+        - "88:88/udp"
+        - "464:464/udp"
+        - "123:123/udp"
+      command: no-exit -a adminPassw0rd! -p adminPassw0rd! -r EXAMPLE.TEST -n example.test -U
+
+- name: Check ldap status in container
+  command: ldapsearch -H ldap://ipa.example.test
+  register: ldap_result
+  until: "'result: 0 Success' in {{ ldap_result }}"
+  retries: 40
+  delay: 30
+
+
+
+- name: Wait for port 389 (LDAP) to become open on the host
+  wait_for:
+    port: 389
+    delay: 10
+
+- name: Fetch container IP address
+  shell: docker inspect --format '{{ '{{' }} .NetworkSettings.IPAddress {{ '}}' }}' freeipa-server-container
+  register: containerIP
+
+- name: Add IP address to /etc/hosts
+  shell: echo {{ containerIP.stdout }} ipa.example.test >> /etc/hosts
+
+- name: Copy wsgi
+  copy:
+    src: fasjson.wsgi
+    dest: /srv/
+    mode: 0644
+    owner: vagrant
+    group: vagrant
+
+- name: Uninstall any old clients
+  shell: ipa-client-install --uninstall
+  ignore_errors: yes
+  become: yes
+
+- name: Enroll system as IPA client
+  become: yes
+  shell: ipa-client-install --hostname ipa.example.test --domain example.test --realm EXAMPLE.TEST --server ipa.example.test -p admin -w adminPassw0rd! -U -N --force-join
+
+- name: kinit
+  become: yes
+  shell: echo "adminPassw0rd!" | kinit admin
+    
+- name: Get service keytab for HTTPd
+  become: yes
+  shell: ipa-getkeytab -p HTTP/ipa.example.test -k /tmp/httpd.keytab
+    
+ - name: Move keytab to gssproxy folder
+   shell: |
+    mv /tmp/httpd.keytab /var/lib/gssproxy/httpd.keytab
+    chown root:root /var/lib/gssproxy/httpd.keytab
+    chmod 640 /var/lib/gssproxy/httpd.keytab
+   become: yes
+
+- name: Copy gssproxy conf
+  copy:
+    src: config/gssproxy-fasjson.conf
+    dest: /etc/gssproxy/99-fasjson.conf
+    mode: 0644
+    owner: vagrant
+    group: vagrant
+    
+- name: Enable and restart GSSProxy
+  systemd:
+    state: restarted
+    name: gssproxy
+    enabled: yes
+    daemon_reload: yes
+
+- name: Configure temporary files
+  copy:
+    src: config/tmpfiles-fasjson.conf
+    dest: /etc/tmpfiles.d/fasjson.conf
+  
+- name: Create temporary file
+  shell: systemd-tmpfiles --create
+
+- name: Tune SELinux Policy
+  seboolean: 
+    name: httpd_can_connect_ldap
+    state: yes
+    persistent: yes
+
+- name: Create Apache service
+  shell: |
+    mkdir -p /etc/systemd/system/httpd.service.d
+
+- name: Copy configs for Apache
+  copy: src={{ item.src }} dest={{ item.dest }}
+  with_items:
+    - { src: 'config/systemd-httpd-service-fasjson.conf', dest: '/etc/systemd/system/httpd.service.d/fasjson.conf' }
+    - { src: 'config/httpd-fasjson.conf', dest: '/etc/httpd/conf.d/fasjson.conf' }
+
+- name: Enable and restart Apache
+  systemd:
+    state: restarted
+    name: httpd
+    enabled: yes
+    reload: yes
+

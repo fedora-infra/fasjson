@@ -17,6 +17,6 @@ setup(
         "Topic :: Security",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    install_requires=["flask", "python-ldap", "dnspython", "gssapi"],
+    install_requires=["flask", "python-ldap", "dnspython", "gssapi", "docker"],
     python_requires=">=3.6",
 )
