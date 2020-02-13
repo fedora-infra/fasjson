@@ -1,7 +1,7 @@
 ---
 - name: Install RPM packages
   dnf:
-    name: ['openldap-clients', 'docker', 'ipa-client', 'httpd', 'mod_auth_gssapi', 'mod_session', 'python3-mod_wsgi', 'python3-dns', 'python3-flask', 'python3-gssapi', 'python3-ldap', 'python3-pip', 'python3-wheel']
+    name: ['docker', 'ipa-client', 'httpd', 'mod_auth_gssapi', 'mod_session', 'python3-mod_wsgi', 'python3-dns', 'python3-flask', 'python3-gssapi', 'python3-ldap', 'python3-pip', 'python3-wheel']
     state: present
 
 - name: Install python dependencies
@@ -54,6 +54,9 @@
         - "123:123/udp"
       command: no-exit -a adminPassw0rd! -p adminPassw0rd! -r EXAMPLE.TEST -n example.test -U
 
+# need to wait for the freeipa docker to finish its install. 
+# if we don't then the client install will fail as LDAP won't be ready.
+# we can't wait on port 389 as it is active before the container is.
 - pause:
     minutes: 10
 
