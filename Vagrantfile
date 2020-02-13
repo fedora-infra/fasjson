@@ -10,7 +10,6 @@ Vagrant.configure(2) do |config|
   config.hostmanager.enabled = true
   config.hostmanager.manage_host = true
   config.vm.provider :libvirt do |libvirt|
-    libvirt.
     libvirt.cpus = 2
     libvirt.memory = 2048 
   end
@@ -27,6 +26,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "ansible/playbook.yml"
+    ansible.verbose  = true
   end
 
 end

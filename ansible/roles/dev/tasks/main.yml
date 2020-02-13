@@ -10,7 +10,10 @@
     chdir: /vagrant/
 
 - name: Create freeipa server data folder
-  shell: mkdir -p /var/lib/ipa-data
+  file:
+    path: /var/lib/ipa-data
+    state: directory
+    mode: '0755'
 
 - name: Tune SELinux Policy for cgroups
   seboolean: 
@@ -51,19 +54,8 @@
         - "123:123/udp"
       command: no-exit -a adminPassw0rd! -p adminPassw0rd! -r EXAMPLE.TEST -n example.test -U
 
-- name: Check ldap status in container
-  command: ldapsearch -H ldap://ipa.example.test
-  register: ldap_result
-  until: "'result: 0 Success' in {{ ldap_result }}"
-  retries: 40
-  delay: 30
-
-
-
-- name: Wait for port 389 (LDAP) to become open on the host
-  wait_for:
-    port: 389
-    delay: 10
+- pause:
+    minutes: 10
 
 - name: Fetch container IP address
   shell: docker inspect --format '{{ '{{' }} .NetworkSettings.IPAddress {{ '}}' }}' freeipa-server-container
@@ -97,12 +89,12 @@
   become: yes
   shell: ipa-getkeytab -p HTTP/ipa.example.test -k /tmp/httpd.keytab
     
- - name: Move keytab to gssproxy folder
-   shell: |
+- name: Move keytab to gssproxy folder
+  shell: |
     mv /tmp/httpd.keytab /var/lib/gssproxy/httpd.keytab
     chown root:root /var/lib/gssproxy/httpd.keytab
     chmod 640 /var/lib/gssproxy/httpd.keytab
-   become: yes
+  become: yes
 
 - name: Copy gssproxy conf
   copy:
@@ -148,5 +140,5 @@
     state: restarted
     name: httpd
     enabled: yes
-    reload: yes
+    daemon_reload: yes
 
