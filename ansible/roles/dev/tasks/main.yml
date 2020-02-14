@@ -43,8 +43,8 @@
         - /run
         - /tmp
       published_ports:
-        - "80:80"
-        - "443:443"
+        - "8080:80"
+        - "8443:443"
         - "389:389"
         - "636:636"
         - "88:88"
@@ -104,8 +104,8 @@
     src: config/gssproxy-fasjson.conf
     dest: /etc/gssproxy/99-fasjson.conf
     mode: 0644
-    owner: vagrant
-    group: vagrant
+    owner: root
+    group: root
     
 - name: Enable and restart GSSProxy
   systemd:
