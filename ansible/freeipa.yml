@@ -1,7 +1,8 @@
 ---
-- hosts: all
+- hosts: freeipa
   become: true
   become_method: sudo
   roles:
-    - dev
+    - freeipa
+
   
