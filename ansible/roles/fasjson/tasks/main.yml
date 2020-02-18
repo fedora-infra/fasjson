@@ -10,35 +10,41 @@
     chdir: /vagrant/
 
 - name: Copy wsgi
-  copy:
-    src: fasjson.wsgi
-    dest: /srv/
+  copy: 
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
     mode: 0644
     owner: vagrant
     group: vagrant
+  with_items:
+    - src: "fasjson.wsgi"
+      dest: "/srv/"
+    - src: "fasjson.wsgi"
+      dest: "/usr/share/fasjson"
 
 - name: Uninstall any old clients
   shell: ipa-client-install --uninstall
   ignore_errors: yes
   become: yes
-
+  
 - name: Enroll system as IPA client
   become: yes
   shell: ipa-client-install --hostname ipa.example.test --domain example.test --realm EXAMPLE.TEST --server ipa.example.test -p admin -w adminPassw0rd! -U -N --force-join
 
 - name: kinit
   become: yes
-  shell: echo "adminPassw0rd!" | kinit admin
+  shell: echo "adminPassw0rd!" | kinit admin@EXAMPLE.TEST
     
 - name: Get service keytab for HTTPd
   become: yes
-  shell: ipa-getkeytab -p HTTP/ipa.example.test -k /tmp/httpd.keytab
+  shell: ipa-getkeytab -p HTTP/ipa.example.test -k /var/lib/gssproxy/httpd.keytab
     
-- name: Move keytab to gssproxy folder
-  shell: |
-    mv /tmp/httpd.keytab /var/lib/gssproxy/httpd.keytab
-    chown root:root /var/lib/gssproxy/httpd.keytab
-    chmod 640 /var/lib/gssproxy/httpd.keytab
+- name: Set the correct permissions on keytab
+  file: 
+    path: /var/lib/gssproxy/httpd.keytab
+    owner: root
+    group: root
+    mode: 0640
   become: yes
 
 - name: Copy gssproxy conf
@@ -71,14 +77,18 @@
     persistent: yes
 
 - name: Create Apache service
-  shell: |
-    mkdir -p /etc/systemd/system/httpd.service.d
+  file:
+    path: /etc/systemd/system/httpd.service.d
+    state: directory
+    mode: 0755
 
 - name: Copy configs for Apache
   copy: src={{ item.src }} dest={{ item.dest }}
   with_items:
-    - { src: 'config/systemd-httpd-service-fasjson.conf', dest: '/etc/systemd/system/httpd.service.d/fasjson.conf' }
-    - { src: 'config/httpd-fasjson.conf', dest: '/etc/httpd/conf.d/fasjson.conf' }
+    - src: "config/systemd-httpd-service-fasjson.conf"
+      dest: "/etc/systemd/system/httpd.service.d/fasjson.conf"
+    - src: "config/httpd-fasjson.conf"
+      dest: "/etc/httpd/conf.d/fasjson.conf"
 
 - name: Enable and restart Apache
   systemd:

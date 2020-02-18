@@ -10,6 +10,7 @@ Vagrant.configure(2) do |config|
     freeipa.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/releases/31/Cloud/x86_64/images/Fedora-Cloud-Base-Vagrant-31-1.9.x86_64.vagrant-libvirt.box"
     freeipa.vm.box = "f31-cloud-libvirt"
     freeipa.vm.hostname = "ipa.example.test"
+    freeipa.hostmanager.aliases = ("kerberos.example.test")
     
     freeipa.vm.provider :libvirt do |libvirt|
       libvirt.cpus = 2
