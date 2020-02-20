@@ -4,7 +4,6 @@
 Vagrant.configure(2) do |config| 
   config.hostmanager.enabled = true
   config.hostmanager.manage_host = true
-  config.vm.network "private_network", type: "dhcp"
 
   config.vm.define "freeipa" do |freeipa|
     freeipa.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/releases/31/Cloud/x86_64/images/Fedora-Cloud-Base-Vagrant-31-1.9.x86_64.vagrant-libvirt.box"
