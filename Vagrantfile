@@ -4,6 +4,7 @@
 Vagrant.configure(2) do |config| 
   config.hostmanager.enabled = true
   config.hostmanager.manage_host = true
+  config.hostmanager.manage_guest = true
 
   config.vm.define "freeipa" do |freeipa|
     freeipa.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/releases/31/Cloud/x86_64/images/Fedora-Cloud-Base-Vagrant-31-1.9.x86_64.vagrant-libvirt.box"
@@ -35,10 +36,6 @@ Vagrant.configure(2) do |config|
     fasjson.vm.provider :libvirt do |libvirt|
       libvirt.cpus = 2
       libvirt.memory = 2048 
-    end
-
-    fasjson.vm.provision :hosts do |provisioner|
-      provisioner.sync_hosts = true
     end
 
     fasjson.vm.provision "ansible" do |ansible|
