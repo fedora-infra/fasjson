@@ -1,0 +1,269 @@
+openapi: 3.0.0
+info:
+  title: Fedora Account Service JSON API
+  version: 0.0.1
+  license:
+    name: GPLv3
+    url: https://www.gnu.org/licenses/quick-guide-gplv3.en.html
+paths:
+  /v1/me:
+    get:
+      operationId: whoami
+      responses:
+        "default":
+          $ref: "#/components/responses/Error"
+        "200":
+          description: requester identity info
+          content:
+            application/json:
+              examples:
+                success:
+                  value:
+                    result:
+                      login: me@fedoraproject.org
+              schema:
+                type: object
+                properties:
+                  result:
+                    $ref: "#/components/schemas/identity"
+          links:
+            user:
+              $ref: "#/components/links/UserProfile"
+  /v1/groups:
+    get:
+      operationId: queryGroups
+      parameters:
+        - name: query
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "default":
+          $ref: "#/components/responses/Error"
+        "200":
+          description: list groups retutning its CN field
+          content:
+            application/json:
+              examples:
+                success:
+                  value:
+                    result:
+                      data:
+                        - default
+                        - admins
+                      pagination:
+                        previous: 0
+                        current: 0
+                        next: 0
+              schema:
+                type: object
+                properties:
+                  result:
+                    $ref: "#/components/schemas/group_page"
+          links:
+            pagination:
+              $ref: "#/components/links/GroupPaging"
+  /v1/groups/{group_name}:
+    get:
+      operationId: getGroupMembers
+      parameters:
+        - name: group_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "default":
+          $ref: "#/components/responses/Error"
+        "200":
+          description: "list members of a given group returning the uid user field"
+          content:
+            application/json:
+              examples:
+                success:
+                  value:
+                    result:
+                      data:
+                        - user_uid
+                        - another_user_uid
+                      pagination:
+                        previous: 0
+                        current: 0
+                        next: 0
+              schema:
+                type: object
+                properties:
+                  result:
+                    $ref: "#/components/schemas/user_ref_page"
+  /v1/users/{username}:
+    get:
+      operationId: getUserInfo
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "default":
+          $ref: "#/components/responses/Error"
+        "200":
+          description: retrieve user information
+          content:
+            application/json:
+              examples:
+                success:
+                  value:
+                    result:
+                      login: 'me@fedoraproject.org'
+                      surname: 'me'
+                      givenname: 'self'
+                      mails:
+                        - me@fedoraproject.org
+                      ircnick: 'me'
+                      locale: 'en_US'
+                      timezone: 'UTC'
+                      gpgkeyids:
+                        - '12345'
+                      creationts: '2020-02-24 09:12:47.157750'
+                      locked: false
+              schema:
+                type: object
+                properties:
+                  result:
+                    $ref: "#/components/schemas/user"
+components:
+  responses:
+    Error:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                $ref: "#/components/schemas/error"
+  schemas:
+    identity:
+      type: object
+      properties:
+        login:
+          type: string
+    user_ref:
+      type: object
+      properties:
+        uid:
+          type: string
+    user_ref_list:
+      type: array
+      items:
+        $ref: "#/components/schemas/user_ref"
+    user_ref_page:
+      type: object
+      properties:
+        data:
+          $ref: "#/components/schemas/user_ref_list"
+        pagination:
+          type: object
+          properties:
+            current:
+              type: integer
+            previous:
+              type: integer
+            next:
+              type: integer
+    user:
+      type: object
+      properties:
+        login:
+          type: string
+        surname:
+          type: string
+        givenname:
+          type: string
+        mails:
+          type: array
+          items:
+            type: string
+        ircnick:
+          type: string
+        locale:
+          type: string
+        timezone:
+          type: string
+        gpgkeyids:
+          type: array
+          items:
+            type: string
+        creationts:
+          type: string
+        locked:
+          type: boolean
+    group:
+      type: object
+      properties:
+        cn:
+          type: string
+    groups:
+      type: array
+      items:
+        $ref: "#/components/schemas/group"
+    group_page:
+      type: object
+      properties:
+        data:
+          $ref: "#/components/schemas/groups"
+        pagination:
+          type: object
+          properties:
+            current:
+              type: integer
+            previous:
+              type: integer
+            next:
+              type: integer
+    error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          type: object
+  links:
+    UserProfile:
+      operationId: getUserInfo
+      parameters:
+        username: $response.body#/result/u
+    GroupPaging:
+      operationId: queryGroups
+      parameters:
+        previous:
+          operationId: queryGroups
+          page: $response.body#/result/pagination/previous
+          per_page: $request.query.per_page
+          query: $request.query.query
+        current:
+          operationId: queryGroups
+          page: $response.body#/result/pagination/current
+          per_page: $request.query.per_page
+          query: $request.query.query
+        next:
+          operationId: queryGroups
+          page: $response.body#/result/pagination/next
+          per_page: $request.query.per_page
+          query: $request.query.query
