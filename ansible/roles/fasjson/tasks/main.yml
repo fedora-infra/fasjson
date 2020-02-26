@@ -11,25 +11,25 @@
 
 - name: Copy wsgi
   copy: 
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+    src: fasjson.wsgi
+    dest: /usr/share/fasjson/
     mode: 0644
     owner: vagrant
     group: vagrant
-  with_items:
-    - src: "fasjson.wsgi"
-      dest: "/srv/"
-    - src: "fasjson.wsgi"
-      dest: "/usr/share/fasjson"
+
+- name: Allow apache to to see /usr/share/fasjson/
+  sefcontext:
+    target: '/usr/share/fasjson(/.*)?'
+    setype: httpd_sys_content_t
 
 - name: Uninstall any old clients
-  shell: ipa-client-install --uninstall
+  shell: ipa-client-install --uninstall --unattended
   ignore_errors: yes
   become: yes
   
 - name: Enroll system as IPA client
   become: yes
-  shell: ipa-client-install --hostname ipa.example.test --domain example.test --realm EXAMPLE.TEST --server ipa.example.test -p admin -w adminPassw0rd! -U -N --force-join
+  shell: ipa-client-install --hostname fasjson.example.test --domain example.test --realm EXAMPLE.TEST --server ipa.example.test -p admin -w adminPassw0rd! -U -N --force-join
 
 - name: kinit
   become: yes
