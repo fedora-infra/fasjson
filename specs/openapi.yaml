@@ -73,7 +73,7 @@ paths:
           links:
             pagination:
               $ref: "#/components/links/GroupPaging"
-  /v1/groups/{group_name}:
+  /v1/groups/{group_name}/members:
     get:
       operationId: getGroupMembers
       parameters:
