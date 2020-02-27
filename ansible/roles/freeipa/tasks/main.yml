@@ -1,11 +1,16 @@
 ---
 - name: Install RPM packages
   dnf:
-      name: ['git', 'vim', 'freeipa-server']
-      state: present
+    name:
+      - git
+      - vim
+      - freeipa-server
+    state: present
 
 - name: install freeipa server
   shell: ipa-server-install -a adminPassw0rd! --hostname=ipa.example.test -r EXAMPLE.TEST -p adminPassw0rd! -n example.test -U
+  args:
+    creates: /var/lib/ipa/sysrestore/sysrestore.state
 
 - name: get freeipa-fas
   git:
@@ -16,3 +21,4 @@
   shell: ./install.sh
   args:
     chdir: /tmp/freeipa-fas/
+    creates: /usr/share/ipa/updates/99-fas.update
