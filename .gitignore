@@ -7,4 +7,5 @@ __pycache__
 .tox
 *.rpm
 *.tar.gz
+.vagrant
 MANIFEST

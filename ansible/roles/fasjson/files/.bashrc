@@ -1,0 +1,3 @@
+# .bashrc
+
+cd /vagrant
