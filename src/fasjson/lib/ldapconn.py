@@ -8,9 +8,9 @@ import datetime
 
 from flask import abort, current_app, g
 
-import ldap
-import ldap.filter as ldap_filter
-import ldap.sasl
+import ldap #type: ignore
+import ldap.filter as ldap_filter #type: ignore
+import ldap.sasl #type: ignore
 
 
 SASL_GSS = ldap.sasl.sasl({}, "GSS-SPNEGO")

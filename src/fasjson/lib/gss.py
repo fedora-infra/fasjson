@@ -4,7 +4,7 @@
 #
 """GSSAPI plugin for Flask
 """
-import gssapi
+import gssapi #type: ignore
 from flask import abort, request
 
 
