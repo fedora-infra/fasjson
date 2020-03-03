@@ -1,7 +1,6 @@
 import json
 
-import typing
-from flask import Response
+from flask import Response, request
 from werkzeug.exceptions import HTTPException
 
 
@@ -11,19 +10,21 @@ class WebApiError(HTTPException):
 
 	It inherits werkzeug HTTPException exception class. 
 	"""
-	def __init__(self, message: str, code: int, data: typing.Any = None) -> None:
+	def __init__(self, message, code, data=None):
 		super(WebApiError, self).__init__(message)
 		self.code = code
 		self.message = message
-		self.data = data
+		self.extra = data
 
-	def as_dict(self) -> typing.Dict[str, typing.Any]:
+	def as_dict(self):
 		"""
 		Returns exception data in dict format.
 		"""
 		return {
-			'message': self.message,
-			'data': self.data
+			'error': {
+				'message': self.message,
+				'data': self.extra
+			}
 		}
 
 	def as_json(self) -> str:
@@ -32,13 +33,13 @@ class WebApiError(HTTPException):
 		"""
 		return json.dumps(self.as_dict())
 
-	def get_description(self, environ=None) -> str:
+	def get_description(self, environ=None):
 		"""
 		Return the error message as its description.
 		"""
 		return self.message
 
-	def get_headers(self, environ=None) -> typing.List[typing.Tuple[str, str]]:
+	def get_headers(self, environ=None):
 		"""
 		Returns error http headers.
 		"""
@@ -46,8 +47,11 @@ class WebApiError(HTTPException):
 			('Content-Type', 'application/json;charset=utf-8')
 		]
 
-	def get_body(self, environ=None) -> str:
+	def get_body(self, environ=None):
 		"""
 		Return the error http body as a string.
 		"""
 		return self.as_json()
+
+	def get_response(self, environ=None):
+		return Response(self.get_body(environ), self.code, self.get_headers(environ))

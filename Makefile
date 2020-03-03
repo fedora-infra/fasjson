@@ -27,4 +27,4 @@ test/unit:
 	@py.test -s
 
 .PHONY: test
-test: test/prepare test/code test/unit
+test: test/prepare test/code test/unit test/clean

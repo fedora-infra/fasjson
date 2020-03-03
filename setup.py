@@ -19,11 +19,17 @@ setup(
     ],
     install_requires=[
         "Flask==1.1.1",
-        "Flask-RESTful==0.3.8",
         "python-ldap==3.2.0",
         "dnspython==1.16.0",
         "gssapi==1.6.2",
         "typing==3.7.4.1"
+    ],
+    tests_requires=[
+        'pytest==5.3.5',
+        'pytest-sugar==0.9.2',
+        'pytest-mock==2.0.0',
+        'mypy==0.761',
+        'mypy-extensions==0.4.3'
     ],
     python_requires=">=3.6",
 )

@@ -84,13 +84,13 @@ class LDAPConn:
         self._conn = self._ldap_connect()
 
     def _ldap_connect(self):
-        conn = ldap.initialize(current_app.config["LDAP_URI"])
+        conn = ldap.initialize(current_app.config["FASJSON_LDAP_URI"])
         conn.sasl_interactive_bind_s("", SASL_GSS)
         return conn
 
     @property
     def basedn(self):
-        return self._app.config["IPA_BASEDN"]
+        return self._app.config["FASJSON_IPA_BASEDN"]
 
     def get_groups(self):
         dn = f"cn=groups,cn=accounts,{self.basedn}"
