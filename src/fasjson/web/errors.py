@@ -1,6 +1,6 @@
 import json
 
-from flask import Response, request
+from .response import ApiResponse as Response
 from werkzeug.exceptions import HTTPException
 
 

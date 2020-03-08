@@ -5,11 +5,13 @@ from werkzeug.routing import BaseConverter
 
 from . import errors
 from .apis import v1
+from .response import ApiResponse
 from .extensions.flask_gss import FlaskGSSAPI
 from .extensions.flask_ipacfg import IPAConfig
 
 
 app = Flask(__name__)
+app.response_class = ApiResponse
 
 #extensions
 FlaskGSSAPI(app)
