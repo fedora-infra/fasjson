@@ -18,7 +18,8 @@ def me():
             'info': parse(res)
         }
     }
-    return response.ApiResponse(json.dumps(output, sort_keys=True, indent=4), 200)
+    
+    return output, 200
 
 
 def parse(s):

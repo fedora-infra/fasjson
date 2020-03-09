@@ -6,8 +6,9 @@ setup(
     version="0.0.1",
     author_email="cheimes@redhat.com",
     description="Read-only REST-like API for Fedora Account System",
-    package_dir={"": "src"},
-    packages=find_packages(where="src"),
+    #package_dir={"": "src"},
+    #packages=find_packages(where="src"),
+    packages=find_packages(exclude=('test,')),
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Programming Language :: Python :: 3.6",

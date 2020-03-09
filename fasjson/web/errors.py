@@ -31,7 +31,7 @@ class WebApiError(HTTPException):
 		"""
 		Returns the json string reprsentation of this object.
 		"""
-		return json.dumps(self.as_dict())
+		return json.dumps(self.as_dict(), sort_keys=True, indent=4)
 
 	def get_description(self, environ=None):
 		"""

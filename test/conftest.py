@@ -1,7 +1,7 @@
 import pytest
 import os
 
-from src.fasjson.web.app import app
+from fasjson.web.app import app
 
 
 @pytest.fixture

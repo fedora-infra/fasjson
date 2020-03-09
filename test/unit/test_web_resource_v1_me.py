@@ -6,7 +6,7 @@ import pytest
 import gssapi
 import ldap
 
-from src.fasjson.web import app
+from fasjson.web import app
 
 
 def test_me_success(client, gss_env):

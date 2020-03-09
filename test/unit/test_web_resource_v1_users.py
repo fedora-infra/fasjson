@@ -1,7 +1,7 @@
 import json
 import pytest
 
-from src.fasjson.web import app
+from fasjson.web import app
 
 
 def test_user_success():

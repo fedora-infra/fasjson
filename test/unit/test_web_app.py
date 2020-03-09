@@ -4,7 +4,7 @@ from unittest import mock
 
 import gssapi
 
-from src.fasjson.web.app import app, errors
+from fasjson.web.app import app, errors
 
 
 def test_app_gss_forbidden_error(client, gss_env):

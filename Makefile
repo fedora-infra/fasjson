@@ -16,15 +16,15 @@ test/prepare:
 
 .PHONY: test/clean
 test/clean:
-	@rm -rf src/fasjson.egg-info
+	@rm -rf fasjson.egg-info
 
 .PHONY: test/code
 test/code:
-	@mypy ./src
+	@mypy ./fasjson
 
 .PHONY: test/unit
 test/unit:
 	@py.test -s
 
 .PHONY: test
-test: test/prepare test/code test/unit test/clean
+test: test/code test/unit test/clean

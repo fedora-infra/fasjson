@@ -1,6 +1,6 @@
 import json
 
-from src.fasjson.web import errors
+from fasjson.web import errors
 
 
 def test_webapierror_as_dict():
