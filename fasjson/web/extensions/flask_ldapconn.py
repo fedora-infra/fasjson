@@ -114,7 +114,7 @@ class LDAPConn:
         attrlist = ["uid"]
         result = self._conn.search_s(dn, scope, filters, attrlist)
         if not result:
-            abort(404, description=f"Group '{groupname}' not found.")
+            return []
         for dn, attrs in result:
             yield attrs["uid"][0].decode("utf-8")
 
@@ -127,7 +127,7 @@ class LDAPConn:
         attrlist = list(c.attrname for c in USER_ATTR)
         result = self._conn.search_s(dn, scope, filters, attrlist)
         if not result:
-            abort(404, f"User '{username}' not found.")
+            return None
         attrs = result[0][1]
         result = {c.destname: c(attrs) for c in USER_ATTR}
         # result['raw'] = repr(attrs)
