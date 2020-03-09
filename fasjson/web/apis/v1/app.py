@@ -13,4 +13,4 @@ app.add_url_rule('/me', view_func=resources.me)
 app.add_url_rule('/groups', view_func=resources.groups)
 app.add_url_rule('/groups/<name>/members', view_func=resources.group_members)
 #users
-app.add_url_rule('/users/<usergroup:username>', view_func=resources.user)
+app.add_url_rule('/users/<username>', view_func=resources.user)
