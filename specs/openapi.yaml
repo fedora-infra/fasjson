@@ -20,15 +20,20 @@ paths:
                 success:
                   value:
                     result:
-                      login: me@fedoraproject.org
+                      raw: "dn: krbprincipalname=http/fasjson.example.test@example.test,cn=services,cn=accounts,dc=example,dc=test"
+                      info:
+                        cn:
+                          - services
+                          - accounts
+                        dc:
+                          - example
+                          - test
+                        krbprincipalname: http/fasjson.example.test@example.test
               schema:
                 type: object
                 properties:
                   result:
                     $ref: "#/components/schemas/identity"
-          links:
-            user:
-              $ref: "#/components/links/UserProfile"
   /v1/groups:
     get:
       operationId: queryGroups
@@ -157,8 +162,10 @@ components:
     identity:
       type: object
       properties:
-        login:
+        raw:
           type: string
+        info:
+          type: object
     user_ref:
       type: object
       properties:
