@@ -1,1 +1,1 @@
-from fasjson import app as application
+from fasjson.web.app import app as application
