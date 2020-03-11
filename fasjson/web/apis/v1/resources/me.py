@@ -1,34 +1,24 @@
 import json
 
 import ldap  #type: ignore
+from flask import current_app
 
 from fasjson.web import errors, response
-from fasjson.web.extensions.flask_ldapconn import get_ldap_conn
+from fasjson.lib import ldaputils
 
 
 def me():
     try:
-        conn = get_ldap_conn()
-        res = conn.whoami()
-    except ldap.LOCAL_ERROR as e:
+        l = ldaputils.singleton(current_app.config['FASJSON_LDAP_URI'])
+        raw, parsed = l.whoami()
+    except (ldap.LOCAL_ERROR, ldap.SERVER_DOWN) as e:
         raise errors.WebApiError('LDAP local error', 500, data={'exception': str(e)})
+    
     output = {
         'result': {
-            'raw': res,
-            'info': parse(res)
+            'raw': raw,
+            'info': parsed
         }
     }
     
     return output, 200
-
-
-def parse(s):
-    data = {}
-    parts = s.split('dn: ')[1].split(',')
-    data['krbprincipalname'] = parts[0].split('=')[1]
-    for part in parts[1:]:
-        k, v = part.split('=')
-        if not k in data:
-            data[k] = []
-        data[k].append(v)
-    return data

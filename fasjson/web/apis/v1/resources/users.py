@@ -1,13 +1,16 @@
 import ldap #type: ignore
 
+from flask import current_app
+
 from fasjson.web import errors
-from fasjson.web.extensions.flask_ldapconn import get_ldap_conn
+from fasjson.lib import ldaputils
 
 
 def user(username):
+    l = ldaputils.singleton(current_app.config['FASJSON_LDAP_URI'])
+
     try:
-        conn = get_ldap_conn()
-        res = conn.get_user(username)
+        res = l.get_user(username)
     except ldap.LOCAL_ERROR as e:
         raise errors.WebApiError('LDAP local error', 500, data={'exception': str(e)})
     
