@@ -7,12 +7,6 @@ from fasjson.web import app
 
 
 def test_groups_success(client, gss_env, mocker):
-    # mocked = [
-    #     ('', {'cn': [b'admins']},),
-    #     ('', {'cn': [b'ipausers']},),
-    #     ('', {'cn': [b'editors']},),
-    #     ('', {'cn': [b'trust admins']},),
-    # ]
     data = ['admins', 'ipausers', 'editors', 'trust admins']
     G = mocker.patch('gssapi.Credentials')
     L = mocker.patch('fasjson.lib.ldaputils.singleton')
@@ -50,26 +44,11 @@ def test_groups_error(client, gss_env, mocker):
     G.return_value = types.SimpleNamespace(lifetime=10)
     rv = client.get('/v1/groups', environ_base=gss_env)
 
-    expected = {
-        'error': {
-            'data': {
-                'exception': '{\'desc\': "Can\'t contact LDAP server", \'errno\': 22, \'info\': \'Invalid argument\'}',
-                'method': 'GET',
-                'path': '/v1/groups'
-            }, 
-            'message': 'unexpected internal error'
-        }
-    }
-
-
     assert 500 == rv.status_code
-    assert expected == json.loads(rv.data)
+    assert 'Can\'t contact LDAP server' in json.loads(rv.data)['error']['data']['exception']
 
 
 def test_group_members_success(client, gss_env, mocker):
-    # mocked = [
-    #     ('', {'uid': [b'admin']},)
-    # ]
     data = ['admin']
     G = mocker.patch('gssapi.Credentials')
     L = mocker.patch('fasjson.lib.ldaputils.singleton')

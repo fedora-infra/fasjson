@@ -76,7 +76,10 @@ USER_ATTR = [
 
 
 class LDAP(object):
-    def __init__(self, uri, trace_level=0):
+    default_basedn = 'dc=example,dc=test'
+
+    def __init__(self, uri, trace_level=0, basedn=None):
+        self.basedn = self.default_basedn if not basedn else basedn
         ldap.set_option(ldap.OPT_REFERRALS, 0)
         self.conn = ldap.initialize(uri, trace_level=trace_level)
         self.conn.protocol_version = 3
@@ -96,12 +99,11 @@ class LDAP(object):
 
     def get_group_members(self, groupname, size=20, cookie=''):
         page_control = SimplePagedResultsControl(True, size=size, cookie=cookie)
-        basedn = 'dc=example,dc=test'
         groupname = ldap_filter.escape_filter_chars(groupname)
-        dn = f"cn=users,cn=accounts,{basedn}"
+        dn = f"cn=users,cn=accounts,{self.basedn}"
         filters = (
             "(&"
-            f"(memberOf=cn={groupname},cn=groups,cn=accounts,{basedn})"
+            f"(memberOf=cn={groupname},cn=groups,cn=accounts,{self.basedn})"
             "(objectClass=person)"
             "(!(nsAccountLock=TRUE))"
             ")"
@@ -129,7 +131,7 @@ class LDAP(object):
 
     def get_groups(self, size=20, cookie=''):
         page_control = SimplePagedResultsControl(True, size=size, cookie=cookie)
-        dn = "cn=groups,cn=accounts,dc=example,dc=test"
+        dn = f"cn=groups,cn=accounts,{self.basedn}"
         filters = r"(|(objectClass=ipausergroup)(objectclass=groupofnames))"
         scope = ldap.SCOPE_SUBTREE
         attrlist = ['cn']
@@ -153,9 +155,8 @@ class LDAP(object):
         return (rmsgid, 0, None, output)
 
     def get_user(self, username):
-        basedn = 'dc=example,dc=test'
         username = ldap_filter.escape_filter_chars(username)
-        dn = f"uid={username},cn=users,cn=accounts,{basedn}"
+        dn = f"uid={username},cn=users,cn=accounts,{self.basedn}"
         filters = "(objectClass=person)"
         scope = ldap.SCOPE_BASE
         # attrlist = ["*", "+"]
