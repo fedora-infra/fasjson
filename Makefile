@@ -18,13 +18,9 @@ test/prepare:
 test/clean:
 	@rm -rf fasjson.egg-info
 
-.PHONY: test/code
-test/code:
-	@mypy ./fasjson
-
 .PHONY: test/unit
 test/unit:
 	@py.test -s
 
 .PHONY: test
-test: test/code test/unit test/clean
+test: test/unit test/clean

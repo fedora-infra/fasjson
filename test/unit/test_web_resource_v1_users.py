@@ -7,29 +7,17 @@ from fasjson.web import app
 
 
 def test_user_success(client, gss_env, mocker):
-    # data1 = {
-    #     "uid": [b"admin"],
-    #     'sn': [b'Administrator'],
-    #     "givenName": [b''],
-    #     "mail": [b'admin@example.test'],
-    #     "fasIRCNick": [b''],
-    #     "fasLocale": [b''],
-    #     "fasTimeZone": [b''],
-    #     "fasGPGKeyId": None,
-    #     "fasCreationTime": [b'20200309103203Z'], #%Y%m%d%H%M%SZ
-    #     "nsAccountLock": [b'false'],
-    # }
     data = {
-            "creationts": 'Mon, 09 Mar 2020 10:32:03 GMT',
-            "givenname": '',
-            "gpgkeyids": None,
-            "ircnick": '',
-            "locale": '',
-            "locked": False,
-            "login": "admin",
-            "mails": ['admin@example.test'],
-            "surename":"Administrator",
-            "timezone": ''
+        "creationts": 'Mon, 09 Mar 2020 10:32:03 GMT',
+        "givenname": '',
+        "gpgkeyids": None,
+        "ircnick": '',
+        "locale": '',
+        "locked": False,
+        "login": "admin",
+        "mails": ['admin@example.test'],
+        "surename":"Administrator",
+        "timezone": ''
     }
     mocked = [
         ('', data,),

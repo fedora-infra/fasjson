@@ -15,8 +15,7 @@ def user(username):
         raise errors.WebApiError('LDAP local error', 500, data={'exception': str(e)})
     
     if not res:
-        raise errors.WebApiError('user not found', 404, data={'username': username})
-    
+        raise errors.WebApiError('user not found', 404, data={'username': username}) 
     output = {
         'result': res
     }

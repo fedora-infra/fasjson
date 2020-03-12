@@ -159,7 +159,6 @@ class LDAP(object):
         filters = "(objectClass=person)"
         scope = ldap.SCOPE_BASE
         # attrlist = ["*", "+"]
-        print(dir(self.conn))
         attrlist = list(c.attrname for c in USER_ATTR)
         result = self.conn.search_s(dn, scope, filters, attrlist)
         if not result:
