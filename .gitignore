@@ -1,3 +1,5 @@
+venv/
+venv_*/
 /build/
 /dist/
 /src/*.egg-info
@@ -9,3 +11,4 @@ __pycache__
 *.tar.gz
 .vagrant
 MANIFEST
+.*_cache
