@@ -1,16 +1,15 @@
 import ldap  #type: ignore
 from flask import request, g, current_app
 
-from fasjson.web import errors
-from fasjson.lib import ldaputils
+from fasjson.web import errors, utils
 
 
 def groups():
     size = int(request.args.get('results_per_page', 20))
     cookie = request.headers.get('X-FasJson-Cookie', '')
     msgid = request.headers.get('X-Fasjson-Previous-Msgid')
-    
-    l = ldaputils.singleton(current_app.config['FASJSON_LDAP_URI'])
+
+    l = utils.ldap_client()
     while True:
         try:
             rmsgid, rsize, rcookie, rdata = l.get_groups(size=size, cookie=cookie)
@@ -43,7 +42,7 @@ def group_members(name):
     cookie = request.headers.get('X-FasJson-Cookie', '')
     msgid = request.headers.get('X-Fasjson-Previous-Msgid')
     
-    l = ldaputils.singleton(current_app.config['FASJSON_LDAP_URI'])
+    l = utils.ldap_client()
     while True:
         try:
             rmsgid, rsize, rcookie, rdata = l.get_group_members(name, size=size, cookie=cookie)
