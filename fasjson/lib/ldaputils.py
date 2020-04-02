@@ -8,10 +8,10 @@ from ldap.controls.pagedresults import SimplePagedResultsControl
 __ldap = None
 
 
-def singleton(uri, trace_level=0):
+def singleton(uri, trace_level=0, basedn=None):
     global __ldap
     if __ldap is None:
-        __ldap = LDAP(uri, trace_level)
+        __ldap = LDAP(uri, trace_level, basedn)
     return __ldap
 
 

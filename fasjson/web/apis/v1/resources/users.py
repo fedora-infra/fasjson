@@ -2,12 +2,11 @@ import ldap #type: ignore
 
 from flask import current_app
 
-from fasjson.web import errors
-from fasjson.lib import ldaputils
+from fasjson.web import errors, utils
 
 
 def user(username):
-    l = ldaputils.singleton(current_app.config['FASJSON_LDAP_URI'])
+    l = utils.ldap_client()
 
     try:
         res = l.get_user(username)
