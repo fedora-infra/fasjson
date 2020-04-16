@@ -1,6 +1,6 @@
 aniso8601==8.0.0
 attrs==19.3.0
-Click==7.0
+Click==7.1.1
 decorator==4.4.1
 dnspython==1.16.0
 Flask==1.1.1
