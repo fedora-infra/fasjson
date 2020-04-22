@@ -1,0 +1,14 @@
+#!groovy
+
+/**
+ * This is FASJSON's Jenkins Pipeline Jenkinsfile.
+ *
+ * You can read documentation about this file at https://jenkins.io/doc/book/pipeline/jenkinsfile/.
+ * A useful list of plugins can be found here: https://jenkins.io/doc/pipeline/steps/.
+ *
+ * For reference, this is the source of the fedoraInfraTox() macro that runs
+ * tox on mutiple Fedora releases:
+ * https://github.com/centosci/cico-shared-library/blob/master/vars/fedoraInfraTox.groovy
+ */
+
+fedoraInfraTox()
