@@ -16,27 +16,68 @@
       - python3-devel
       - openldap-devel
       - krb5-devel
+      - poetry
       - '@Development Tools'
     state: present
 
-- name: Install python dependencies
-  shell: pip-3 install .
+- name: Allow apache to see /srv
+  sefcontext:
+    target: '/srv(/.*)?'
+    setype: httpd_sys_content_t
+
+- name: Allow apache to exec binary Python modules
+  sefcontext:
+    target: '/srv/venv/lib(64)?/.*\.so'
+    setype: httpd_sys_script_exec_t
+
+- name: Create a directory for the virtualenv where Apache can see it
+  file:
+    name: /srv/venv
+    state: directory
+    mode: 0755
+    owner: vagrant
+    group: vagrant
+
+- name: Create the virtualenv and install poetry
+  pip:
+    name: poetry
+    virtualenv: /srv/venv
+    virtualenv_command: pyvenv
+  become: yes
+  become_user: vagrant
+
+- name: Tell poetry not to create a virtualenv
+  shell: /srv/venv/bin/poetry config virtualenvs.create false
   args:
     chdir: /vagrant/
   become: yes
+  become_user: vagrant
+
+- name: Install python dependencies with poetry
+  shell: /srv/venv/bin/poetry install
+  args:
+    chdir: /vagrant/
+  become: yes
+  become_user: vagrant
+
+- name: Restore SELinux contexts
+  command: restorecon -irv /srv/
+
+- name: Install the .bashrc
+  copy:
+      src: .bashrc
+      dest: /home/vagrant/.bashrc
+      mode: 0644
+      owner: vagrant
+      group: vagrant
 
 - name: Copy wsgi
   copy:
     src: fasjson.wsgi
-    dest: /usr/share/fasjson/
+    dest: /srv/fasjson.wsgi
     mode: 0644
     owner: vagrant
     group: vagrant
-
-- name: Allow apache to to see /usr/share/fasjson/
-  sefcontext:
-    target: '/usr/share/fasjson(/.*)?'
-    setype: httpd_sys_content_t
 
 - name: Uninstall any old clients
   shell: ipa-client-install --uninstall --unattended
@@ -101,9 +142,12 @@
 
 - name: Tune SELinux Policy
   seboolean:
-    name: httpd_can_connect_ldap
+    name: "{{ item }}"
     state: yes
     persistent: yes
+  with_items:
+    - httpd_can_connect_ldap
+    - httpd_use_fusefs
 
 - name: Create Apache service
   file:

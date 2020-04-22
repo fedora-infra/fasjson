@@ -11,13 +11,13 @@ def test_dir():
 
 @pytest.fixture
 def fixture_dir(test_dir):
-    return f'{test_dir}/fixtures'
+    return f"{test_dir}/fixtures"
 
 
 @pytest.fixture
 def app_config(fixture_dir):
-    app.config['FASJSON_IPA_CONFIG_PATH'] = f'{fixture_dir}/ipa.default.conf'
-    app.config['FASJSON_IPA_CA_CERT_PATH'] = f'{fixture_dir}/ipa.ca.crt'
+    app.config["FASJSON_IPA_CONFIG_PATH"] = f"{fixture_dir}/ipa.default.conf"
+    app.config["FASJSON_IPA_CA_CERT_PATH"] = f"{fixture_dir}/ipa.ca.crt"
 
 
 @pytest.fixture
@@ -29,8 +29,8 @@ def client(app_config):
 @pytest.fixture
 def gss_env(fixture_dir):
     output = {}
-    with open(f'{fixture_dir}/fasjson.env') as f:
+    with open(f"{fixture_dir}/fasjson.env") as f:
         for line in f.readlines():
-            k, v = line.replace('\n', '').split('=')
+            k, v = line.replace("\n", "").split("=")
             output[k] = v
     return output

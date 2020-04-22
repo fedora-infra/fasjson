@@ -9,7 +9,7 @@ from flask import current_app
 
 
 class IPAConfig(object):
-    preffix = 'FASJSON_IPA'
+    preffix = "FASJSON_IPA"
 
     def __init__(self, app=None):
         self.app = app
@@ -17,10 +17,14 @@ class IPAConfig(object):
             self.init_app(app)
 
     def init_app(self, app):
-        if not 'FASJSON_IPA_CONFIG_PATH' in app.config:
-            app.config.setdefault('FASJSON_IPA_CONFIG_PATH', '/etc/ipa/default.conf')
-        if not 'FASJSON_IPA_CA_CERT_PATH' in app.config:
-            app.config.setdefault('FASJSON_IPA_CA_CERT_PATH', '/etc/ipa/ca.crt')
+        if "FASJSON_IPA_CONFIG_PATH" not in app.config:
+            app.config.setdefault(
+                "FASJSON_IPA_CONFIG_PATH", "/etc/ipa/default.conf"
+            )
+        if "FASJSON_IPA_CA_CERT_PATH" not in app.config:
+            app.config.setdefault(
+                "FASJSON_IPA_CA_CERT_PATH", "/etc/ipa/ca.crt"
+            )
         try:
             self._load_config(app)
         except FileNotFoundError:
@@ -31,32 +35,38 @@ class IPAConfig(object):
         _app = app
         if _app is None:
             _app = current_app
-        if _app.config.get('FASJSON_IPA_CONFIG_LOADED', False):
+        if _app.config.get("FASJSON_IPA_CONFIG_LOADED", False):
             return
         p = configparser.ConfigParser()
-        with open(_app.config['FASJSON_IPA_CONFIG_PATH']) as f:
+        with open(_app.config["FASJSON_IPA_CONFIG_PATH"]) as f:
             p.read_file(f)
 
-        _app.config.setdefault('FASJSON_IPA_BASEDN', p.get('global', 'basedn'))
-        _app.config.setdefault('FASJSON_IPA_DOMAIN', p.get('global', 'domain'))
-        _app.config.setdefault('FASJSON_IPA_REALM', p.get('global', 'realm'))
         _app.config.setdefault(
-            'FASJSON_IPA_SERVER', p.get('global', 'server', fallback=None)
+            "FASJSON_IPA_BASEDN", p.get("global", "basedn")
         )
-        _app.config.setdefault('FASJSON_IPA_CONFIG_LOADED', True)
+        _app.config.setdefault(
+            "FASJSON_IPA_DOMAIN", p.get("global", "domain")
+        )
+        _app.config.setdefault("FASJSON_IPA_REALM", p.get("global", "realm"))
+        _app.config.setdefault(
+            "FASJSON_IPA_SERVER", p.get("global", "server", fallback=None)
+        )
+        _app.config.setdefault("FASJSON_IPA_CONFIG_LOADED", True)
 
     def _detect_ldap(self) -> None:
-        domain = current_app.config['FASJSON_IPA_DOMAIN']
+        domain = current_app.config["FASJSON_IPA_DOMAIN"]
         servers = []
         try:
-            answers = query_srv(f'_ldap._tcp.{domain}')
+            answers = query_srv(f"_ldap._tcp.{domain}")
         except DNSException:
-            servers.append('ldap://' + current_app.config['FASJSON_IPA_SERVER'])
+            servers.append(
+                "ldap://" + current_app.config["FASJSON_IPA_SERVER"]
+            )
         else:
             for answer in answers:
-                server = str(answer.target).rstrip('.')
-                servers.append(f'ldap://{server}:{answer.port}')
-        current_app.config['FASJSON_LDAP_URI'] = ' '.join(servers)
+                server = str(answer.target).rstrip(".")
+                servers.append(f"ldap://{server}:{answer.port}")
+        current_app.config["FASJSON_LDAP_URI"] = " ".join(servers)
 
 
 def _mix_weight(records):
