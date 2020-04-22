@@ -1,7 +1,7 @@
 import datetime
 
 import ldap
-import ldap.filter as ldap_filter #type: ignore
+import ldap.filter as ldap_filter  # type: ignore
 from ldap.controls.pagedresults import SimplePagedResultsControl
 
 
@@ -16,7 +16,7 @@ def singleton(uri, trace_level=0, basedn=None):
 
 
 known_ldap_resp_ctrls = {
-    SimplePagedResultsControl.controlType: SimplePagedResultsControl,
+    SimplePagedResultsControl.controlType: SimplePagedResultsControl
 }
 
 
@@ -28,7 +28,7 @@ class Converter:
         self.missing = missing
 
     def convert(self, value):
-        return value.decode('utf-8')
+        return value.decode("utf-8")
 
     def __call__(self, dct):
         if self.attrname not in dct:
@@ -45,10 +45,10 @@ class Converter:
 
 class BoolConverter(Converter):
     def convert(self, value):
-        value = value.decode('utf-8').upper()
-        if value == 'TRUE':
+        value = value.decode("utf-8").upper()
+        if value == "TRUE":
             return True
-        if value == 'FALSE':
+        if value == "FALSE":
             return False
         raise ValueError(value)
 
@@ -76,29 +76,33 @@ USER_ATTR = [
 
 
 class LDAP(object):
-    default_basedn = 'dc=example,dc=test'
+    default_basedn = "dc=example,dc=test"
 
     def __init__(self, uri, trace_level=0, basedn=None):
         self.basedn = self.default_basedn if not basedn else basedn
         ldap.set_option(ldap.OPT_REFERRALS, 0)
         self.conn = ldap.initialize(uri, trace_level=trace_level)
         self.conn.protocol_version = 3
-        self.conn.sasl_interactive_bind_s('', ldap.sasl.sasl({}, 'GSS-SPNEGO'))
+        self.conn.sasl_interactive_bind_s(
+            "", ldap.sasl.sasl({}, "GSS-SPNEGO")
+        )
 
     def whoami(self):
         raw = self.conn.whoami_s()
         data = {}
-        parts = raw.split('dn: ')[1].split(',')
-        data['krbprincipalname'] = parts[0].split('=')[1]
+        parts = raw.split("dn: ")[1].split(",")
+        data["krbprincipalname"] = parts[0].split("=")[1]
         for part in parts[1:]:
-            k, v = part.split('=')
-            if not k in data:
+            k, v = part.split("=")
+            if k not in data:
                 data[k] = []
             data[k].append(v)
         return (raw, data)
 
-    def get_group_members(self, groupname, size=20, cookie=''):
-        page_control = SimplePagedResultsControl(True, size=size, cookie=cookie)
+    def get_group_members(self, groupname, size=20, cookie=""):
+        page_control = SimplePagedResultsControl(
+            True, size=size, cookie=cookie
+        )
         groupname = ldap_filter.escape_filter_chars(groupname)
         dn = f"cn=users,cn=accounts,{self.basedn}"
         filters = (
@@ -109,47 +113,65 @@ class LDAP(object):
             ")"
         )
         scope = ldap.SCOPE_SUBTREE
-        attrlist = ['uid']
+        attrlist = ["uid"]
         output = []
 
-        msgid = self.conn.search_ext(dn, scope, filters, attrlist=attrlist, serverctrls=[page_control])
+        msgid = self.conn.search_ext(
+            dn, scope, filters, attrlist=attrlist, serverctrls=[page_control]
+        )
         if msgid is None:
             return (None, 0, None, output)
 
-        rtype, rdata, rmsgid, serverctrls = self.conn.result3(msgid, resp_ctrl_classes=known_ldap_resp_ctrls)
+        rtype, rdata, rmsgid, serverctrls = self.conn.result3(
+            msgid, resp_ctrl_classes=known_ldap_resp_ctrls
+        )
         for dn, data in rdata:
-            output.append(data['uid'][0].decode('utf8'))
+            output.append(data["uid"][0].decode("utf8"))
 
-        controls = [c for c in serverctrls if c.controlType == SimplePagedResultsControl.controlType]
+        controls = [
+            c
+            for c in serverctrls
+            if c.controlType == SimplePagedResultsControl.controlType
+        ]
         if controls:
             ctrl = controls[0]
             if int(ctrl.size) == 0:
-              return (rmsgid, 0, None, output)
+                return (rmsgid, 0, None, output)
             if ctrl.cookie:
                 return (rmsgid, size, ctrl.cookie, output)
         return (rmsgid, 0, None, output)
 
-    def get_groups(self, size=20, cookie=''):
-        page_control = SimplePagedResultsControl(True, size=size, cookie=cookie)
+    def get_groups(self, size=20, cookie=""):
+        page_control = SimplePagedResultsControl(
+            True, size=size, cookie=cookie
+        )
         dn = f"cn=groups,cn=accounts,{self.basedn}"
         filters = r"(|(objectClass=ipausergroup)(objectclass=groupofnames))"
         scope = ldap.SCOPE_SUBTREE
-        attrlist = ['cn']
+        attrlist = ["cn"]
         output = []
 
-        msgid = self.conn.search_ext(dn, scope, filters, attrlist=attrlist, serverctrls=[page_control])
+        msgid = self.conn.search_ext(
+            dn, scope, filters, attrlist=attrlist, serverctrls=[page_control]
+        )
         if msgid is None:
             return (None, 0, None, output)
 
-        rtype, rdata, rmsgid, serverctrls = self.conn.result3(msgid, resp_ctrl_classes=known_ldap_resp_ctrls)
+        rtype, rdata, rmsgid, serverctrls = self.conn.result3(
+            msgid, resp_ctrl_classes=known_ldap_resp_ctrls
+        )
         for dn, data in rdata:
-            output.append(data['cn'][0].decode('utf8'))
+            output.append(data["cn"][0].decode("utf8"))
 
-        controls = [c for c in serverctrls if c.controlType == SimplePagedResultsControl.controlType]
+        controls = [
+            c
+            for c in serverctrls
+            if c.controlType == SimplePagedResultsControl.controlType
+        ]
         if controls:
             ctrl = controls[0]
             if int(ctrl.size) == 0:
-              return (rmsgid, 0, None, output)
+                return (rmsgid, 0, None, output)
             if ctrl.cookie:
                 return (rmsgid, size, ctrl.cookie, output)
         return (rmsgid, 0, None, output)

@@ -1,12 +1,10 @@
 from flask import Response, jsonify
 
-from . import errors
-
 
 class ApiResponse(Response):
-    charset = 'utf-8'
+    charset = "utf-8"
     default_status = 200
-    default_mimetype = 'application/json'
+    default_mimetype = "application/json"
 
     @classmethod
     def force_type(cls, rv, environ=None):
