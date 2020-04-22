@@ -16,6 +16,7 @@
       - python3-devel
       - openldap-devel
       - krb5-devel
+      - poetry
       - '@Development Tools'
     state: present
 
