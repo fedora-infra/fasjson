@@ -2,7 +2,7 @@ venv/
 venv_*/
 /build/
 /dist/
-/src/*.egg-info
+*.egg-info/
 __pycache__
 *.pyc
 *.pyo
@@ -12,3 +12,14 @@ __pycache__
 .vagrant
 MANIFEST
 .*_cache
+
+# test related
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+
+.vscode/
