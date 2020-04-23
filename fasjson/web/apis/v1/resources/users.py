@@ -1,11 +1,13 @@
+import ldap
+
 from fasjson.web import errors, utils
 
 
 def user(username):
-    ldap = utils.ldap_client()
+    ldap_client = utils.ldap_client()
 
     try:
-        res = ldap.get_user(username)
+        res = ldap_client.get_user(username)
     except ldap.LOCAL_ERROR as e:
         raise errors.WebApiError(
             "LDAP local error", 500, data={"exception": str(e)}
