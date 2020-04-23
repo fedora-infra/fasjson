@@ -17,6 +17,7 @@
       - openldap-devel
       - krb5-devel
       - poetry
+      - python3-tox
       - '@Development Tools'
     state: present
 
