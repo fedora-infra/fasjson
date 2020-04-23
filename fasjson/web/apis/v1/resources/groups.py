@@ -1,3 +1,4 @@
+import ldap
 from flask import request
 
 from fasjson.web import errors, utils
@@ -8,10 +9,10 @@ def groups():
     cookie = request.headers.get("X-FasJson-Cookie", "")
     msgid = request.headers.get("X-Fasjson-Previous-Msgid")
 
-    ldap = utils.ldap_client()
+    ldap_client = utils.ldap_client()
     while True:
         try:
-            rmsgid, rsize, rcookie, rdata = ldap.get_groups(
+            rmsgid, rsize, rcookie, rdata = ldap_client.get_groups(
                 size=size, cookie=cookie
             )
         except ldap.LOCAL_ERROR as e:
