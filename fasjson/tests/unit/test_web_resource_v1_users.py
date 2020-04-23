@@ -1,10 +1,8 @@
 import json
 import types
 
-from pytest_mock import mocker
 
-
-def test_user_success(client, gss_env):
+def test_user_success(client, gss_env, mocker):
     data = {
         "creationts": "Mon, 09 Mar 2020 10:32:03 GMT",
         "givenname": "",
@@ -28,7 +26,7 @@ def test_user_success(client, gss_env):
     assert {"result": data} == json.loads(rv.data)
 
 
-def test_user_error(client, gss_env):
+def test_user_error(client, gss_env, mocker):
     G = mocker.patch("gssapi.Credentials")
     L = mocker.patch("fasjson.lib.ldaputils.singleton")
     G.return_value = types.SimpleNamespace(lifetime=10)

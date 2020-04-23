@@ -2,10 +2,8 @@ import json
 import types
 from unittest import mock
 
-from pytest_mock import mocker
 
-
-def test_me_success(client, gss_env):
+def test_me_success(client, gss_env, mocker):
     r = (
         "dn: krbprincipalname=http/fasjson.example.test@example.test,"
         "cn=services,cn=accounts,dc=example,dc=test"
