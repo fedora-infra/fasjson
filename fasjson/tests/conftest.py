@@ -54,6 +54,13 @@ def client(app_config, gss_env):
 
 
 @pytest.fixture
+def anon_client(app_config):
+    app.test_client_class = FlaskClient
+    with app.test_client() as client:
+        yield client
+
+
+@pytest.fixture
 def gss_user(gss_env, mocker):
     creds = mocker.patch("gssapi.Credentials")
     creds.return_value = types.SimpleNamespace(lifetime=10)

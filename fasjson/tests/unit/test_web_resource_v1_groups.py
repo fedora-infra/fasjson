@@ -102,3 +102,25 @@ def test_group_members_error(client, gss_user, mock_ldap_client):
     }
     assert 404 == rv.status_code
     assert expected == json.loads(rv.data)
+
+
+def test_group_success(client, gss_user, mock_ldap_client):
+    mock_ldap_client(
+        "fasjson.web.resources.groups",
+        get_group=lambda n: {"name": "dummy-group"},
+    )
+
+    rv = client.get("/v1/groups/dummy-group/")
+
+    expected = {
+        "name": "dummy-group",
+        "uri": "http://localhost/v1/groups/dummy-group/",
+    }
+    assert 200 == rv.status_code
+    assert json.loads(rv.data) == {"result": expected}
+
+
+def test_group_not_found(client, gss_user, mock_ldap_client):
+    mock_ldap_client("fasjson.web.resources.groups", get_group=lambda n: None)
+    rv = client.get("/v1/groups/dummy-group/")
+    assert rv.status_code == 404
