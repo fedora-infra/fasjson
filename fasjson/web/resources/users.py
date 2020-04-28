@@ -1,10 +1,7 @@
 from flask_restx import Resource, fields
 
 from fasjson.web.utils.ldap import ldap_client
-from fasjson.web.utils.pagination import (
-    page_request_parser,
-    paged_marshal_with,
-)
+from fasjson.web.utils.pagination import page_request_parser
 from .base import Namespace
 
 
@@ -31,7 +28,7 @@ UserModel = api_v1.model(
 @api_v1.route("/")
 class UserList(Resource):
     @api_v1.doc("list_users")
-    @paged_marshal_with(UserModel, "v1.users_user_list")
+    @api_v1.paged_marshal_with(UserModel, "v1.users_user_list")
     def get(self):
         """List all users"""
         args = page_request_parser.parse_args()
