@@ -1,88 +1,104 @@
 import json
-import types
 
-import pytest
-
-
-@pytest.mark.vcr()
-def test_groups_success(client, gss_env, mocker):
-    G = mocker.patch("gssapi.Credentials")
-    G.return_value = types.SimpleNamespace(lifetime=10)
-    rv = client.get("/v1/groups", environ_base=gss_env)
-    result = json.loads(rv.data)
-    assert 200 == rv.status_code
-    assert 0 == result["result"]["size"]
+from fasjson.lib.ldap.client import LDAPResult
 
 
-@pytest.mark.vcr()
-def test_groups_success_paginate(client, gss_env, mocker):
-    G = mocker.patch("gssapi.Credentials")
-    G.return_value = types.SimpleNamespace(lifetime=10)
-    rv = client.get("/v1/groups?results_per_page=1", environ_base=gss_env)
-    result = json.loads(rv.data)
-    assert 200 == rv.status_code
-    assert 1 == result["result"]["size"]
-
-
-def test_groups_error_notfound(client, gss_env, mocker):
-    G = mocker.patch("gssapi.Credentials")
-    L = mocker.patch("fasjson.lib.ldaputils.singleton")
-    G.return_value = types.SimpleNamespace(lifetime=10)
-    L.return_value = types.SimpleNamespace(
-        get_groups=lambda size, cookie: [None, 0, None, []]
+def test_groups_success(client, gss_user, mock_ldap_client):
+    groups = ["group1", "group2"]
+    result = LDAPResult(items=[{"name": name} for name in groups])
+    mock_ldap_client(
+        "fasjson.web.resources.groups",
+        get_groups=lambda page_size, page_number: result,
     )
-    rv = client.get("/v1/groups", environ_base=gss_env)
 
-    assert 404 == rv.status_code
-    assert "0 groups found" == json.loads(rv.data)["error"]["message"]
-
-
-def test_groups_error(client, gss_env, mocker):
-    G = mocker.patch("gssapi.Credentials")
-    G.return_value = types.SimpleNamespace(lifetime=10)
-    rv = client.get("/v1/groups")
-
-    assert 500 == rv.status_code
-    assert "KRB5CCNAME missing" in json.loads(rv.data)["error"]["message"]
+    rv = client.get("/v1/groups/")
+    assert 200 == rv.status_code
+    assert json.loads(rv.data) == {
+        "result": [
+            {"name": name, "uri": f"http://localhost/v1/groups/{name}/"}
+            for name in groups
+        ]
+    }
 
 
-def test_group_members_success(client, gss_env, mocker):
-    data = ["admin"]
-    G = mocker.patch("gssapi.Credentials")
-    L = mocker.patch("fasjson.lib.ldaputils.singleton")
-    G.return_value = types.SimpleNamespace(lifetime=10)
-    L.return_value = types.SimpleNamespace(
-        get_group_members=lambda name, size, cookie: (
-            "2",
-            len(data),
-            b"0",
-            data,
-        )
+def test_groups_success_paginate(client, gss_user, mock_ldap_client):
+    result = LDAPResult(
+        items=[{"name": "group1"}], total=2, page_number=1, page_size=1
     )
-    rv = client.get("/v1/groups/admins/members", environ_base=gss_env)
+    mock_ldap_client(
+        "fasjson.web.resources.groups",
+        get_groups=lambda page_size, page_number: result,
+    )
 
-    expected = {"result": {"data": data, "size": len(data)}}
+    rv = client.get("/v1/groups/?page_size=1")
+    assert 200 == rv.status_code
+    assert json.loads(rv.data) == {
+        "result": [
+            {"name": "group1", "uri": "http://localhost/v1/groups/group1/"}
+        ],
+        "page": {
+            "total_results": 2,
+            "page_size": 1,
+            "page_number": 1,
+            "total_pages": 2,
+            "next_page": "http://localhost/v1/groups/?page_size=1&page=2",
+        },
+    }
 
+
+def test_groups_no_groups(client, gss_user, mock_ldap_client):
+    result = LDAPResult(items=[])
+    mock_ldap_client(
+        "fasjson.web.resources.groups",
+        get_groups=lambda page_size, page_number: result,
+    )
+    rv = client.get("/v1/groups/")
+
+    assert 200 == rv.status_code
+    assert json.loads(rv.data) == {"result": []}
+
+
+def test_groups_error(client, gss_user):
+    del client.gss_env["KRB5CCNAME"]
+    rv = client.get("/v1/groups/")
+
+    assert 401 == rv.status_code
+
+
+def test_group_members_success(client, gss_user, mock_ldap_client):
+    data = [{"username": "admin"}]
+    result = LDAPResult(items=data)
+    mock_ldap_client(
+        "fasjson.web.resources.groups",
+        get_group_members=lambda name, page_size, page_number: result,
+        get_group=lambda n: {"cn": n},
+    )
+    rv = client.get("/v1/groups/admins/members/")
+
+    expected = {
+        "result": [
+            {"username": "admin", "uri": "http://localhost/v1/users/admin/"}
+        ]
+    }
     assert 200 == rv.status_code
     assert expected == json.loads(rv.data)
 
 
-def test_group_members_error(client, gss_env, mocker):
-    data = []
-    G = mocker.patch("gssapi.Credentials")
-    G.return_value = types.SimpleNamespace(lifetime=10)
-    L = mocker.patch("fasjson.lib.ldaputils.singleton")
-    L.return_value = types.SimpleNamespace(
-        get_group_members=lambda name, size, cookie: [
-            None,
-            len(data),
-            None,
-            data,
-        ]
+def test_group_members_error(client, gss_user, mock_ldap_client):
+    mock_ldap_client(
+        "fasjson.web.resources.groups",
+        # get_group_members=lambda name, ps, pn: result,
+        get_group=lambda n: None,
     )
-    rv = client.get("/v1/groups/editors/members", environ_base=gss_env)
 
-    expected = {"error": {"data": None, "message": "0 groups found"}}
+    rv = client.get("/v1/groups/editors/members/")
 
+    expected = {
+        "name": "editors",
+        "message": (
+            "Group not found. You have requested this URI [/v1/groups/editors/members/] "
+            "but did you mean /v1/groups/<name:name>/members/ or /v1/groups/<name:name>/ ?"
+        ),
+    }
     assert 404 == rv.status_code
     assert expected == json.loads(rv.data)
