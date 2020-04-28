@@ -18,12 +18,14 @@
       - krb5-devel
       - poetry
       - python3-tox
-      - '@Development Tools'
+      - "@Development Tools"
+      - vim
+      - tmux
     state: present
 
 - name: Allow apache to see /srv
   sefcontext:
-    target: '/srv(/.*)?'
+    target: "/srv(/.*)?"
     setype: httpd_sys_content_t
 
 - name: Allow apache to exec binary Python modules
@@ -66,11 +68,11 @@
 
 - name: Install the .bashrc
   copy:
-      src: .bashrc
-      dest: /home/vagrant/.bashrc
-      mode: 0644
-      owner: vagrant
-      group: vagrant
+    src: .bashrc
+    dest: /home/vagrant/.bashrc
+    mode: 0644
+    owner: vagrant
+    group: vagrant
 
 - name: Copy wsgi
   copy:
@@ -83,10 +85,8 @@
 - name: Uninstall any old clients
   shell: ipa-client-install --uninstall --unattended
   ignore_errors: yes
-  become: yes
 
 - name: Enroll system as IPA client
-  become: yes
   shell: ipa-client-install --hostname fasjson.example.test --domain example.test --realm EXAMPLE.TEST --server ipa.example.test -p admin -w adminPassw0rd! -U -N --force-join
 
 - name: Copy the service setup script
@@ -96,14 +96,12 @@
     mode: 0755
 
 - name: kinit
-  become: yes
   shell: echo "adminPassw0rd!" | kinit admin@EXAMPLE.TEST
 
 - name: Create the service in IPA
   command: bash /srv/setup-fasjson-service.sh
 
 - name: Get service keytab for HTTPd
-  become: yes
   shell: ipa-getkeytab -p HTTP/fasjson.example.test -k /var/lib/gssproxy/httpd.keytab
   args:
     creates: /var/lib/gssproxy/httpd.keytab
@@ -114,7 +112,6 @@
     owner: root
     group: root
     mode: 0640
-  become: yes
 
 - name: Copy gssproxy conf
   copy:
@@ -168,4 +165,3 @@
     name: httpd
     enabled: yes
     daemon_reload: yes
-

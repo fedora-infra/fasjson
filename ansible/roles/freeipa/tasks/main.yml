@@ -15,10 +15,10 @@
 - name: get freeipa-fas
   git:
     repo: https://github.com/fedora-infra/freeipa-fas.git
-    dest: /tmp/freeipa-fas
+    dest: /root/freeipa-fas
 
 - name: install freeipa-fas
   shell: ./install.sh
   args:
-    chdir: /tmp/freeipa-fas/
+    chdir: /root/freeipa-fas/
     creates: /usr/share/ipa/updates/99-fas.update

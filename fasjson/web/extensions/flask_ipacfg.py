@@ -8,8 +8,8 @@ from dns.exception import DNSException
 from flask import current_app
 
 
-class IPAConfig(object):
-    preffix = "FASJSON_IPA"
+class IPAConfig:
+    prefix = "FASJSON_IPA"
 
     def __init__(self, app=None):
         self.app = app
