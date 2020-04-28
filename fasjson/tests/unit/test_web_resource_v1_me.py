@@ -3,15 +3,19 @@ import json
 
 def test_me_success(client, gss_user, mock_ldap_client):
     r = {
-        "dn": (
-            "krbprincipalname=http/fasjson.example.test@example.test,"
-            "cn=services,cn=accounts,dc=example,dc=test"
-        )
+        "dn": "uid=dummy,cn=users,cn=accounts,dc=example,dc=test",
+        "username": "dummy",
     }
     mock_ldap_client("fasjson.web.resources.me", whoami=lambda: r)
 
     rv = client.get("/v1/me/")
-    expected = {"result": {"dn": r["dn"], "username": None}}
+    expected = {
+        "result": {
+            "dn": "uid=dummy,cn=users,cn=accounts,dc=example,dc=test",
+            "username": "dummy",
+            "uri": "http://localhost/v1/users/dummy/",
+        }
+    }
 
     assert 200 == rv.status_code
     assert expected == json.loads(rv.data)

@@ -1,7 +1,9 @@
 import gssapi  # type: ignore
 from flask import request
+import os
 
 from fasjson.web import errors
+from flask import g
 
 
 class FlaskGSSAPI(object):
@@ -13,6 +15,7 @@ class FlaskGSSAPI(object):
         app.before_request(self._gssapi_check)
 
     def _gssapi_check(self):
+        g.gss_name = None
         environ = request.environ
         if environ["wsgi.multithread"]:
             raise errors.WebApiError(
@@ -27,6 +30,8 @@ class FlaskGSSAPI(object):
                 500,
                 data={"request.environ.KRB5CCNAME": "KRB5CCNAME"},
             )
+        # The LDAP library will look for the cache in the process' environment variables
+        os.environ["KRB5CCNAME"] = ccache
 
         principal = environ.get("GSS_NAME")
         if not principal:
@@ -59,3 +64,5 @@ class FlaskGSSAPI(object):
                 raise errors.WebApiError(
                     "Credential lifetime has expired", 401
                 )
+
+        g.gss_name = gss_name.display_as(gssapi.NameType.kerberos_principal)
