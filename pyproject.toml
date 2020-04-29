@@ -30,7 +30,7 @@ pytest-mock = "^2.0.0"
 pytest-cov = "^2.8"
 liccheck = "^0.4.2"
 bandit = "^1.6"
-black = {version = "^18.3-alpha.0", allow-prereleases = true}
+black = {version = "^19.10b0", allow-prereleases = true}
 
 [tool.black]
 line-length = 78
