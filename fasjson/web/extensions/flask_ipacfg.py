@@ -28,7 +28,7 @@ class IPAConfig:
         try:
             self._load_config(app)
         except FileNotFoundError:
-            app.before_request(self._load_config)
+            pass  # The config will be loaded on request by _detect_ldap
         app.before_request(self._detect_ldap)
 
     def _load_config(self, app=None):
@@ -54,6 +54,8 @@ class IPAConfig:
         _app.config.setdefault("FASJSON_IPA_CONFIG_LOADED", True)
 
     def _detect_ldap(self) -> None:
+        # Load the config if it wasn't loaded before
+        self._load_config()
         domain = current_app.config["FASJSON_IPA_DOMAIN"]
         servers = []
         try:
@@ -97,8 +99,11 @@ def _mix_weight(records):
             if acc >= urn:
                 records.remove(rr)
                 result.append(rr)
-    if records:
-        result.append(records.pop())
+
+    # randomness makes it hard to check for coverage in these next 2 lines
+    if records:  # pragma: no cover
+        result.append(records.pop())  # pragma: no cover
+
     return result
 
 

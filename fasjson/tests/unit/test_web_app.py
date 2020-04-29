@@ -10,9 +10,9 @@ def test_app_gss_forbidden_error(client):
     rv = client.get("/")
     body = json.loads(rv.data)
     expected_codes = {
-        "maj": 851968,
-        "min": 2529639107,
-        "routine": 851968,
+        "maj": 851_968,
+        "min": 2_529_639_107,
+        "routine": 851_968,
         "supplementary": None,
     }
 
@@ -83,3 +83,11 @@ def test_app_registered_error(client, gss_user):
 
     assert rv.status_code == 403
     assert body == {"foo": "bar", "message": "forbidden"}
+
+
+def test_webserver_error(anon_client):
+    for code in (401, 403, 500):
+        rv = anon_client.get(f"/errors/{code}")
+        assert rv.status_code == code
+        body = json.loads(rv.data)
+        assert "message" in body

@@ -21,7 +21,7 @@ def test_groups_success(client, gss_user, mock_ldap_client):
     }
 
 
-def test_groups_success_paginate(client, gss_user, mock_ldap_client):
+def test_groups_paginate(client, gss_user, mock_ldap_client):
     result = LDAPResult(
         items=[{"name": "group1"}], total=2, page_number=1, page_size=1
     )
@@ -43,6 +43,25 @@ def test_groups_success_paginate(client, gss_user, mock_ldap_client):
             "total_pages": 2,
             "next_page": "http://localhost/v1/groups/?page_size=1&page=2",
         },
+    }
+
+
+def test_groups_paginate_last_page(client, gss_user, mock_ldap_client):
+    result = LDAPResult(
+        items=[{"name": "group2"}], total=2, page_number=2, page_size=1
+    )
+    mock_ldap_client(
+        "fasjson.web.resources.groups",
+        get_groups=lambda page_size, page_number: result,
+    )
+
+    rv = client.get("/v1/groups/?page_size=1&page=2")
+    assert 200 == rv.status_code
+    assert json.loads(rv.data)["page"] == {
+        "total_results": 2,
+        "page_size": 1,
+        "page_number": 2,
+        "total_pages": 2,
     }
 
 
