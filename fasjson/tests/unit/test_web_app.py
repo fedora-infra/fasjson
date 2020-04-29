@@ -1,80 +1,93 @@
 import json
 import types
 
-from unittest import mock
+from flask_restx import abort
 
-from fasjson.web.app import app, errors
+from fasjson.web.app import app
 
 
-def test_app_gss_forbidden_error(client, gss_env):
-    rv = client.get("/", environ_base=gss_env)
+def test_app_gss_forbidden_error(client):
+    rv = client.get("/")
     body = json.loads(rv.data)
-    expected_data = {
-        "codes": {
-            "maj": 851968,
-            "min": 2529639107,
-            "routine": 851968,
-            "supplementary": None,
-        }
+    expected_codes = {
+        "maj": 851_968,
+        "min": 2_529_639_107,
+        "routine": 851_968,
+        "supplementary": None,
     }
 
     assert rv.status_code == 403
-    assert body["error"]["data"] == expected_data
-    assert body["error"]["message"] == "Invalid credentials"
+    assert body == {"message": "Invalid credentials", "codes": expected_codes}
 
 
-def test_app_default_unauthorized_error(client, gss_env):
-    with mock.patch("gssapi.Credentials") as M:
-        M.return_value = types.SimpleNamespace(lifetime=0)
-        rv = client.get("/", environ_base=gss_env)
+def test_root_anonymous(anon_client):
+    rv = anon_client.get("/")
+    body = json.loads(rv.data)
+
+    assert rv.status_code == 200
+    expected = {
+        "apis": [
+            {
+                "doc": "http://localhost/v1/doc/",
+                "spec": "http://localhost/specs/v1.json",
+                "uri": "http://localhost/v1/",
+                "version": 1,
+            }
+        ],
+        "message": "Welcome to FASJSON",
+    }
+    assert body == expected
+
+
+def test_app_default_unauthorized_error(client, mocker):
+    creds_factory = mocker.patch("gssapi.Credentials")
+    creds_factory.return_value = types.SimpleNamespace(lifetime=0)
+    rv = client.get("/")
     body = json.loads(rv.data)
 
     assert rv.status_code == 401
-    assert body["error"]["data"] is None
-    assert body["error"]["message"] == "Credential lifetime has expired"
+    assert body == {"message": "Credential lifetime has expired"}
 
 
-def test_app_default_notfound_error(client, gss_env):
-    with mock.patch("gssapi.Credentials") as M:
-        M.return_value = types.SimpleNamespace(lifetime=10)
-        rv = client.get("/notfound", environ_base=gss_env)
+def test_app_default_notfound_error(client, gss_user):
+    rv = client.get("/notfound")
     body = json.loads(rv.data)
 
     assert rv.status_code == 404
-    assert body["error"]["data"] == {"method": "GET", "path": "/notfound"}
-    assert body["error"]["message"] == "resource not found"
+    assert body.get("message") is not None
 
 
-def test_app_default_internal_error(client, gss_env):
+def test_app_default_internal_error(client, gss_user):
     @app.route("/500")
     def fivehundred():
         x = []
         return x[10]
 
-    with mock.patch("gssapi.Credentials") as M:
-        M.return_value = types.SimpleNamespace(lifetime=10)
-        rv = client.get("/500", environ_base=gss_env)
+    # Don't catch the exception in the testing framework
+    app.config["TESTING"] = False
+
+    rv = client.get("/500")
     body = json.loads(rv.data)
 
     assert rv.status_code == 500
-    assert body["error"]["data"] == {
-        "exception": "list index out of range",
-        "method": "GET",
-        "path": "/500",
-    }
-    assert body["error"]["message"] == "unexpected internal error"
+    assert body.get("message") is not None
 
 
-def test_app_registered_error(client, gss_env):
-    @app.route("/")
-    def root():
-        raise errors.WebApiError("forbidden", 403, data={"foo": "bar"})
+def test_app_registered_error(client, gss_user):
+    @app.route("/403")
+    def forbidden():
+        abort(403, "forbidden", foo="bar")
 
-    with mock.patch("gssapi.Credentials") as M:
-        M.return_value = types.SimpleNamespace(lifetime=10)
-        rv = client.get("/", environ_base=gss_env)
+    rv = client.get("/403")
     body = json.loads(rv.data)
 
     assert rv.status_code == 403
-    assert body["error"]["data"] == {"foo": "bar"}
-    assert body["error"]["message"] == "forbidden"
+    assert body == {"foo": "bar", "message": "forbidden"}
+
+
+def test_webserver_error(anon_client):
+    for code in (401, 403, 500):
+        rv = anon_client.get(f"/errors/{code}")
+        assert rv.status_code == code
+        body = json.loads(rv.data)
+        assert "message" in body
