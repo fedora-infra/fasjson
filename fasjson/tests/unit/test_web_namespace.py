@@ -8,7 +8,7 @@ def test_schema(client, gss_user):
     assert rv.status_code == 200
     body = json.loads(rv.data)
     assert body["basePath"] == "/v1"
-    assert body["info"]["title"] == "FASJSON"
+    assert body["info"]["title"] == "FAS-JSON"
     assert body["info"]["version"] == "1.0"
     assert body["swagger"] == "2.0"
 
