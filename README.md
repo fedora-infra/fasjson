@@ -1,20 +1,20 @@
 # Fedora Account System / IPA JSON gateway
 
-**PROOF OF CONCEPT**
 
 ## Installation
 
 Install dependencies
 
 ```
-dnf install ipa-client httpd mod_auth_gssapi mod_session python3-mod_wsgi python3-dns python3-flask python3-gssapi python3-ldap python3-pip python3-wheel
+dnf install ipa-client httpd mod_auth_gssapi mod_session python3-mod_wsgi python3-poetry
 ```
 
 Install WSGI app
 
 ```
-pip-3 install .
-cp fasjson.wsgi /srv/
+poetry config virtualenvs.create false
+poetry install
+cp ansible/roles/fasjson/files/fasjson.wsgi /srv/
 ```
 
 Enroll the system as an IPA client
@@ -27,6 +27,7 @@ Get service keytab for HTTPd
 
 ```
 ipa service-add HTTP/$(hostname)
+ipa servicedelegationrule-add-member --principals=HTTP/$(hostname) fasjson-delegation
 ipa-getkeytab -p HTTP/$(hostname) -k /var/lib/gssproxy/httpd.keytab
 chown root:root /var/lib/gssproxy/httpd.keytab
 chmod 640 /var/lib/gssproxy/httpd.keytab
@@ -35,7 +36,7 @@ chmod 640 /var/lib/gssproxy/httpd.keytab
 Configure GSSProxy for Apache
 
 ```
-cp config/gssproxy-fasjson.conf /etc/gssproxy/99-fasjson.conf
+cp ansible/roles/fasjson/files/config/gssproxy-fasjson.conf /etc/gssproxy/99-fasjson.conf
 systemctl enable gssproxy.service
 systemctl restart gssproxy.service
 ```
@@ -43,7 +44,7 @@ systemctl restart gssproxy.service
 Configure temporary files
 
 ```
-cp config/tmpfiles-fasjson.conf /etc/tmpfiles.d/fasjson.conf
+cp ansible/roles/fasjson/files/config/tmpfiles-fasjson.conf /etc/tmpfiles.d/fasjson.conf
 systemd-tmpfiles --create
 ```
 
@@ -57,8 +58,8 @@ Configure Apache
 
 ```
 mkdir mkdir -p /etc/systemd/system/httpd.service.d
-cp config/systemd-httpd-service-fasjson.conf /etc/systemd/system/httpd.service.d/fasjson.conf
-cp config/httpd-fasjson.conf /etc/httpd/conf.d/fasjson.conf
+cp ansible/roles/fasjson/files/config/systemd-httpd-service-fasjson.conf /etc/systemd/system/httpd.service.d/fasjson.conf
+cp ansible/roles/fasjson/files/config/httpd-fasjson.conf /etc/httpd/conf.d/fasjson.conf
 systemctl daemon-reload
 systemctl enable httpd.service
 systemctl restart httpd.service
@@ -68,21 +69,17 @@ systemctl restart httpd.service
 
 ```
 $ kinit
-$ curl --negotiate -u : http://$(hostname)/fasjson/groups
-["admins","ipausers","editors","trust admins"]
-$ curl --negotiate -u : http://$(hostname)/fasjson/group/admins
-["admin"]
-$ curl --negotiate -u : http://$(hostname)/fasjson/user/admin
-{"gecos":"Administrator"}
+$ curl --negotiate -u : http://$(hostname)/fasjson/v1/groups/
+{"result": [{"name": "test-group", "uri": "http://$(hostname)/fasjson/v1/groups/test-group/"}]}
+$ curl --negotiate -u : http://$(hostname)/fasjson/v1/groups/admins/
+{"result": {"name": "test-group", "uri": "http://fasjson.example.test/fasjson/v1/groups/test-group/"}}
+$ curl --negotiate -u : http://$(hostname)/fasjson/v1/users/admin/
+{"result": {"username": "admin", "surname": "Administrator", "givenname": "", "emails": ["admin@$(domain)"], "ircnick": null, "locale": "fr_FR", "timezone": null, "gpgkeyids": null, "creation": "2020-04-23T10:16:35", "locked": false, "uri": "http://$(hostname)/fasjson/v1/users/admin/"}}
+$ curl --negotiate -u : http://$(hostname)/fasjson/v1/me/
+{"result": {"dn": "uid=admin,cn=users,cn=accounts,dc=$(domain)", "username": "admin", "uri": "http://$(hostname)/fasjson/v1/users/admin/"}}
 ```
 
 ## TODO
 
-A lot!
-
-* tests
 * documentation
-* CI
-* error handling
 * HTTPS
-* JSON return value
