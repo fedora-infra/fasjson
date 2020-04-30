@@ -11,11 +11,21 @@ def handle_ldap_server_error(error):
     return {"message": "LDAP server is down"}, 500
 
 
+API_DEFAULTS = {
+    "title": "FAS-JSON",
+    "description": "The Fedora Accounts System JSON API",
+    "license": "GPLv3",
+    "license_url": "https://www.gnu.org/licenses/gpl-3.0.html",
+    # We add our own route for specs and docs
+    "add_specs": False,
+    "doc": False,
+}
+
+
 class FasJsonApi(Api):
     def init_app(self, app, **kwargs):
-        # We add our own route for specs and docs
-        kwargs.setdefault("add_specs", False)
-        kwargs.setdefault("doc", False)
+        for key, value in API_DEFAULTS.items():
+            kwargs.setdefault(key, value)
 
         super().init_app(app, **kwargs)
 

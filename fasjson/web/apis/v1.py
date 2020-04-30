@@ -6,9 +6,7 @@ from ..resources.users import api_v1 as users
 from ..resources.groups import api_v1 as groups
 
 blueprint = Blueprint("v1", __name__, url_prefix="/v1")
-api = FasJsonApi(
-    blueprint, title="FASJSON", version="1.0", description="The FASJSON API"
-)
+api = FasJsonApi(blueprint, version="1.0")
 
 api.add_namespace(me)
 api.add_namespace(users)
