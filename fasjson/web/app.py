@@ -2,8 +2,10 @@ import re
 
 from flask import Flask, jsonify, url_for
 from werkzeug.routing import BaseConverter
+from werkzeug.exceptions import HTTPException
 
 from .apis.v1 import blueprint as blueprint_v1
+from .apis.errors import blueprint as blueprint_errors, api as api_errors
 
 from .extensions.flask_gss import FlaskGSSAPI
 from .extensions.flask_ipacfg import IPAConfig
@@ -29,6 +31,12 @@ app.url_map.converters["name"] = NameConverter
 # variable as described here:
 # https://flask.palletsprojects.com/en/1.1.x/patterns/urlprocessors/#internationalized-blueprint-urls
 app.register_blueprint(blueprint_v1)
+
+
+# Handler for webserver errors
+app.register_blueprint(blueprint_errors)
+# Make the main app's error handler use the error API's error handler in order to output JSON
+app.register_error_handler(HTTPException, api_errors.handle_error)
 
 
 @app.route("/")

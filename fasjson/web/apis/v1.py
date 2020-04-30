@@ -7,11 +7,7 @@ from ..resources.groups import api_v1 as groups
 
 blueprint = Blueprint("v1", __name__, url_prefix="/v1")
 api = FasJsonApi(
-    blueprint,
-    title="FASJSON",
-    version="1.0",
-    description="The FASJSON API",
-    doc="/doc/",
+    blueprint, title="FASJSON", version="1.0", description="The FASJSON API"
 )
 
 api.add_namespace(me)

@@ -1,7 +1,6 @@
 import ldap
-from flask_restx import Api, abort
+from flask_restx import Api
 from flask_restx.api import SwaggerView
-from werkzeug.exceptions import HTTPException
 
 
 def handle_ldap_local_error(error):
@@ -12,15 +11,14 @@ def handle_ldap_server_error(error):
     return {"message": "LDAP server is down"}, 500
 
 
-def handle_webserver_error(code):
-    """Generate JSON on Apache-generated errors (or whichever webserver is used)."""
-    abort(code)
-
-
 class FasJsonApi(Api):
     def init_app(self, app, **kwargs):
-        kwargs.setdefault("add_specs", False)  # We add our own route
+        # We add our own route for specs and docs
+        kwargs.setdefault("add_specs", False)
+        kwargs.setdefault("doc", False)
+
         super().init_app(app, **kwargs)
+
         self.errorhandler(ldap.LOCAL_ERROR)(handle_ldap_local_error)
         self.errorhandler(ldap.SERVER_DOWN)(handle_ldap_server_error)
         self.blueprint.record_once(self._on_blueprint_registration)
@@ -29,16 +27,6 @@ class FasJsonApi(Api):
         # Add URL rules on the top level app
         self._register_specs_top(state.app)
         self._register_doc_top(state.app)
-
-        # TODO: make sure the following two instructions are not done multiple times when we have
-        # multiple API versions.
-
-        # Make the main app's error handler use the API's error handler in order to output JSON
-        state.app.register_error_handler(HTTPException, self.handle_error)
-        # Register views for the webserver to use so that it outputs JSON too
-        state.app.add_url_rule(
-            "/errors/<int:code>", view_func=handle_webserver_error
-        )
 
     def _register_specs_top(self, top_level_app):
         endpoint = f"{self.blueprint.name}.specs"
