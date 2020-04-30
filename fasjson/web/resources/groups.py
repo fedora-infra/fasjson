@@ -26,6 +26,7 @@ MemberModel = api_v1.model(
 @api_v1.route("/")
 class GroupList(Resource):
     @api_v1.doc("list_groups")
+    @api_v1.expect(page_request_parser)
     @api_v1.paged_marshal_with(GroupModel, "v1.groups_group_list")
     def get(self):
         """List all groups"""
@@ -57,6 +58,7 @@ class Group(Resource):
 @api_v1.response(404, "Group not found")
 class GroupMembers(Resource):
     @api_v1.doc("get_group_members")
+    @api_v1.expect(page_request_parser)
     @api_v1.paged_marshal_with(MemberModel, "v1.groups_group_members")
     def get(self, name):
         """Fetch group members given the group name"""

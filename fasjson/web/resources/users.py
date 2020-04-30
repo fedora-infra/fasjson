@@ -28,6 +28,7 @@ UserModel = api_v1.model(
 @api_v1.route("/")
 class UserList(Resource):
     @api_v1.doc("list_users")
+    @api_v1.expect(page_request_parser)
     @api_v1.paged_marshal_with(UserModel, "v1.users_user_list")
     def get(self):
         """List all users"""
