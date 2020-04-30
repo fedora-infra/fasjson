@@ -28,8 +28,8 @@ def test_root_anonymous(anon_client):
     expected = {
         "apis": [
             {
-                "doc": "http://localhost/v1/doc/",
-                "spec": "http://localhost/specs/v1.json",
+                "docs": "http://localhost/docs/v1/",
+                "specs": "http://localhost/specs/v1.json",
                 "uri": "http://localhost/v1/",
                 "version": 1,
             }

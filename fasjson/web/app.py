@@ -41,8 +41,8 @@ def root():
         {
             "version": int(name[1:]),
             "uri": url_for(f"{name}.root", _external=True),
-            "spec": url_for(f"{name}.spec", _external=True),
-            "doc": url_for(f"{name}.doc", _external=True),
+            "specs": url_for(f"{name}.specs", _external=True),
+            "docs": url_for(f"{name}.doc", _external=True),
         }
         for name in blueprints
     ]
