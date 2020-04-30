@@ -11,3 +11,4 @@ pull_request_rules:
   - "#approved-reviews-by>=1"
   - status-success=DCO
   - status-success=CI on f31
+  - status-success=CI on f32
