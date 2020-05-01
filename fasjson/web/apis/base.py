@@ -2,6 +2,8 @@ import ldap
 from flask_restx import Api
 from flask_restx.api import SwaggerView
 
+from ..resources.health import Ready, Live
+
 
 def handle_ldap_local_error(error):
     return ({"message": "LDAP local error", "details": str(error)}, 500)
@@ -37,6 +39,7 @@ class FasJsonApi(Api):
         # Add URL rules on the top level app
         self._register_specs_top(state.app)
         self._register_doc_top(state.app)
+        self._register_healthchecks(state.app)
 
     def _register_specs_top(self, top_level_app):
         endpoint = f"{self.blueprint.name}.specs"
@@ -51,4 +54,16 @@ class FasJsonApi(Api):
             f"/docs/{self.blueprint.name}/",
             f"{self.blueprint.name}.doc",
             self.render_doc,
+        )
+
+    def _register_healthchecks(self, top_level_app):
+        top_level_app.add_url_rule(
+            f"/healthz/{self.blueprint.name}/ready/",
+            f"{self.blueprint.name}.health.ready",
+            view_func=Ready.get,
+        )
+        top_level_app.add_url_rule(
+            f"/healthz/{self.blueprint.name}/live/",
+            f"{self.blueprint.name}.health.live",
+            view_func=Live.get,
         )
