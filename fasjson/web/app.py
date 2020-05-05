@@ -1,4 +1,6 @@
+import os
 import re
+from logging.config import dictConfig
 
 from flask import Flask, jsonify, url_for
 from werkzeug.routing import BaseConverter
@@ -12,6 +14,16 @@ from .extensions.flask_ipacfg import IPAConfig
 
 
 app = Flask(__name__)
+
+# Load default configuration
+app.config.from_pyfile("defaults.cfg")
+# Load the optional configuration file
+if "FASJSON_CONFIG_PATH" in os.environ:
+    app.config.from_envvar("FASJSON_CONFIG_PATH")
+
+# Logging
+if app.config.get("LOGGING"):
+    dictConfig(app.config["LOGGING"])
 
 
 # Extensions

@@ -114,10 +114,7 @@ def test_group_members_error(client, gss_user, mock_ldap_client):
 
     expected = {
         "name": "editors",
-        "message": (
-            "Group not found. You have requested this URI [/v1/groups/editors/members/] "
-            "but did you mean /v1/groups/<name:name>/members/ or /v1/groups/<name:name>/ ?"
-        ),
+        "message": "Group not found",
     }
     assert 404 == rv.status_code
     assert expected == json.loads(rv.data)

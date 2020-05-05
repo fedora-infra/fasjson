@@ -44,10 +44,7 @@ def test_user_error(client, gss_user, mock_ldap_client):
     assert 404 == rv.status_code
     assert res == {
         "name": "admin",
-        "message": (
-            "User not found. You have requested this URI [/v1/users/admin/] "
-            "but did you mean /v1/users/<name:username>/ or /v1/users/ ?"
-        ),
+        "message": "User not found",
     }
 
 
