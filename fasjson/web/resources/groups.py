@@ -1,6 +1,7 @@
 from flask_restx import Resource, fields
 
-from fasjson.web.utils.ipa import ldap_client
+from fasjson.lib.ldap.models import GroupModel as LDAPGroupModel
+from fasjson.web.utils.ipa import ldap_client, get_fields_from_ldap_model
 from fasjson.web.utils.pagination import page_request_parser
 from .base import Namespace
 
@@ -8,12 +9,9 @@ from .base import Namespace
 api_v1 = Namespace("groups", description="Groups related operations")
 
 GroupModel = api_v1.model(
-    "Group",
-    {
-        "name": fields.String(),
-        "uri": fields.Url("v1.groups_group", absolute=True),
-    },
+    "Group", get_fields_from_ldap_model(LDAPGroupModel, "v1.groups_group"),
 )
+
 MemberModel = api_v1.model(
     "Member",
     {

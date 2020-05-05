@@ -1,6 +1,7 @@
-from flask_restx import Resource, fields
+from flask_restx import Resource
 
-from fasjson.web.utils.ipa import ldap_client
+from fasjson.lib.ldap.models import UserModel as LDAPUserModel
+from fasjson.web.utils.ipa import ldap_client, get_fields_from_ldap_model
 from fasjson.web.utils.pagination import page_request_parser
 from .base import Namespace
 
@@ -9,19 +10,9 @@ api_v1 = Namespace("users", description="Users related operations")
 
 UserModel = api_v1.model(
     "User",
-    {
-        "username": fields.String(),
-        "surname": fields.String(),
-        "givenname": fields.String(),
-        "emails": fields.List(fields.String()),
-        "ircnick": fields.String(),
-        "locale": fields.String(),
-        "timezone": fields.String(),
-        "gpgkeyids": fields.List(fields.String()),
-        "creation": fields.DateTime(),
-        "locked": fields.Boolean(default=False),
-        "uri": fields.Url("v1.users_user", absolute=True),
-    },
+    get_fields_from_ldap_model(
+        LDAPUserModel, "v1.users_user", {"locked": {"default": False}}
+    ),
 )
 
 
