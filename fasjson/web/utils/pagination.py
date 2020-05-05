@@ -4,11 +4,9 @@ from flask import url_for
 from flask_restx import reqparse, marshal
 
 page_request_parser = reqparse.RequestParser()
+page_request_parser.add_argument("page_size", type=int, help="Page size.")
 page_request_parser.add_argument(
-    "page_size", type=int, help="Wrong page size"
-)
-page_request_parser.add_argument(
-    "page", type=int, default=1, help="Wong page number"
+    "page", type=int, default=1, help="Page number."
 )
 
 
