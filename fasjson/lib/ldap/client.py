@@ -48,6 +48,8 @@ class LDAP:
             key, value = part.split("=")
             if key == "uid":
                 result["username"] = value
+            if key == "krbprincipalname":
+                result["service"] = value.split("@")[0]
         return result
 
     def get_groups(self, page_size, page_number):

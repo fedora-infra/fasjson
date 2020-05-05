@@ -116,7 +116,7 @@
 - name: Copy gssproxy conf
   copy:
     src: config/gssproxy-fasjson.conf
-    dest: /etc/gssproxy/99-fasjson.conf
+    dest: /etc/gssproxy/80-fasjson.conf
     mode: 0644
     owner: root
     group: root

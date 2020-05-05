@@ -34,13 +34,26 @@ def _single_page_result_factory(result):
     return _result
 
 
-def test_whoami(mock_connection):
+def test_whoami_user(mock_connection):
     r = "dn: uid=dummy,cn=users,cn=accounts,dc=example,dc=test"
     mock_connection.whoami_s = lambda: r
 
     ldap = LDAP("https://dummy.com", basedn="dc=example,dc=test")
 
     expected = {"dn": r[4:], "username": "dummy"}
+    assert expected == ldap.whoami()
+
+
+def test_whoami_service(mock_connection):
+    r = (
+        "dn: krbprincipalname=test/fasjson.example.test@example.test,"
+        "cn=services,cn=accounts,dc=example,dc=test"
+    )
+    mock_connection.whoami_s = lambda: r
+
+    ldap = LDAP("https://dummy.com", basedn="dc=example,dc=test")
+
+    expected = {"dn": r[4:], "service": "test/fasjson.example.test"}
     assert expected == ldap.whoami()
 
 

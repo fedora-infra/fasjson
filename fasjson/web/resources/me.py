@@ -1,3 +1,4 @@
+from flask import url_for
 from flask_restx import Resource, fields
 
 from fasjson.web.utils.ipa import ldap_client
@@ -11,7 +12,8 @@ MeModel = api_v1.model(
     {
         "dn": fields.String,
         "username": fields.String,
-        "uri": fields.Url("v1.users_user", absolute=True),
+        "service": fields.String,
+        "uri": fields.String,
     },
 )
 
@@ -23,4 +25,9 @@ class Me(Resource):
     def get(self):
         """Fetch the connected user"""
         client = ldap_client()
-        return client.whoami()
+        result = client.whoami()
+        if "username" in result:
+            result["uri"] = url_for(
+                "v1.users_user", username=result["username"], _external=True
+            )
+        return result
