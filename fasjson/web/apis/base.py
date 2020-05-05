@@ -1,6 +1,7 @@
 import ldap
 from flask_restx import Api
 from flask_restx.api import SwaggerView
+from python_freeipa.exceptions import BadRequest
 
 
 def handle_ldap_local_error(error):
@@ -12,7 +13,14 @@ def handle_ldap_local_error(error):
     Returns:
         dict: a description of the error
     """
-    return ({"message": "LDAP local error", "details": str(error)}, 500)
+    return (
+        {
+            "message": "LDAP local error",
+            "details": str(error),
+            "source": "LDAP",
+        },
+        500,
+    )
 
 
 def handle_ldap_server_error(error):
@@ -24,7 +32,22 @@ def handle_ldap_server_error(error):
     Returns:
         dict: a description of the error
     """
-    return {"message": "LDAP server is down"}, 500
+    return {"message": "LDAP server is down", "source": "LDAP"}, 500
+
+
+def handle_rpc_error(error):
+    """When a JSON-RPC error occurs, return a 400 status code.
+
+    Args:
+        error (python_freeipa.exceptions.BadRequest): the exception that was raised
+
+    Returns:
+        dict: a description of the error
+    """
+    return (
+        {"message": error.message, "code": error.code, "source": "RPC"},
+        400,
+    )
 
 
 API_DEFAULTS = {
@@ -47,6 +70,7 @@ class FasJsonApi(Api):
 
         self.errorhandler(ldap.LOCAL_ERROR)(handle_ldap_local_error)
         self.errorhandler(ldap.SERVER_DOWN)(handle_ldap_server_error)
+        self.errorhandler(BadRequest)(handle_rpc_error)
         self.blueprint.record_once(self._on_blueprint_registration)
 
     def _on_blueprint_registration(self, state):
