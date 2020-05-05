@@ -30,7 +30,7 @@
 
 - name: Allow apache to exec binary Python modules
   sefcontext:
-    target: '/srv/venv/lib(64)?/.*\.so'
+    target: '/srv/venv/lib(64)?/.*\.so[0-9.]*'
     setype: httpd_sys_script_exec_t
 
 - name: Create a directory for the virtualenv where Apache can see it
@@ -143,6 +143,7 @@
     persistent: yes
   with_items:
     - httpd_can_connect_ldap
+    - httpd_can_network_connect
     - httpd_use_fusefs
 
 - name: Create Apache service
