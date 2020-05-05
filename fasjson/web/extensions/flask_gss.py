@@ -14,7 +14,8 @@ class FlaskGSSAPI:
         app.before_request(self._gssapi_check)
 
     def _gssapi_check(self):
-        g.gss_name = None
+        g.gss_name = g.gss_creds = g.principal = g.username = None
+
         environ = request.environ
         if environ["wsgi.multithread"]:
             abort(
@@ -50,4 +51,7 @@ class FlaskGSSAPI:
         if creds.lifetime <= 0:
             abort(401, "Credential lifetime has expired")
 
-        g.gss_name = gss_name.display_as(gssapi.NameType.kerberos_principal)
+        g.gss_name = gss_name
+        g.gss_creds = creds
+        g.principal = gss_name.display_as(gssapi.NameType.kerberos_principal)
+        g.username = g.principal.split("@")[0]

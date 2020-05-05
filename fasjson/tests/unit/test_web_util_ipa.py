@@ -9,7 +9,7 @@ def test_ldap_client(mocker, gss_user, app):
     get_client = mocker.patch("fasjson.web.utils.ipa.get_client")
     with app.test_request_context("/v1/me/"):
         app.preprocess_request()
-        g.gss_name = "dummy"
+        g.username = "dummy"
         ldap_client()
     get_client.assert_called_with(
         "ldap://ipa.example.test",
@@ -23,7 +23,7 @@ def test_ldap_client_anon(mocker, gss_user, app):
     get_client = mocker.patch("fasjson.web.utils.ipa.get_client")
     with app.test_request_context("/v1/me/"):
         app.preprocess_request()
-        g.gss_name = None
+        g.username = None
         with pytest.raises(Unauthorized):
             ldap_client()
     get_client.assert_not_called()

@@ -20,7 +20,8 @@ def test_gssapi_multithread(app):
 def test_gssapi_no_krb5ccname(app):
     with app.test_request_context("/v1/"):
         app.preprocess_request()
-        assert g.gss_name is None
+        assert g.principal is None
+        assert g.username is None
 
 
 def test_gssapi_no_username(app):
@@ -28,4 +29,5 @@ def test_gssapi_no_username(app):
         "/v1/", environ_base={"KRB5CCNAME": "/tmp/ignore"}
     ):
         app.preprocess_request()
-        assert g.gss_name is None
+        assert g.principal is None
+        assert g.username is None
