@@ -23,6 +23,8 @@ gssapi = "^1.6.2"
 typing = "^3.7.4.1"
 flask-restx = "^0.2.0"
 flask-healthz = "^0.0.1"
+python-freeipa = "^1.0.5"
+requests-kerberos = "^0.12.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.7"
@@ -109,6 +111,9 @@ authorized_licenses = [
   "lgpl",
   "BSD-like",
 ]
+
+[tool.liccheck.authorized_packages]
+requests-kerberos = "<0.12.1"
 
 [build-system]
 requires = ["poetry>=1.0.0"]

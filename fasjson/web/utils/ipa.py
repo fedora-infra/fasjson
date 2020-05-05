@@ -1,5 +1,6 @@
 from flask import current_app, g
 from flask_restx import abort, fields
+from python_freeipa import ClientMeta
 
 from fasjson.lib.ldap import get_client, converters
 
@@ -13,6 +14,17 @@ def ldap_client():
         login=g.username,
         timeout=current_app.config.get("FASJSON_LDAP_TIMEOUT", 30),
     )
+
+
+def rpc_client():
+    if g.username is None:
+        abort(401)
+    client = ClientMeta(
+        current_app.config["FASJSON_IPA_SERVER"],
+        verify_ssl=current_app.config["FASJSON_IPA_CA_CERT_PATH"],
+    )
+    client.login_kerberos()
+    return client
 
 
 def get_fields_from_ldap_model(ldap_model, endpoint, field_args=None):
