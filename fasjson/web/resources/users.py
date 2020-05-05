@@ -1,6 +1,6 @@
 from flask_restx import Resource, fields
 
-from fasjson.web.utils.ldap import ldap_client
+from fasjson.web.utils.ipa import ldap_client
 from fasjson.web.utils.pagination import page_request_parser
 from .base import Namespace
 
