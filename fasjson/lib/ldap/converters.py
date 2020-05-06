@@ -1,4 +1,5 @@
 import datetime
+from base64 import b64encode
 
 
 class Converter:
@@ -32,3 +33,12 @@ class GeneralTimeConverter(Converter):
     def decode(self, value):
         value = super().decode(value)
         return datetime.datetime.strptime(value, self.gentime_fmt)
+
+
+class BinaryConverter(Converter):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.ldap_name = f"{self.ldap_name};binary"
+
+    def decode(self, value):
+        return b64encode(value).decode("ascii")

@@ -1,6 +1,11 @@
 from ldap.filter import escape_filter_chars
 
-from .converters import Converter, GeneralTimeConverter, BoolConverter
+from .converters import (
+    Converter,
+    GeneralTimeConverter,
+    BoolConverter,
+    BinaryConverter,
+)
 
 
 class Model:
@@ -43,6 +48,7 @@ class UserModel(Model):
         "locale": Converter("fasLocale"),
         "timezone": Converter("fasTimeZone"),
         "gpgkeyids": Converter("fasGPGKeyId", multivalued=True),
+        "certificates": BinaryConverter("userCertificate", multivalued=True),
         "creation": GeneralTimeConverter("fasCreationTime"),
         "locked": BoolConverter("nsAccountLock"),
     }

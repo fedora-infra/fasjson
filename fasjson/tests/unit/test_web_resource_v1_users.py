@@ -6,6 +6,7 @@ from fasjson.lib.ldap.client import LDAPResult
 
 def _get_user_ldap_data(name):
     return {
+        "certificates": None,
         "creation": datetime(2020, 3, 9, 10, 32, 3, tzinfo=timezone.utc),
         "givenname": "",
         "gpgkeyids": None,
