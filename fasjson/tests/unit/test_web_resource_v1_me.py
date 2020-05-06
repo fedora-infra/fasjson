@@ -1,4 +1,11 @@
-import json
+from functools import partial
+
+import pytest
+
+
+@pytest.fixture
+def mock_ldap_client(mock_ipa_client):
+    yield partial(mock_ipa_client, "fasjson.web.resources.me", "ldap")
 
 
 def test_me_user_success(client, gss_user, mock_ldap_client):
@@ -6,7 +13,7 @@ def test_me_user_success(client, gss_user, mock_ldap_client):
         "dn": "uid=dummy,cn=users,cn=accounts,dc=example,dc=test",
         "username": "dummy",
     }
-    mock_ldap_client("fasjson.web.resources.me", whoami=lambda: r)
+    mock_ldap_client(whoami=lambda: r)
 
     rv = client.get("/v1/me/")
     expected = {
@@ -19,7 +26,7 @@ def test_me_user_success(client, gss_user, mock_ldap_client):
     }
 
     assert 200 == rv.status_code
-    assert expected == json.loads(rv.data)
+    assert expected == rv.get_json()
 
 
 def test_me_service_success(client, gss_user, mock_ldap_client):
@@ -30,7 +37,7 @@ def test_me_service_success(client, gss_user, mock_ldap_client):
         ),
         "service": "test/fasjson.example.test",
     }
-    mock_ldap_client("fasjson.web.resources.me", whoami=lambda: r)
+    mock_ldap_client(whoami=lambda: r)
 
     rv = client.get("/v1/me/")
     expected = {
@@ -43,12 +50,12 @@ def test_me_service_success(client, gss_user, mock_ldap_client):
     }
 
     assert 200 == rv.status_code
-    assert expected == json.loads(rv.data)
+    assert expected == rv.get_json()
 
 
 def test_me_error(client, gss_env):
     rv = client.get("/v1/me/")
-    res = json.loads(rv.data)
+    res = rv.get_json()
     expected = {
         "codes": {
             "maj": 851968,

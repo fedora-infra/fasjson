@@ -1,7 +1,14 @@
-import json
 from datetime import datetime, timezone
+from functools import partial
+
+import pytest
 
 from fasjson.lib.ldap.client import LDAPResult
+
+
+@pytest.fixture
+def mock_ldap_client(mock_ipa_client):
+    yield partial(mock_ipa_client, "fasjson.web.resources.users", "ldap")
 
 
 def _get_user_ldap_data(name):
@@ -27,20 +34,20 @@ def _get_user_api_output(name):
 
 def test_user_success(client, gss_user, mock_ldap_client):
     data = _get_user_ldap_data("dummy")
-    mock_ldap_client("fasjson.web.resources.users", get_user=lambda u: data)
+    mock_ldap_client(get_user=lambda u: data)
 
     rv = client.get("/v1/users/dummy/")
 
     expected = _get_user_api_output("dummy")
     assert 200 == rv.status_code
-    assert json.loads(rv.data) == {"result": expected}
+    assert rv.get_json() == {"result": expected}
 
 
 def test_user_error(client, gss_user, mock_ldap_client):
-    mock_ldap_client("fasjson.web.resources.users", get_user=lambda u: None)
+    mock_ldap_client(get_user=lambda u: None)
 
     rv = client.get("/v1/users/admin/")
-    res = json.loads(rv.data)
+    res = rv.get_json()
 
     assert 404 == rv.status_code
     assert res == {
@@ -50,31 +57,12 @@ def test_user_error(client, gss_user, mock_ldap_client):
 
 
 def test_users_success(client, gss_user, mock_ldap_client):
-    groups = ["group1", "group2"]
-    result = LDAPResult(items=[{"name": name} for name in groups])
-    mock_ldap_client(
-        "fasjson.web.resources.groups",
-        get_groups=lambda page_size, page_number: result,
-    )
-
-    rv = client.get("/v1/groups/")
-    assert 200 == rv.status_code
-    assert json.loads(rv.data) == {
-        "result": [
-            {"name": name, "uri": f"http://localhost/v1/groups/{name}/"}
-            for name in groups
-        ]
-    }
-
     data = [_get_user_ldap_data(f"dummy-{idx}") for idx in range(1, 10)]
     result = LDAPResult(items=data)
-    mock_ldap_client(
-        "fasjson.web.resources.users",
-        get_users=lambda page_size, page_number: result,
-    )
+    mock_ldap_client(get_users=lambda page_size, page_number: result,)
 
     rv = client.get("/v1/users/")
 
     expected = [_get_user_api_output(f"dummy-{idx}") for idx in range(1, 10)]
     assert 200 == rv.status_code
-    assert json.loads(rv.data) == {"result": expected}
+    assert rv.get_json() == {"result": expected}
