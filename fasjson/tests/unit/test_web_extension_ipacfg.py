@@ -6,7 +6,6 @@ import pytest
 import dns
 import dns.rdtypes.IN.SRV
 
-from fasjson.web.app import app
 from fasjson.web.extensions.flask_ipacfg import (
     IPAConfig,
     query_srv,
@@ -28,14 +27,14 @@ enable_ra = True
 
 
 @pytest.fixture
-def filtered_app_config(mocker):
+def app_with_filtered_config(app, mocker):
     old_config = dict(app.config)
     mocker.patch.dict(app.config, clear=True)
     for key, value in old_config.items():
         if key.startswith("FASJSON_"):
             continue
         app.config[key] = value
-    yield
+    yield app
     app.config = old_config
 
 
@@ -76,7 +75,8 @@ def test_ipacfg_delayed_init(mocker):
     init_app.assert_not_called()
 
 
-def test_ipacfg_default_paths(filtered_app_config):
+def test_ipacfg_default_paths(app_with_filtered_config):
+    app = app_with_filtered_config
     IPAConfig(app)
     with app.test_request_context("/v1/"):
         try:
@@ -92,7 +92,8 @@ def test_ipacfg_default_paths(filtered_app_config):
         assert app.config["FASJSON_IPA_CA_CERT_PATH"] == "/etc/ipa/ca.crt"
 
 
-def test_ipacfg_delayed_load(tmpdir, filtered_app_config):
+def test_ipacfg_delayed_load(tmpdir, app_with_filtered_config):
+    app = app_with_filtered_config
     config_path = os.path.join(tmpdir, "ipa.cfg")
     app.config["FASJSON_IPA_CONFIG_PATH"] = config_path
     IPAConfig(app)
@@ -106,13 +107,13 @@ def test_ipacfg_delayed_load(tmpdir, filtered_app_config):
         assert app.config["FASJSON_IPA_DOMAIN"] == "testing"
 
 
-def test_default_app():
+def test_default_app(app):
     with app.test_request_context("/v1/"):
         IPAConfig(app)._load_config()
         # This should not crash
 
 
-def test_already_loaded(mocker):
+def test_already_loaded(mocker, app):
     configparser = mocker.patch(
         "fasjson.web.extensions.flask_ipacfg.configparser"
     )
@@ -121,7 +122,7 @@ def test_already_loaded(mocker):
         configparser.ConfigParser.assert_not_called()
 
 
-def test_detect_dns(mocker):
+def test_detect_dns(mocker, app):
     ext = IPAConfig(app)
     mocker.patch(
         "fasjson.web.extensions.flask_ipacfg.query_srv",

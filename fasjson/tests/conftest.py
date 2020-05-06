@@ -4,7 +4,7 @@ import types
 
 from flask.testing import FlaskClient
 
-from fasjson.web.app import app
+from fasjson.web.app import create_app
 
 
 @pytest.fixture
@@ -18,10 +18,12 @@ def fixture_dir(test_dir):
 
 
 @pytest.fixture
-def app_config(fixture_dir):
+def app(fixture_dir):
+    app = create_app()
     app.config["FASJSON_IPA_CONFIG_PATH"] = f"{fixture_dir}/ipa.default.conf"
     app.config["FASJSON_IPA_CA_CERT_PATH"] = f"{fixture_dir}/ipa.ca.crt"
     app.config["TESTING"] = True
+    return app
 
 
 @pytest.fixture
@@ -47,14 +49,14 @@ class GSSAwareClient(FlaskClient):
 
 
 @pytest.fixture
-def client(app_config, gss_env):
+def client(app, gss_env):
     app.test_client_class = GSSAwareClient
     with app.test_client(gss_env=gss_env) as client:
         yield client
 
 
 @pytest.fixture
-def anon_client(app_config):
+def anon_client(app):
     app.test_client_class = FlaskClient
     with app.test_client() as client:
         yield client

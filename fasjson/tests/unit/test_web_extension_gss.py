@@ -2,7 +2,6 @@ import pytest
 from flask import g
 from werkzeug.exceptions import InternalServerError
 
-from fasjson.web.app import app
 from fasjson.web.extensions.flask_gss import FlaskGSSAPI
 
 
@@ -12,19 +11,19 @@ def test_gssapi_delayed_init(mocker):
     init_app.assert_not_called()
 
 
-def test_gssapi_multithread():
+def test_gssapi_multithread(app):
     with app.test_request_context("/v1/", multithread=True):
         with pytest.raises(InternalServerError):
             app.preprocess_request()
 
 
-def test_gssapi_no_krb5ccname():
+def test_gssapi_no_krb5ccname(app):
     with app.test_request_context("/v1/"):
         app.preprocess_request()
         assert g.gss_name is None
 
 
-def test_gssapi_no_gss_name():
+def test_gssapi_no_username(app):
     with app.test_request_context(
         "/v1/", environ_base={"KRB5CCNAME": "/tmp/ignore"}
     ):

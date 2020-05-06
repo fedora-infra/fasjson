@@ -2,11 +2,10 @@ import pytest
 from flask import g
 from werkzeug.exceptions import Unauthorized
 
-from fasjson.web.app import app
 from fasjson.web.utils.ipa import ldap_client
 
 
-def test_ldap_client(mocker, gss_user, app_config):
+def test_ldap_client(mocker, gss_user, app):
     get_client = mocker.patch("fasjson.web.utils.ipa.get_client")
     with app.test_request_context("/v1/me/"):
         app.preprocess_request()
@@ -20,7 +19,7 @@ def test_ldap_client(mocker, gss_user, app_config):
     )
 
 
-def test_ldap_client_anon(mocker, gss_user, app_config):
+def test_ldap_client_anon(mocker, gss_user, app):
     get_client = mocker.patch("fasjson.web.utils.ipa.get_client")
     with app.test_request_context("/v1/me/"):
         app.preprocess_request()
