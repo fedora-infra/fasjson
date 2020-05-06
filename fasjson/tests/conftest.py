@@ -69,11 +69,11 @@ def gss_user(gss_env, mocker):
 
 
 @pytest.fixture
-def mock_ldap_client(mocker):
-    def ldap_client_factory(module_path, **kwargs):
+def mock_ipa_client(mocker):
+    def ipa_client_factory(module_path, client_type, **kwargs):
         client = types.SimpleNamespace(**kwargs)
-        factory = mocker.patch(f"{module_path}.ldap_client")
+        factory = mocker.patch(f"{module_path}.{client_type}_client")
         factory.return_value = client
         return client
 
-    return ldap_client_factory
+    return ipa_client_factory
