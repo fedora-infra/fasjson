@@ -32,6 +32,7 @@ Vagrant.configure(2) do |config|
     fasjson.vm.hostname = "fasjson.example.test"
     
     fasjson.vm.synced_folder ".", "/vagrant/", type: "sshfs"
+    fasjson.vm.synced_folder "../fasjson-client", "/home/vagrant/fasjson-client", type: "sshfs"
 
     fasjson.vm.provider :libvirt do |libvirt|
       libvirt.cpus = 2
