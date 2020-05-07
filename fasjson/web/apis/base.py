@@ -4,10 +4,26 @@ from flask_restx.api import SwaggerView
 
 
 def handle_ldap_local_error(error):
+    """When an LDAP local error occurs, return a 500 status code.
+
+    Args:
+        error (ldap.LOCAL_ERROR): the exception that was raised
+
+    Returns:
+        dict: a description of the error
+    """
     return ({"message": "LDAP local error", "details": str(error)}, 500)
 
 
 def handle_ldap_server_error(error):
+    """When the LDAP server is down, return a 500 status code.
+
+    Args:
+        error (ldap.SERVER_DOWN): the exception that was raised
+
+    Returns:
+        dict: a description of the error
+    """
     return {"message": "LDAP server is down"}, 500
 
 
