@@ -171,7 +171,7 @@ def test_get_user(mock_connection):
     expected = {
         "creation": datetime.datetime(2020, 3, 9, 10, 32, 3),
         "givenname": "",
-        "ircnick": ["admin"],
+        "ircnicks": ["admin"],
         "locked": False,
         "username": "admin",
         "emails": ["admin@example.test"],

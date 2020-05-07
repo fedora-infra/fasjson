@@ -130,17 +130,17 @@ paths:
                 success:
                   value:
                     result:
-                      login: 'me@fedoraproject.org'
-                      surname: 'me'
-                      givenname: 'self'
+                      login: "me@fedoraproject.org"
+                      surname: "me"
+                      givenname: "self"
                       mails:
                         - me@fedoraproject.org
-                      ircnick: 'me'
-                      locale: 'en_US'
-                      timezone: 'UTC'
+                      ircnick: "me"
+                      locale: "en_US"
+                      timezone: "UTC"
                       gpgkeyids:
-                        - '12345'
-                      creationts: '2020-02-24 09:12:47.157750'
+                        - "12345"
+                      creationts: "2020-02-24 09:12:47.157750"
                       locked: false
               schema:
                 type: object
@@ -202,8 +202,8 @@ components:
           type: array
           items:
             type: string
-        ircnick:
-          type: string
+        ircnicks:
+          type: array
         locale:
           type: string
         timezone:

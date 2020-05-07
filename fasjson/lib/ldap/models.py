@@ -39,7 +39,7 @@ class UserModel(Model):
         "surname": Converter("sn"),
         "givenname": Converter("givenName"),
         "emails": Converter("mail", multivalued=True),
-        "ircnick": Converter("fasIRCNick", multivalued=True),
+        "ircnicks": Converter("fasIRCNick", multivalued=True),
         "locale": Converter("fasLocale"),
         "timezone": Converter("fasTimeZone"),
         "gpgkeyids": Converter("fasGPGKeyId", multivalued=True),

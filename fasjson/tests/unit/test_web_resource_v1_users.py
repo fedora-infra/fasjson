@@ -19,7 +19,7 @@ def _get_user_ldap_data(name):
 def _get_user_api_output(name):
     data = _get_user_ldap_data(name)
     data["creation"] = data["creation"].isoformat()
-    data["ircnick"] = data["locale"] = data["timezone"] = None
+    data["ircnicks"] = data["locale"] = data["timezone"] = None
     data["uri"] = f"http://localhost/v1/users/{name}/"
     return data
 

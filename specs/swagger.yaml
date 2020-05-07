@@ -1,5 +1,5 @@
 ---
-swagger: '2.0'
+swagger: "2.0"
 info:
   license:
     name: GPLv3
@@ -10,21 +10,21 @@ paths:
   "/v1/groups":
     get:
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: query
-        name: query
-        type: string
-      - default: 0
-        in: query
-        name: page
-        type: integer
-      - default: 10
-        in: query
-        name: per_page
-        type: integer
+        - in: query
+          name: query
+          type: string
+        - default: 0
+          in: query
+          name: page
+          type: integer
+        - default: 10
+          in: query
+          name: per_page
+          type: integer
       responses:
-        '200':
+        "200":
           description: list groups retutning its CN field
           schema:
             properties:
@@ -42,14 +42,14 @@ paths:
   "/v1/groups/{group_name}/members":
     get:
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: path
-        name: group_name
-        required: true
-        type: string
+        - in: path
+          name: group_name
+          required: true
+          type: string
       responses:
-        '200':
+        "200":
           description: list members of a given group returning the uid user field
           schema:
             properties:
@@ -67,10 +67,10 @@ paths:
   "/v1/me":
     get:
       produces:
-      - application/json
+        - application/json
       parameters: []
       responses:
-        '200':
+        "200":
           description: requester identity info
           schema:
             properties:
@@ -88,14 +88,14 @@ paths:
   "/v1/users/{username}":
     get:
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: path
-        name: username
-        required: true
-        type: string
+        - in: path
+          name: username
+          required: true
+          type: string
       responses:
-        '200':
+        "200":
           description: retrieve user information
           schema:
             properties:
@@ -120,8 +120,8 @@ definitions:
       message:
         type: string
     required:
-    - code
-    - message
+      - code
+      - message
     type: object
   group:
     properties:
@@ -163,8 +163,8 @@ definitions:
         items:
           type: string
         type: array
-      ircnick:
-        type: string
+      ircnicks:
+        type: array
       locale:
         type: string
       locked:
