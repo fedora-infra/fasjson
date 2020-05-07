@@ -114,10 +114,12 @@ def test_default_app(app):
 
 
 def test_already_loaded(mocker, app):
-    configparser = mocker.patch(
-        "fasjson.web.extensions.flask_ipacfg.configparser"
-    )
     with app.test_request_context("/v1/"):
+        app.preprocess_request()
+        assert app.config["FASJSON_IPA_CONFIG_LOADED"] is True
+        configparser = mocker.patch(
+            "fasjson.web.extensions.flask_ipacfg.configparser"
+        )
         IPAConfig(app)._load_config()
         configparser.ConfigParser.assert_not_called()
 
