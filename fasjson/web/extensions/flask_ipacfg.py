@@ -5,6 +5,9 @@ import operator
 import dns.resolver
 import dns.rdatatype
 from dns.exception import DNSException
+
+import ldap
+
 from flask import current_app
 
 
@@ -50,6 +53,10 @@ class IPAConfig:
         _app.config.setdefault("FASJSON_IPA_REALM", p.get("global", "realm"))
         _app.config.setdefault(
             "FASJSON_IPA_SERVER", p.get("global", "server", fallback=None)
+        )
+        _app.config.setdefault(
+            "FASJSON_HEALTH_CHECKS",
+            {"ready": lambda: readiness(_app), "live": liveness},
         )
         _app.config.setdefault("FASJSON_IPA_CONFIG_LOADED", True)
 
@@ -157,3 +164,18 @@ def query_srv(qname, resolver=None, **kwargs):
         resolver = dns.resolver
     answer = resolver.query(qname, rdtype=dns.rdatatype.SRV, **kwargs)
     return sort_prio_weight(answer)
+
+
+def readiness(app):
+    """Readiness Health Check"""
+    try:
+        client = ldap.initialize(app.config["FASJSON_LDAP_URI"])
+        client.simple_bind_s()
+        return True, "OK"
+    except ldap.SERVER_DOWN:
+        return False, "NOT OK"
+
+
+def liveness():
+    """Liveness Health Check"""
+    return True, "OK"

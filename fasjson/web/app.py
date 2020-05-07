@@ -1,7 +1,5 @@
 import re
 
-import ldap
-
 from flask import Flask, jsonify, url_for
 from werkzeug.routing import BaseConverter
 from werkzeug.exceptions import HTTPException
@@ -30,25 +28,14 @@ class NameConverter(BaseConverter):
 
 app.url_map.converters["name"] = NameConverter
 
+with app.app_context():
+    healthcheck_blueprint = HealthCheck(
+        name="healthz",
+        import_name=__name__,
+        config_key="FASJSON_HEALTH_CHECKS",
+    )
 
-def ldap_running():
-    """Readiness Health Check"""
-    try:
-        client = ldap.initialize(app.config["FASJSON_LDAP_URI"])
-        client.simple_bind_s()
-        return True, "OK"
-    except ldap.SERVER_DOWN:
-        return False, "NOT OK"
-
-
-def basic_liveness():
-    """Liveness Health Check"""
-    return True, "OK"
-
-
-health_check = HealthCheck(app)
-health_check.add_check("/healthz/ready", "readiness", ldap_running)
-health_check.add_check("/healthz/live", "liveness", basic_liveness)
+app.register_blueprint(healthcheck_blueprint)
 
 
 # TODO: consider having only one class per resource and passing the API version from the global g
