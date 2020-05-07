@@ -27,6 +27,8 @@ class HealthCheck(Blueprint):
                 endpoint=health_check_name,
                 view_func=lambda: self.run_check(health_check),
             )
+        else:
+            raise Exception("Health check provided does not seem to be a function.")
 
     def run_check(self, health_check):
         try:
