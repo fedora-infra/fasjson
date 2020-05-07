@@ -106,6 +106,7 @@ authorized_licenses = [
   "zpl 2.1",
   "mpl-2.0",
   "lgpl",
+  "BSD-like",
 ]
 
 [build-system]
