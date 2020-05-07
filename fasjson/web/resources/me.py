@@ -20,7 +20,7 @@ MeModel = api_v1.model(
 
 @api_v1.route("/")
 class Me(Resource):
-    @api_v1.doc("get_me")
+    @api_v1.doc("whoami")
     @api_v1.marshal_with(MeModel)
     def get(self):
         """Fetch the connected user"""
