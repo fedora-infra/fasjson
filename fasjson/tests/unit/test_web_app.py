@@ -22,25 +22,6 @@ def test_app_gss_forbidden_error(client):
     assert body == {"message": "Invalid credentials", "codes": expected_codes}
 
 
-def test_root_anonymous(anon_client):
-    rv = anon_client.get("/")
-    body = json.loads(rv.data)
-
-    assert rv.status_code == 200
-    expected = {
-        "apis": [
-            {
-                "docs": "http://localhost/docs/v1/",
-                "specs": "http://localhost/specs/v1.json",
-                "uri": "http://localhost/v1/",
-                "version": 1,
-            }
-        ],
-        "message": "Welcome to FASJSON",
-    }
-    assert body == expected
-
-
 def test_app_default_unauthorized_error(client, mocker):
     creds_factory = mocker.patch("gssapi.Credentials")
     creds_factory.return_value = types.SimpleNamespace(lifetime=0)
