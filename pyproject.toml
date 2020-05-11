@@ -22,6 +22,7 @@ dnspython = "^1.16.0"
 gssapi = "^1.6.2"
 typing = "^3.7.4.1"
 flask-restx = "^0.2.0"
+flask-healthz = "^0.0.1"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.7"
