@@ -10,7 +10,7 @@ from .apis.errors import blueprint as blueprint_errors, api as api_errors
 from .extensions.flask_gss import FlaskGSSAPI
 from .extensions.flask_ipacfg import IPAConfig
 
-from ..healthz.healthcheck import HealthCheck
+from ..healthz import healthz
 
 
 app = Flask(__name__)
@@ -28,14 +28,9 @@ class NameConverter(BaseConverter):
 
 app.url_map.converters["name"] = NameConverter
 
-with app.app_context():
-    healthcheck_blueprint = HealthCheck(
-        name="healthz",
-        import_name=__name__,
-        config_key="FASJSON_HEALTH_CHECKS",
-    )
-
-app.register_blueprint(healthcheck_blueprint)
+app.register_blueprint(
+    healthz(config_key="FASJSON_HEALTH_CHECKS"), url_prefix="/healthz"
+)
 
 
 # TODO: consider having only one class per resource and passing the API version from the global g

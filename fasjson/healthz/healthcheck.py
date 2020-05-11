@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, current_app
+from flask import Blueprint, jsonify
 
 
 def response(result, code):
@@ -7,44 +7,36 @@ def response(result, code):
 
 
 class HealthCheck(Blueprint):
-    def __init__(
-        self, config_key=None, pass_code=200, fail_code=503, *args, **kwargs
-    ):
-        super(HealthCheck, self).__init__(*args, **kwargs)
-        self.mountpoint = kwargs["name"] or "healthz"
+    def __init__(self, config_key, name, import_name, pass_code, fail_code):
+        super(HealthCheck, self).__init__(name, import_name)
+        self.config_key = config_key
         self.pass_code = pass_code
         self.fail_code = fail_code
-        health_checks = current_app.config.get(config_key)
-        if type(health_checks) is dict:
-            for health_check_name, health_check in health_checks.items():
-                self.add_check(health_check_name, health_check)
+        self.record(self._setup_endpoints)
+
+    def _setup_endpoints(self, state):
+        health_checks = state.app.config.get(self.config_key, {})
+        for health_check_name, health_check in health_checks.items():
+            self.add_check(health_check_name, health_check)
 
     def add_check(self, health_check_name, health_check):
         if callable(health_check):
-            url = f"/{self.mountpoint}/{health_check_name}/"
             self.add_url_rule(
-                rule=url,
+                rule=f"/{health_check_name}",
                 endpoint=health_check_name,
                 view_func=lambda: self.run_check(health_check),
             )
         else:
-            raise Exception("Health check provided does not seem to be a function.")
+            raise Exception(
+                "Health check provided does not seem to be a function."
+            )
 
     def run_check(self, health_check):
-        try:
-            passed, result = health_check()
-            if passed:
-                return response(result, self.pass_code)
-            else:
-                current_app.logger(
-                    f"Health check {health_check.__name__} failed with error {result}"
-                )
-                return response(result, self.fail_code)
-        except Exception as e:
-            current_app.logger(
-                f"Health check {health_check.__name__} hit exception {str(e)}"
-            )
-            raise HealthException(str(e), self.fail_code)
+        passed, result = health_check()
+        if passed:
+            return response(result, self.pass_code)
+        else:
+            return response(result, self.fail_code)
 
 
 class HealthException(Exception):

@@ -10,6 +10,8 @@ import ldap
 
 from flask import current_app
 
+from ...healthz import HealthException
+
 
 class IPAConfig:
     prefix = "FASJSON_IPA"
@@ -166,14 +168,14 @@ def query_srv(qname, resolver=None, **kwargs):
     return sort_prio_weight(answer)
 
 
-def readiness(app):
+def readiness():
     """Readiness Health Check"""
     try:
-        client = ldap.initialize(app.config["FASJSON_LDAP_URI"])
+        client = ldap.initialize(current_app.config["FASJSON_LDAP_URI"])
         client.simple_bind_s()
         return True, "OK"
     except ldap.SERVER_DOWN:
-        return False, "NOT OK"
+        raise HealthException("NOT OK", 503)
 
 
 def liveness():
