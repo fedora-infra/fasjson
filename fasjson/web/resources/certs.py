@@ -46,6 +46,7 @@ create_request_parser.add_argument(
 
 
 @api_v1.route("/")
+@api_v1.response(400, "The CSR could not be signed")
 class Certs(Resource):
     @api_v1.doc("sign_csr")
     @api_v1.expect(create_request_parser)
