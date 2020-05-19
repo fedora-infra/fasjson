@@ -15,3 +15,4 @@ exclude_lines =
     if __name__ == .__main__.:
 omit =
     fasjson/tests/*
+    fasjson/__init__.py
