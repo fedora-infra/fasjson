@@ -22,4 +22,7 @@ htmlcov/
 nosetests.xml
 coverage.xml
 
+# docs related
+docs/_source
+docs/_build
 .vscode/
