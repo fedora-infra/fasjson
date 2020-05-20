@@ -25,4 +25,6 @@ coverage.xml
 # docs related
 docs/_source
 docs/_build
+docs/_api
+
 .vscode/
