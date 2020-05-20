@@ -6,27 +6,22 @@
 
 import os
 import json
+from importlib import import_module
 
 from fasjson.web.app import create_app
 
-directory = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-app = create_app()
 
-app.testing = True
-app.config["FASJSON_IPA_CONFIG_PATH"] = f"{directory}/utils/ipa.default.conf"
-app.config["FASJSON_IPA_CA_CERT_PATH"] = f"{directory}/utils/ipa.ca.crt"
-app.config["TESTING"] = True
+directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "_api")
 
-client = app.test_client()
 
-page = client.get("/specs/v1.json")
-f = open(f"{directory}/_api/api_v1.json", "w")
-f.write(json.dumps(page.get_json(), indent=4))
-f.close()
+def _generate_spec(api_version):
+    api_module = import_module(f"fasjson.web.apis.v{api_version}")
+    output_path = os.path.join(directory, f"api_v{api_version}.json")
+    with open(output_path, "w") as f:
+        f.write(json.dumps(api_module.api.__schema__))
 
-# if we go to v2, we will need to generate it here something like this
 
-# page = client.get("/specs/v2.json")
-# f = open(f"{directory}/_api/api_v2.json", "w")
-# f.write(json.dumps(page.get_json(), indent=4))
-# f.close()
+if __name__ == "__main__":
+    app = create_app({"TESTING": True})
+    with app.test_request_context():
+        _generate_spec(1)
