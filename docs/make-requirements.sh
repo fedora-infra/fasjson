@@ -16,3 +16,5 @@ done
 
 # Add toml to parse the version in conf.py
 echo toml >> "${output}"
+# Add Sphinx dependencies
+echo -e "sphinx\nsphinxcontrib-napoleon\nsphinxcontrib-openapi" >> "${output}"

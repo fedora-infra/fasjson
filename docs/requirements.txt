@@ -29,3 +29,6 @@ urllib3==1.25.9
 werkzeug==1.0.1
 zipp==3.1.0; python_version < "3.8"
 toml
+sphinx
+sphinxcontrib-napoleon
+sphinxcontrib-openapi
