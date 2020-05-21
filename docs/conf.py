@@ -4,7 +4,22 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-import fasjson  # NOQA
+import os
+import sys
+
+topdir = os.path.abspath("../")
+sys.path.insert(0, topdir)
+
+# Set the full version, including alpha/beta/rc tags
+try:
+    import fasjson  # NOQA
+
+    release = fasjson.__version__
+except ImportError:
+    import toml
+
+    pyproject = toml.load(os.path.join(topdir, "pyproject.toml"))
+    release = pyproject["tool"]["poetry"]["version"]
 
 
 # -- Project information -----------------------------------------------------
@@ -14,7 +29,7 @@ copyright = "2020, Red Hat, Inc"
 author = "Fedora Infrastructure"
 
 # The short X.Y version
-version = ".".join(fasjson.__version__.split(".")[:2])
+version = ".".join(release.split(".")[:2])
 
 # The full version, including alpha/beta/rc tags
 release = fasjson.__version__
@@ -74,6 +89,8 @@ html_static_path = ["_static"]
 
 
 # -- Extension configuration -------------------------------------------------
+
+autodoc_mock_imports = ["gssapi", "requests_gssapi"]
 
 # -- Options for intersphinx extension ---------------------------------------
 
