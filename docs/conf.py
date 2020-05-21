@@ -10,9 +10,9 @@ import sys
 topdir = os.path.abspath("../")
 sys.path.insert(0, topdir)
 
-# Set the full version, including alpha/beta/rc tags
 import fasjson  # NOQA
 
+# Set the full version, including alpha/beta/rc tags
 release = fasjson.__version__
 if release is None:
     import toml
@@ -29,9 +29,6 @@ author = "Fedora Infrastructure"
 
 # The short X.Y version
 version = ".".join(release.split(".")[:2])
-
-# The full version, including alpha/beta/rc tags
-release = fasjson.__version__
 
 
 # -- General configuration ---------------------------------------------------
@@ -107,6 +104,13 @@ extlinks = {
 
 
 def export_swagger(_):
+    # Mock C-based modules
+    from unittest.mock import Mock
+    sys.modules["ldap"] = Mock()
+    sys.modules["ldap.filter"] = Mock()
+    sys.modules["ldap.controls.pagedresults"] = Mock()
+    sys.modules["gssapi"] = Mock()
+    # Run the exporter
     sys.path.insert(0, os.path.join(topdir, "docs", "utils"))
     import export_swagger
     export_swagger.run()

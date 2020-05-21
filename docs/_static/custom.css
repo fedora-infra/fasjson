@@ -1,3 +1,5 @@
-dl.http {
+#api-v1 dl {
     margin-top: 2em;
+    padding-bottom: 1em;
+    border-bottom: 1px dotted gray;
 }

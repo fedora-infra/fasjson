@@ -16,6 +16,10 @@ directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "_ap
 
 def _generate_spec(api_version):
     api_module = import_module(f"fasjson.web.apis.v{api_version}")
+    try:
+        os.makedirs(directory)
+    except OSError:
+        pass
     output_path = os.path.join(directory, f"api_v{api_version}.json")
     with open(output_path, "w") as f:
         f.write(json.dumps(api_module.api.__schema__))
