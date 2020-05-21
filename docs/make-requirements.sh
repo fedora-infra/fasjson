@@ -10,7 +10,9 @@ set -x
 poetry export -f requirements.txt --without-hashes -o "${output}"
 
 # Remove some modules because ReadTheDocs does not install C-based modules
-sed -i -e '/^gssapi==/d ; /^python-ldap==/d' "${output}"
+for exclude in gssapi python-ldap requests-kerberos pykerberos winkerberos; do
+    sed -i -e "/^${exclude}==/d" "${output}"
+done
 
 # Add toml to parse the version in conf.py
 echo toml >> "${output}"
