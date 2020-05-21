@@ -107,8 +107,10 @@ extlinks = {
 
 
 def export_swagger(_):
-    from subprocess import call
-    call([sys.executable, os.path.join(topdir, "docs", "utils", "export_swagger.py")])
+    sys.path.insert(0, os.path.join(topdir, "docs", "utils"))
+    import export_swagger
+    export_swagger.run()
+    sys.path.pop(0)
 
 
 def run_apidoc(_):

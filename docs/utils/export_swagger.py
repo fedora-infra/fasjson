@@ -21,7 +21,11 @@ def _generate_spec(api_version):
         f.write(json.dumps(api_module.api.__schema__))
 
 
-if __name__ == "__main__":
+def run():
     app = create_app({"TESTING": True})
     with app.test_request_context():
         _generate_spec(1)
+
+
+if __name__ == "__main__":
+    run()
