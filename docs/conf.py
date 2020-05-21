@@ -101,3 +101,25 @@ extlinks = {
     "issue": ("https://github.com/fedora-infra/fasjson/issues/%s", "#"),
     "pr": ("https://github.com/fedora-infra/fasjson/pull/%s", "PR#"),
 }
+
+
+# -- Misc -----
+
+
+def export_swagger(_):
+    from subprocess import call
+    call([sys.executable, os.path.join(topdir, "docs", "utils", "export_swagger.py")])
+
+
+def run_apidoc(_):
+    from sphinx.ext import apidoc
+    apidoc.main([
+        "-f",
+        "-o", os.path.join(topdir, "docs", "_source"),
+        os.path.join(topdir, "fasjson")
+    ])
+
+
+def setup(app):
+    app.connect('builder-inited', run_apidoc)
+    app.connect('builder-inited', export_swagger)
