@@ -4,6 +4,12 @@ try:
 
     __version__ = importlib.metadata.version("fasjson")
 except ImportError:
-    import pkg_resources
+    try:
+        import pkg_resources
 
-    __version__ = pkg_resources.get_distribution("fasjson").version
+        try:
+            __version__ = pkg_resources.get_distribution("fasjson").version
+        except pkg_resources.DistributionNotFound:
+            __version__ = None
+    except ImportError:
+        __version__ = None

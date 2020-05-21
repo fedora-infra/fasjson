@@ -11,11 +11,10 @@ topdir = os.path.abspath("../")
 sys.path.insert(0, topdir)
 
 # Set the full version, including alpha/beta/rc tags
-try:
-    import fasjson  # NOQA
+import fasjson  # NOQA
 
-    release = fasjson.__version__
-except ImportError:
+release = fasjson.__version__
+if release is None:
     import toml
 
     pyproject = toml.load(os.path.join(topdir, "pyproject.toml"))
