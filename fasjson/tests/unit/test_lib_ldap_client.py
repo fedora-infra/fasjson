@@ -71,10 +71,10 @@ def test_get_groups(mock_connection):
     result = ldap.get_groups(page_number=1, page_size=0)
     expected = LDAPResult(
         items=[
-            {"name": "admins"},
-            {"name": "ipausers"},
-            {"name": "editors"},
-            {"name": "trust admins"},
+            {"groupname": "admins"},
+            {"groupname": "ipausers"},
+            {"groupname": "editors"},
+            {"groupname": "trust admins"},
         ],
         total=4,
         page_size=0,
@@ -89,7 +89,7 @@ def test_get_group(mock_connection):
 
     ldap = LDAP("https://dummy.com", basedn="dc=example,dc=test")
 
-    assert ldap.get_group("dummy-group") == {"name": "dummy-group"}
+    assert ldap.get_group("dummy-group") == {"groupname": "dummy-group"}
 
 
 def test_get_group_not_found(mock_connection):
@@ -204,7 +204,11 @@ def test_get_paged_groups(mock_connection):
         "(&(objectClass=fasGroup)(|(cn=group-4)(cn=group-5)(cn=group-6)))",
     ]
     expected = LDAPResult(
-        items=[{"name": "group-4"}, {"name": "group-5"}, {"name": "group-6"}],
+        items=[
+            {"groupname": "group-4"},
+            {"groupname": "group-5"},
+            {"groupname": "group-6"},
+        ],
         total=11,
         page_size=3,
         page_number=2,
@@ -240,7 +244,7 @@ def test_do_search_paged(mock_connection):
     result = ldap.get_groups(0, 1)
 
     expected = LDAPResult(
-        items=[{"name": "group-1"}, {"name": "group-2"}],
+        items=[{"groupname": "group-1"}, {"groupname": "group-2"}],
         total=2,
         page_size=0,
         page_number=1,
