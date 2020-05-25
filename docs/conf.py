@@ -106,6 +106,7 @@ extlinks = {
 def export_swagger(_):
     # Mock C-based modules
     from unittest.mock import Mock
+
     sys.modules["ldap"] = Mock()
     sys.modules["ldap.filter"] = Mock()
     sys.modules["ldap.controls.pagedresults"] = Mock()
@@ -113,19 +114,24 @@ def export_swagger(_):
     # Run the exporter
     sys.path.insert(0, os.path.join(topdir, "docs", "utils"))
     import export_swagger
+
     export_swagger.run()
     sys.path.pop(0)
 
 
 def run_apidoc(_):
     from sphinx.ext import apidoc
-    apidoc.main([
-        "-f",
-        "-o", os.path.join(topdir, "docs", "_source"),
-        os.path.join(topdir, "fasjson")
-    ])
+
+    apidoc.main(
+        [
+            "-f",
+            "-o",
+            os.path.join(topdir, "docs", "_source"),
+            os.path.join(topdir, "fasjson"),
+        ]
+    )
 
 
 def setup(app):
-    app.connect('builder-inited', run_apidoc)
-    app.connect('builder-inited', export_swagger)
+    app.connect("builder-inited", run_apidoc)
+    app.connect("builder-inited", export_swagger)
