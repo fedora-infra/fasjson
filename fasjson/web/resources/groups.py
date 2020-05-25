@@ -36,37 +36,37 @@ class GroupList(Resource):
         return result
 
 
-@api_v1.route("/<name:name>/")
-@api_v1.param("name", "The group name")
+@api_v1.route("/<name:groupname>/")
+@api_v1.param("groupname", "The group name")
 @api_v1.response(404, "Group not found")
 class Group(Resource):
     @api_v1.doc("get_group")
     @api_v1.marshal_with(GroupModel)
-    def get(self, name):
+    def get(self, groupname):
         """Fetch a group given their name"""
         client = ldap_client()
-        res = client.get_group(name)
+        res = client.get_group(groupname)
         if res is None:
-            api_v1.abort(404, "Group not found", name=name)
+            api_v1.abort(404, "Group not found", groupname=groupname)
         return res
 
 
-@api_v1.route("/<name:name>/members/")
-@api_v1.param("name", "The group name")
+@api_v1.route("/<name:groupname>/members/")
+@api_v1.param("groupname", "The group name")
 @api_v1.response(404, "Group not found")
 class GroupMembers(Resource):
     @api_v1.doc("get_group_members")
     @api_v1.expect(page_request_parser)
     @api_v1.paged_marshal_with(MemberModel, "v1.groups_group_members")
-    def get(self, name):
+    def get(self, groupname):
         """Fetch group members given the group name"""
         args = page_request_parser.parse_args()
         client = ldap_client()
 
-        group = client.get_group(name)
+        group = client.get_group(groupname)
         if group is None:
-            api_v1.abort(404, "Group not found", name=name)
+            api_v1.abort(404, "Group not found", groupname=groupname)
 
         return client.get_group_members(
-            name, page_size=args.page_size, page_number=args.page
+            groupname, page_size=args.page_size, page_number=args.page
         )

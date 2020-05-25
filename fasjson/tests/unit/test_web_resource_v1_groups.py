@@ -12,14 +12,14 @@ def mock_ldap_client(mock_ipa_client):
 
 def test_groups_success(client, gss_user, mock_ldap_client):
     groups = ["group1", "group2"]
-    result = LDAPResult(items=[{"name": name} for name in groups])
+    result = LDAPResult(items=[{"groupname": name} for name in groups])
     mock_ldap_client(get_groups=lambda page_size, page_number: result,)
 
     rv = client.get("/v1/groups/")
     assert 200 == rv.status_code
     assert rv.get_json() == {
         "result": [
-            {"name": name, "uri": f"http://localhost/v1/groups/{name}/"}
+            {"groupname": name, "uri": f"http://localhost/v1/groups/{name}/"}
             for name in groups
         ]
     }
@@ -27,7 +27,7 @@ def test_groups_success(client, gss_user, mock_ldap_client):
 
 def test_groups_paginate(client, gss_user, mock_ldap_client):
     result = LDAPResult(
-        items=[{"name": "group1"}], total=2, page_number=1, page_size=1
+        items=[{"groupname": "group1"}], total=2, page_number=1, page_size=1
     )
     mock_ldap_client(get_groups=lambda page_size, page_number: result,)
 
@@ -35,7 +35,10 @@ def test_groups_paginate(client, gss_user, mock_ldap_client):
     assert 200 == rv.status_code
     assert rv.get_json() == {
         "result": [
-            {"name": "group1", "uri": "http://localhost/v1/groups/group1/"}
+            {
+                "groupname": "group1",
+                "uri": "http://localhost/v1/groups/group1/",
+            }
         ],
         "page": {
             "total_results": 2,
@@ -49,7 +52,7 @@ def test_groups_paginate(client, gss_user, mock_ldap_client):
 
 def test_groups_paginate_last_page(client, gss_user, mock_ldap_client):
     result = LDAPResult(
-        items=[{"name": "group2"}], total=2, page_number=2, page_size=1
+        items=[{"groupname": "group2"}], total=2, page_number=2, page_size=1
     )
     mock_ldap_client(get_groups=lambda page_size, page_number: result,)
 
@@ -106,7 +109,7 @@ def test_group_members_error(client, gss_user, mock_ldap_client):
     rv = client.get("/v1/groups/editors/members/")
 
     expected = {
-        "name": "editors",
+        "groupname": "editors",
         "message": "Group not found",
     }
     assert 404 == rv.status_code
@@ -114,12 +117,12 @@ def test_group_members_error(client, gss_user, mock_ldap_client):
 
 
 def test_group_success(client, gss_user, mock_ldap_client):
-    mock_ldap_client(get_group=lambda n: {"name": "dummy-group"},)
+    mock_ldap_client(get_group=lambda n: {"groupname": "dummy-group"},)
 
     rv = client.get("/v1/groups/dummy-group/")
 
     expected = {
-        "name": "dummy-group",
+        "groupname": "dummy-group",
         "uri": "http://localhost/v1/groups/dummy-group/",
     }
     assert 200 == rv.status_code
