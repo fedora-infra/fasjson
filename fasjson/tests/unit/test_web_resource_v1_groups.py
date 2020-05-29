@@ -45,7 +45,7 @@ def test_groups_paginate(client, gss_user, mock_ldap_client):
             "page_size": 1,
             "page_number": 1,
             "total_pages": 2,
-            "next_page": "http://localhost/v1/groups/?page_size=1&page=2",
+            "next_page": "http://localhost/v1/groups/?page_size=1&page_number=2",
         },
     }
 
@@ -56,7 +56,7 @@ def test_groups_paginate_last_page(client, gss_user, mock_ldap_client):
     )
     mock_ldap_client(get_groups=lambda page_size, page_number: result,)
 
-    rv = client.get("/v1/groups/?page_size=1&page=2")
+    rv = client.get("/v1/groups/?page_size=1&page_number=2")
     assert 200 == rv.status_code
     assert rv.get_json()["page"] == {
         "total_results": 2,

@@ -31,7 +31,7 @@ class GroupList(Resource):
         args = page_request_parser.parse_args()
         client = ldap_client()
         result = client.get_groups(
-            page_size=args.page_size, page_number=args.page
+            page_size=args.page_size, page_number=args.page_number
         )
         return result
 
@@ -68,5 +68,5 @@ class GroupMembers(Resource):
             api_v1.abort(404, "Group not found", groupname=groupname)
 
         return client.get_group_members(
-            groupname, page_size=args.page_size, page_number=args.page
+            groupname, page_size=args.page_size, page_number=args.page_number
         )

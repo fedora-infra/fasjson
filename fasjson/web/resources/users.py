@@ -26,7 +26,7 @@ class UserList(Resource):
         args = page_request_parser.parse_args()
         client = ldap_client()
         result = client.get_users(
-            page_size=args.page_size, page_number=args.page
+            page_size=args.page_size, page_number=args.page_number
         )
         return result
 

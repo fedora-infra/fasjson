@@ -6,7 +6,7 @@ from flask_restx import reqparse, marshal
 page_request_parser = reqparse.RequestParser()
 page_request_parser.add_argument("page_size", type=int, help="Page size.")
 page_request_parser.add_argument(
-    "page", type=int, default=1, help="Page number."
+    "page_number", type=int, default=1, help="Page number."
 )
 
 
@@ -37,7 +37,10 @@ def add_page_data(output, result, model, endpoint):
         "total_pages": total_pages,
     }
     if result.page_number < total_pages:
-        qs = {"page_size": result.page_size, "page": result.page_number + 1}
+        qs = {
+            "page_size": result.page_size,
+            "page_number": result.page_number + 1,
+        }
         qs = "&".join(f"{k}={v}" for k, v in qs.items())
         next_page = f"{url_for(endpoint, _external=True)}?{qs}"
         output["page"]["next_page"] = next_page
