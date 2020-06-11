@@ -44,32 +44,3 @@ class User(Resource):
         if res is None:
             api_v1.abort(404, "User not found", name=username)
         return res
-
-
-@api_v1.route("/search/<search_term>/")
-@api_v1.param("search_term", "The term used to find a user or list of users")
-@api_v1.response(404, "User not found")
-class SearchUsers(Resource):
-    @api_v1.doc("search")
-    @api_v1.expect(page_request_parser)
-    @api_v1.marshal_with(UserModel)
-    def get(self, search_term):
-        """Fetch users given a search term"""
-        args = page_request_parser.parse_args()
-        client = ldap_client()
-        filters = (
-            f"(&(objectClass=fasUser)(!(nsAccountLock=TRUE))(|(username=*{search_term}*)"
-            f"(mail=*{search_term}*)(surname=*{search_term}*)(givenname=*{search_term}*)"
-            f"(fasIRCNick=*{search_term}*)))"
-        )
-        sub_dn = "cn=users,cn=accounts"
-        res = client.search(
-            model=LDAPUserModel,
-            filters=filters,
-            sub_dn=sub_dn,
-            page_size=args.page_size,
-            page_number=args.page
-        )
-        if res is None:
-            api_v1.abort(404, "Empty result", search_term=search_term)
-        return res.items
