@@ -187,6 +187,44 @@ def test_get_user_not_found(mock_connection):
     assert ldap.get_user("dummy") is None
 
 
+def test_search_users(mock_connection):
+    def _get_mock_result(idx):
+        return {
+            "uid": [f"dummy-{idx}".encode("ascii")],
+            "sn": [b""],
+            "givenName": [b""],
+            "mail": [f"dummy-{idx}@example.test".encode("ascii")],
+            "fasCreationTime": [b"20200309103203Z"],
+            "nsAccountLock": [b"false"],
+        }
+
+    mocked = [_get_mock_result(i) for i in range(1, 4)]
+    mock_connection.result3 = _single_page_result_factory(mocked)
+
+    ldap = LDAP("https://dummy.com", basedn="dc=example,dc=test")
+
+    result = ldap.search_users(search_term="dummy", page_number=1, page_size=0)
+    creation_dt = datetime.datetime(2020, 3, 9, 10, 32, 3)
+
+    def _get_expected(idx):
+        return {
+            "creation": creation_dt,
+            "givenname": "",
+            "locked": False,
+            "username": f"dummy-{idx}",
+            "emails": [f"dummy-{idx}@example.test"],
+            "surname": "",
+        }
+
+    expected = LDAPResult(
+        items=[_get_expected(i) for i in range(1, 4)],
+        total=3,
+        page_size=0,
+        page_number=1,
+    )
+    assert result == expected
+
+
 def test_get_paged_groups(mock_connection):
     mocked = [
         {"cn": [f"group-{idx}".encode("ascii")]} for idx in range(1, 12)
