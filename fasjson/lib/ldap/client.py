@@ -103,20 +103,38 @@ class LDAP:
             return None
         return result.items[0]
 
-    def search_users(self, search_term, page_number, page_size):
-        escaped_search_term = ldap.filter.escape_filter_chars(search_term, 1)
-        filters = (
-            f"(&(objectClass=fasUser)(!(nsAccountLock=TRUE))(|(uid=*{escaped_search_term}*)"
-            f"(mail=*{escaped_search_term}*)(sn=*{escaped_search_term}*)"
-            f"(givenName=*{escaped_search_term}*)(fasIRCNick=*{escaped_search_term}*)))"
-        )
-        dn = "cn=users,cn=accounts"
+    def search_users(
+        self,
+        page_number,
+        page_size,
+        username,
+        email,
+        ircnick,
+        givenname,
+        surname,
+    ):
+        filter_fields = {
+            "uid": username,
+            "mail": email,
+            "fasIRCNick": ircnick,
+            "givenName": givenname,
+            "sn": surname,
+        }
+
+        filter_string = ["(&(objectClass=fasUser)(!(nsAccountLock=TRUE))(&"]
+        for attribute, filter in filter_fields.items():
+            if filter:
+                filter_string.append(
+                    f"({attribute}=*{ldap.filter.escape_filter_chars(filter, 0)}*)"
+                )
+        filter_string.append("))")
+        filter_string = "".join(filter_string)
+
         return self.search(
             model=UserModel,
-            filters=filters,
-            sub_dn=dn,
+            filters=filter_string,
             page_size=page_size,
-            page_number=page_number
+            page_number=page_number,
         )
 
     def search(
