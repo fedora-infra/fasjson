@@ -203,7 +203,15 @@ def test_search_users(mock_connection):
 
     ldap = LDAP("https://dummy.com", basedn="dc=example,dc=test")
 
-    result = ldap.search_users(search_term="dummy", page_number=1, page_size=0)
+    result = ldap.search_users(
+        username="dummy",
+        email="dummy",
+        ircnick="dummy-1@example.test",
+        givenname="",
+        surname="",
+        page_number=1,
+        page_size=0,
+    )
     creation_dt = datetime.datetime(2020, 3, 9, 10, 32, 3)
 
     def _get_expected(idx):
