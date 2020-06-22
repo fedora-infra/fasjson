@@ -14,9 +14,13 @@ def mock_ldap_client(mock_ipa_client):
 @pytest.fixture()
 def ldap_with_search_result(mock_ldap_client, gss_user):
     def mock(num_of_results):
-        data = [_get_user_ldap_data(f"dummy-{idx + 1}") for idx in range(0, num_of_results)]
+        data = [
+            _get_user_ldap_data(f"dummy-{idx + 1}")
+            for idx in range(0, num_of_results)
+        ]
         result = LDAPResult(items=data)
         return mock_ldap_client(search_users=lambda *a, **kw: result)
+
     return mock
 
 
