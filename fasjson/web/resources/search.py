@@ -6,10 +6,10 @@ from .base import Namespace
 from .users import UserModel
 
 search_request_parser = page_request_parser.copy()
+search_request_parser.add_argument("email", help="The email to search for")
 search_request_parser.add_argument(
     "username", help="The username to search for"
 )
-search_request_parser.add_argument("email", help="The email to search for")
 search_request_parser.add_argument(
     "ircnick", help="The ircnick to search for"
 )
@@ -35,14 +35,14 @@ class SearchUsers(Resource):
         search_args = search_request_parser.parse_args()
         page_size = search_args.pop("page_size", 40)
         page_number = search_args.pop("page_number")
-        if page_size and page_size > 40:
+        if isinstance(page_size, int) and (page_size > 40 or page_size < 1):
             api_v1.abort(
                 400,
-                "Page size cannot be greater than 40 when searching.",
+                "Page size must be between 1 and 40 when searching.",
                 page_size=page_size,
             )
         if not any(search_args.values()):
-            api_v1.abort(400, "At least one search term must be provided")
+            api_v1.abort(400, "At least one search term must be provided.")
         for search_term, search_value in search_args.items():
             if search_value and len(search_value) < 3:
                 api_v1.abort(
