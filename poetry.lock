@@ -357,7 +357,7 @@ description = "Check python packages from requirement.txt and report issues"
 name = "liccheck"
 optional = false
 python-versions = ">=2.7"
-version = "0.4.3"
+version = "0.4.7"
 
 [package.dependencies]
 semantic_version = "*"
@@ -962,7 +962,7 @@ jsonschema = [
     {file = "jsonschema-3.2.0.tar.gz", hash = "sha256:c8a85b28d377cc7737e46e2d9f2b4f44ee3c0e1deac6bf46ddefc7187d30797a"},
 ]
 liccheck = [
-    {file = "liccheck-0.4.3.tar.gz", hash = "sha256:f6b1361a874a26fdc639b3aaf691b6e4e61a72153bfe6becdcd860f354bd2045"},
+    {file = "liccheck-0.4.7.tar.gz", hash = "sha256:2ac6e7e9cce19556c9cff12f1f2c7e96b5ab7f1392e1403bcb1e9ccf70b36aef"},
 ]
 markupsafe = [
     {file = "MarkupSafe-1.1.1-cp27-cp27m-macosx_10_6_intel.whl", hash = "sha256:09027a7803a62ca78792ad89403b1b7a73a01c8cb65909cd876f7fcebd79b161"},
@@ -1139,6 +1139,7 @@ regex = [
     {file = "regex-2020.5.7.tar.gz", hash = "sha256:73a10404867b835f1b8a64253e4621908f0d71150eb4e97ab2e7e441b53e9451"},
 ]
 requests = [
+    {file = "requests-2.23.0-py2.7.egg", hash = "sha256:5d2d0ffbb515f39417009a46c14256291061ac01ba8f875b90cad137de83beb4"},
     {file = "requests-2.23.0-py2.py3-none-any.whl", hash = "sha256:43999036bfa82904b6af1d99e4882b560e5e2c68e5c4b0aa03b655f3d7d73fee"},
     {file = "requests-2.23.0.tar.gz", hash = "sha256:b3f43d496c6daba4493e7c431722aeb7dbc6288f52a6e04e7b6023b0247817e6"},
 ]
