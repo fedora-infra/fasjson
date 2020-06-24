@@ -124,9 +124,11 @@ class LDAP:
         filter_string = ["(&(objectClass=fasUser)(!(nsAccountLock=TRUE))(&"]
         for attribute, filter in filter_fields.items():
             if filter:
-                filter_string.append(
-                    f"({attribute}=*{ldap.filter.escape_filter_chars(filter, 0)}*)"
-                )
+                filter_value = ldap.filter.escape_filter_chars(filter, 0)
+                if attribute == "mail":
+                    filter_string.append(f"({attribute}={filter_value})")
+                else:
+                    filter_string.append(f"({attribute}=*{filter_value}*)")
         filter_string.append("))")
         filter_string = "".join(filter_string)
 

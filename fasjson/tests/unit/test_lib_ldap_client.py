@@ -308,7 +308,7 @@ def test_get_paged_search_no_results(mock_connection):
     assert called_filters == [
         (
             "(&(objectClass=fasUser)(!(nsAccountLock=TRUE))(&(uid=*something*)"
-            "(mail=*something@example.test*)(fasIRCNick=*something*)"
+            "(mail=something@example.test)(fasIRCNick=*something*)"
             "(givenName=*some*)(sn=*thing*)))"
         )
     ]
