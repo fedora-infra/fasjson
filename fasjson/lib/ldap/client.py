@@ -197,6 +197,13 @@ class LDAP:
                 item[model.primary_key][0].decode("utf-8")
                 for item in pkeys[first:last]
             ]
+            if not pkeys_page:
+                return LDAPResult(
+                    items=[],
+                    page_size=page_size,
+                    page_number=page_number,
+                    total=total,
+                )
             # Now adjust the filters to only get items on this page
             entries_filters = [
                 f"({model.primary_key}={item})" for item in pkeys_page

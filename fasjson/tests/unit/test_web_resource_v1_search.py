@@ -13,12 +13,16 @@ def mock_ldap_client(mock_ipa_client):
 
 @pytest.fixture()
 def ldap_with_search_result(mock_ldap_client, gss_user):
-    def mock(num_of_results):
+    def mock(num, page_size, page_number, total_results):
         data = [
-            _get_user_ldap_data(f"dummy-{idx + 1}")
-            for idx in range(0, num_of_results)
+            _get_user_ldap_data(f"dummy-{idx + 1}") for idx in range(0, num)
         ]
-        result = LDAPResult(items=data)
+        result = LDAPResult(
+            items=data,
+            total=total_results,
+            page_size=page_size,
+            page_number=page_number,
+        )
         return mock_ldap_client(search_users=lambda *a, **kw: result)
 
     return mock
@@ -46,20 +50,38 @@ def _get_user_api_output(name):
 
 
 def test_search_user_success(client, ldap_with_search_result):
-    ldap_with_search_result(9)
+    ldap_with_search_result(
+        num=9, page_size=40, page_number=1, total_results=9
+    )
     rv = client.get("/v1/search/users/?username=dummy")
 
     expected = [_get_user_api_output(f"dummy-{idx}") for idx in range(1, 10)]
+    page = {
+        "total_results": 9,
+        "page_size": 40,
+        "page_number": 1,
+        "total_pages": 1,
+    }
     assert 200 == rv.status_code
-    assert rv.get_json() == {"result": expected}
+    assert rv.get_json() == {"result": expected, "page": page}
 
 
 def test_search_user_not_found(client, ldap_with_search_result):
-    ldap_with_search_result(0)
+    ldap_with_search_result(
+        num=0, page_size=40, page_number=1, total_results=0
+    )
     rv = client.get("/v1/search/users/?username=somethingobscure")
-
+    expected = {
+        "result": [],
+        "page": {
+            "total_results": 0,
+            "page_size": 40,
+            "page_number": 1,
+            "total_pages": 0,
+        },
+    }
     assert 200 == rv.status_code
-    assert rv.get_json() == {"result": []}
+    assert rv.get_json() == expected
 
 
 def test_search_user_no_args(client, gss_user, mock_ldap_client):
@@ -113,4 +135,44 @@ def test_search_user_page_size_zero(client, gss_user, mock_ldap_client):
         "message": "Page size must be between 1 and 40 when searching.",
     }
     assert 400 == rv.status_code
+    assert expected == rv.get_json()
+
+
+def test_search_user_page_size_none(client, ldap_with_search_result):
+    ldap_with_search_result(
+        num=0, page_size=40, page_number=1, total_results=0
+    )
+    rv = client.get("/v1/search/users/?username=somethinginsignificant")
+
+    expected = {
+        "result": [],
+        "page": {
+            "total_results": 0,
+            "page_size": 40,
+            "page_number": 1,
+            "total_pages": 0,
+        },
+    }
+    assert 200 == rv.status_code
+    assert expected == rv.get_json()
+
+
+def test_search_user_outside_page_range(client, ldap_with_search_result):
+    ldap_with_search_result(
+        num=0, page_size=2, page_number=6, total_results=9
+    )
+    rv = client.get(
+        "/v1/search/users/?username=dummy&page_number=6&page_size=2"
+    )
+
+    expected = {
+        "result": [],
+        "page": {
+            "total_results": 9,
+            "page_size": 2,
+            "page_number": 6,
+            "total_pages": 5,
+        },
+    }
+    assert 200 == rv.status_code
     assert expected == rv.get_json()
