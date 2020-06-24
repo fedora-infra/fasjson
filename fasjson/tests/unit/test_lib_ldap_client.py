@@ -233,6 +233,31 @@ def test_search_users(mock_connection):
     assert result == expected
 
 
+def test_get_paged_search_filters(mock_connection):
+    mocked = []
+
+    ldap = LDAP("https://dummy.com", basedn="dc=example,dc=test")
+    with mock.patch.object(
+        ldap, "_do_search", side_effect=[mocked]
+    ) as do_search:
+        result = ldap.search_users(
+            page_number=2,
+            page_size=3,
+            username="something",
+            email=None,
+            ircnick=None,
+            givenname=None,
+            surname=None,
+        )
+
+    called_filters = [call[1]["filters"] for call in do_search.call_args_list]
+    assert called_filters == [
+        "(&(objectClass=fasUser)(!(nsAccountLock=TRUE))(&(uid=*something*)))"
+    ]
+    expected = LDAPResult(items=[], total=0, page_size=3, page_number=2,)
+    assert result == expected
+
+
 def test_get_paged_groups(mock_connection):
     mocked = [
         {"cn": [f"group-{idx}".encode("ascii")]} for idx in range(1, 12)
@@ -259,6 +284,35 @@ def test_get_paged_groups(mock_connection):
         page_size=3,
         page_number=2,
     )
+    assert result == expected
+
+
+def test_get_paged_search_no_results(mock_connection):
+    mocked = []
+
+    ldap = LDAP("https://dummy.com", basedn="dc=example,dc=test")
+    with mock.patch.object(
+        ldap, "_do_search", side_effect=[mocked]
+    ) as do_search:
+        result = ldap.search_users(
+            page_number=2,
+            page_size=3,
+            username="something",
+            email="something@example.test",
+            ircnick="something",
+            givenname="some",
+            surname="thing",
+        )
+
+    called_filters = [call[1]["filters"] for call in do_search.call_args_list]
+    assert called_filters == [
+        (
+            "(&(objectClass=fasUser)(!(nsAccountLock=TRUE))(&(uid=*something*)"
+            "(mail=*something@example.test*)(fasIRCNick=*something*)"
+            "(givenName=*some*)(sn=*thing*)))"
+        )
+    ]
+    expected = LDAPResult(items=[], total=0, page_size=3, page_number=2,)
     assert result == expected
 
 
