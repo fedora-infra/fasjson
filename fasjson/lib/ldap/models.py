@@ -43,6 +43,7 @@ class UserModel(Model):
         "username": Converter("uid"),
         "surname": Converter("sn"),
         "givenname": Converter("givenName"),
+        "human_name": Converter("displayName"),
         "emails": Converter("mail", multivalued=True),
         "ircnicks": Converter("fasIRCNick", multivalued=True),
         "locale": Converter("fasLocale"),

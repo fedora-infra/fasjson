@@ -1,9 +1,9 @@
-from datetime import datetime, timezone
 from functools import partial
 
 import pytest
 
 from fasjson.lib.ldap.client import LDAPResult
+from fasjson.tests.unit.utils import get_user_ldap_data, get_user_api_output
 
 
 @pytest.fixture
@@ -15,7 +15,7 @@ def mock_ldap_client(mock_ipa_client):
 def ldap_with_search_result(mock_ldap_client, gss_user):
     def mock(num, page_size, page_number, total_results):
         data = [
-            _get_user_ldap_data(f"dummy-{idx + 1}") for idx in range(0, num)
+            get_user_ldap_data(f"dummy-{idx + 1}") for idx in range(0, num)
         ]
         result = LDAPResult(
             items=data,
@@ -28,34 +28,13 @@ def ldap_with_search_result(mock_ldap_client, gss_user):
     return mock
 
 
-def _get_user_ldap_data(name):
-    return {
-        "certificates": None,
-        "creation": datetime(2020, 3, 9, 10, 32, 3, tzinfo=timezone.utc),
-        "givenname": "",
-        "gpgkeyids": None,
-        "locked": False,
-        "username": name,
-        "emails": [f"{name}@example.test"],
-        "surname": name,
-    }
-
-
-def _get_user_api_output(name):
-    data = _get_user_ldap_data(name)
-    data["creation"] = data["creation"].isoformat()
-    data["ircnicks"] = data["locale"] = data["timezone"] = None
-    data["uri"] = f"http://localhost/v1/users/{name}/"
-    return data
-
-
 def test_search_user_success(client, ldap_with_search_result):
     ldap_with_search_result(
         num=9, page_size=40, page_number=1, total_results=9
     )
     rv = client.get("/v1/search/users/?username=dummy")
 
-    expected = [_get_user_api_output(f"dummy-{idx}") for idx in range(1, 10)]
+    expected = [get_user_api_output(f"dummy-{idx}") for idx in range(1, 10)]
     page = {
         "total_results": 9,
         "page_size": 40,
@@ -63,6 +42,8 @@ def test_search_user_success(client, ldap_with_search_result):
         "total_pages": 1,
     }
     assert 200 == rv.status_code
+    print(expected[0])
+    print(rv.get_json()["result"][0])
     assert rv.get_json() == {"result": expected, "page": page}
 
 
