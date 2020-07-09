@@ -45,3 +45,32 @@ def test_users_success(client, gss_user, mock_ldap_client):
     expected = [get_user_api_output(f"dummy-{idx}") for idx in range(1, 10)]
     assert 200 == rv.status_code
     assert rv.get_json() == {"result": expected}
+
+
+def test_user_groups_success(client, gss_user, mock_ldap_client):
+    groups = ["group1", "group2"]
+    result = LDAPResult(items=[{"groupname": name} for name in groups])
+    mock_ldap_client(
+        get_user_groups=lambda username, page_size, page_number: result,
+        get_user=lambda n: {"cn": n},
+    )
+
+    rv = client.get("/v1/users/dummy/groups/")
+    assert 200 == rv.status_code
+    assert rv.get_json() == {
+        "result": [
+            {"groupname": name, "uri": f"http://localhost/v1/groups/{name}/"}
+            for name in groups
+        ]
+    }
+
+
+def test_user_groups_error(client, gss_user, mock_ldap_client):
+    mock_ldap_client(get_user=lambda n: None)
+
+    rv = client.get("/v1/users/dummy/groups/")
+
+    expected = {"name": "dummy", "message": "User does not exist"}
+
+    assert 404 == rv.status_code
+    assert rv.get_json() == expected

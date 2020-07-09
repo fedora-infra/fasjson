@@ -1,4 +1,4 @@
-from flask_restx import Resource
+from flask_restx import Resource, fields
 
 from fasjson.lib.ldap.models import UserModel as LDAPUserModel
 from fasjson.web.utils.ipa import ldap_client, get_fields_from_ldap_model
@@ -13,6 +13,14 @@ UserModel = api_v1.model(
     get_fields_from_ldap_model(
         LDAPUserModel, "v1.users_user", {"locked": {"default": False}}
     ),
+)
+
+UserGroupsModel = api_v1.model(
+    "UserGroup",
+    {
+        "groupname": fields.String(),
+        "uri": fields.Url("v1.groups_group", absolute=True),
+    },
 )
 
 
@@ -44,3 +52,24 @@ class User(Resource):
         if res is None:
             api_v1.abort(404, "User not found", name=username)
         return res
+
+
+@api_v1.route("/<name:username>/groups/")
+@api_v1.param("username", "The user name")
+@api_v1.response(404, "User not found")
+class UserGroups(Resource):
+    @api_v1.doc("list_users_groups")
+    @api_v1.expect(page_request_parser)
+    @api_v1.paged_marshal_with(UserGroupsModel, "v1.users_user_groups")
+    def get(self, username):
+        """Fetch a user's groups given their username"""
+        args = page_request_parser.parse_args()
+        client = ldap_client()
+        user = client.get_user(username)
+        if user is None:
+            api_v1.abort(404, "User does not exist", name=username)
+        return client.get_user_groups(
+            username=username,
+            page_size=args.page_size,
+            page_number=args.page_number,
+        )

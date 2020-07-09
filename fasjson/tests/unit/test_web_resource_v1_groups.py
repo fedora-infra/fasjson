@@ -116,6 +116,36 @@ def test_group_members_error(client, gss_user, mock_ldap_client):
     assert expected == rv.get_json()
 
 
+def test_group_sponsors_success(client, gss_user, mock_ldap_client):
+    result = [{"username": "admin"}]
+    mock_ldap_client(
+        get_group_sponsors=lambda groupname: result,
+        get_group=lambda n: {"cn": n},
+    )
+    rv = client.get("/v1/groups/admins/sponsors/")
+
+    expected = {
+        "result": [
+            {"username": "admin", "uri": "http://localhost/v1/users/admin/"}
+        ]
+    }
+    assert 200 == rv.status_code
+    assert expected == rv.get_json()
+
+
+def test_group_sponsors_error(client, gss_user, mock_ldap_client):
+    mock_ldap_client(get_group=lambda n: None,)
+
+    rv = client.get("/v1/groups/editors/sponsors/")
+
+    expected = {
+        "groupname": "editors",
+        "message": "Group not found",
+    }
+    assert 404 == rv.status_code
+    assert expected == rv.get_json()
+
+
 def test_group_success(client, gss_user, mock_ldap_client):
     mock_ldap_client(get_group=lambda n: {"groupname": "dummy-group"},)
 

@@ -55,6 +55,15 @@ class UserModel(Model):
     }
 
 
+class SponsorModel(Model):
+    primary_key = "memberManager"
+    filters = "(&(objectClass=fasUser)(!(nsAccountLock=TRUE)))"
+    sub_dn = "cn=users,cn=accounts"
+    fields = {
+        "sponsors": Converter("memberManager", multivalued=True),
+    }
+
+
 class GroupModel(Model):
     primary_key = "cn"
     filters = "(objectClass=fasGroup)"
