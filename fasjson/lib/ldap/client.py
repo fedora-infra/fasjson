@@ -1,7 +1,7 @@
 import ldap
 from ldap.controls.pagedresults import SimplePagedResultsControl
 
-from .models import UserModel, GroupModel
+from .models import UserModel, GroupModel, SponsorModel
 
 
 class LDAPResult:
@@ -86,6 +86,29 @@ class LDAP:
             page_number=page_number,
         )
 
+    def get_group_sponsors(self, groupname):
+        group_dn = GroupModel.get_sub_dn_for(groupname)
+        filters = f"(&(objectClass=fasGroup)(cn={groupname}))"
+        sponsors_result = self.search(
+            model=SponsorModel,
+            sub_dn=group_dn,
+            attrs=["memberManager"],
+            filters=filters,
+            scope=ldap.SCOPE_SUBTREE,
+        )
+        if not sponsors_result.items:
+            return None
+        return self._sponsors_to_users(sponsors_result)
+
+    def _sponsors_to_users(self, sponsors_dn):
+        sponsors = []
+
+        for sponsor in sponsors_dn.items[0]["sponsors"]:
+            res = self.search(model=UserModel, base_dn=sponsor)
+            sponsors.append(res.items[0])
+
+        return sponsors
+
     def get_users(self, page_size, page_number):
         return self.search(
             model=UserModel,
@@ -102,6 +125,18 @@ class LDAP:
         if not result.items:
             return None
         return result.items[0]
+
+    def get_user_groups(self, username, page_size, page_number):
+        dn = UserModel.get_sub_dn_for(username)
+        filters = (
+            "(&" f"(member={dn},{self.basedn})" f"{GroupModel.filters}" ")"
+        )
+        return self.search(
+            model=GroupModel,
+            filters=filters,
+            page_number=page_number,
+            page_size=page_size,
+        )
 
     def search_users(
         self,
@@ -143,6 +178,7 @@ class LDAP:
         self,
         model,
         sub_dn=None,
+        base_dn=None,
         filters=None,
         attrs=None,
         scope=ldap.SCOPE_SUBTREE,
@@ -179,7 +215,8 @@ class LDAP:
         Returns:
             LDAPResult: The query result, with pagination information if appropriate.
         """
-        base_dn = f"{sub_dn or model.sub_dn},{self.basedn}"
+        if not base_dn:
+            base_dn = f"{sub_dn or model.sub_dn},{self.basedn}"
         filters = filters or model.filters
         total = None
         if page_size:

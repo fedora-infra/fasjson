@@ -111,6 +111,54 @@ def test_get_group_members(mock_connection):
     assert result == expected
 
 
+def test_get_group_sponsors(mock_connection):
+    mocked = [
+        {
+            "memberManager": [
+                b"uid=admin,cn=users,cn=accounts,dc=example,dc=test"
+            ]
+        }
+    ]
+    mocked_conversion = [{"username": "admin"}]
+    mock_connection.result3 = _single_page_result_factory(mocked)
+
+    ldap = LDAP("https://dummy.com", basedn="dc=example,dc=test")
+    with mock.patch.object(
+        ldap, "_sponsors_to_users", side_effect=[mocked_conversion]
+    ):
+        result = ldap.get_group_sponsors(groupname="admins")
+
+    expected = [{"username": "admin"}]
+    assert result == expected
+
+
+def test_get_group_sponsors_none(mock_connection):
+    mock_connection.result3 = _single_page_result_factory([])
+    ldap = LDAP("https://dummy.com", basedn="dc=example,dc=test")
+    assert ldap.get_group_sponsors("dummy") is None
+
+
+def test_sponsors_to_users(mock_connection):
+    mocked = [{"uid": [b"admin"]}]
+    mock_connection.result3 = _single_page_result_factory(mocked)
+
+    ldap = LDAP("https://dummy.com", basedn="dc=example,dc=test")
+
+    sponsors_dn = LDAPResult(
+        items=[
+            {
+                "sponsors": [
+                    "uid=admin,cn=users,cn=accounts,dc=example,dc=test"
+                ]
+            }
+        ]
+    )
+
+    result = ldap._sponsors_to_users(sponsors_dn)
+    expected = [{"username": "admin"}]
+    assert result == expected
+
+
 def test_get_users(mock_connection):
     def _get_mock_result(idx):
         return {
@@ -185,6 +233,34 @@ def test_get_user_not_found(mock_connection):
     mock_connection.result3 = _single_page_result_factory([])
     ldap = LDAP("https://dummy.com", basedn="dc=example,dc=test")
     assert ldap.get_user("dummy") is None
+
+
+def test_get_user_groups(mock_connection):
+    mocked = [
+        {"cn": [b"admins"]},
+        {"cn": [b"ipausers"]},
+        {"cn": [b"editors"]},
+        {"cn": [b"trust admins"]},
+    ]
+    mock_connection.result3 = _single_page_result_factory(mocked)
+
+    ldap = LDAP("https://dummy.com", basedn="dc=example,dc=test")
+
+    result = ldap.get_user_groups(
+        username="dummy", page_number=1, page_size=0
+    )
+    expected = LDAPResult(
+        items=[
+            {"groupname": "admins"},
+            {"groupname": "ipausers"},
+            {"groupname": "editors"},
+            {"groupname": "trust admins"},
+        ],
+        total=4,
+        page_size=0,
+        page_number=1,
+    )
+    assert result == expected
 
 
 def test_search_users(mock_connection):
