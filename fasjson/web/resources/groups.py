@@ -63,7 +63,7 @@ class Group(Resource):
 @api_v1.param("groupname", "The group name")
 @api_v1.response(404, "Group not found")
 class GroupMembers(Resource):
-    @api_v1.doc("get_group_members")
+    @api_v1.doc("list_group_members")
     @api_v1.expect(page_request_parser)
     @api_v1.paged_marshal_with(MemberModel, "v1.groups_group_members")
     def get(self, groupname):
@@ -84,10 +84,10 @@ class GroupMembers(Resource):
 @api_v1.param("groupname", "The group name")
 @api_v1.response(404, "Group not found")
 class GroupSponsors(Resource):
-    @api_v1.doc("get_group_sponsors")
+    @api_v1.doc("list_group_sponsors")
     @api_v1.marshal_with(SponsorModel)
     def get(self, groupname):
-        """Fetch group members given the group name"""
+        """Fetch group sponsors given the group name"""
         client = ldap_client()
 
         group = client.get_group(groupname)

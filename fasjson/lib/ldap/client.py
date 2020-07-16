@@ -1,3 +1,4 @@
+import re
 import ldap
 from ldap.controls.pagedresults import SimplePagedResultsControl
 
@@ -97,17 +98,25 @@ class LDAP:
             scope=ldap.SCOPE_SUBTREE,
         )
         if not sponsors_result.items:
-            return None
+            return []
         return self._sponsors_to_users(sponsors_result)
 
     def _sponsors_to_users(self, sponsors_dn):
         sponsors = []
 
         for sponsor in sponsors_dn.items[0]["sponsors"]:
-            res = self.search(model=UserModel, base_dn=sponsor)
-            sponsors.append(res.items[0])
+            username = re.findall("(?<=uid=)([^,]+)", sponsor)[0]
+            uid = f"uid={username}"
+            sponsors.append(uid)
 
-        return sponsors
+        filters = ["(&(objectClass=fasUser)(|"]
+        for uid in sponsors:
+            filters.append(f"({uid})")
+        filters.append("))")
+        filters = "".join(filters)
+
+        result = self.search(model=UserModel, filters=filters)
+        return result.items
 
     def get_users(self, page_size, page_number):
         return self.search(
@@ -128,9 +137,7 @@ class LDAP:
 
     def get_user_groups(self, username, page_size, page_number):
         dn = UserModel.get_sub_dn_for(username)
-        filters = (
-            "(&" f"(member={dn},{self.basedn})" f"{GroupModel.filters}" ")"
-        )
+        filters = f"(&(member={dn},{self.basedn}){GroupModel.filters})"
         return self.search(
             model=GroupModel,
             filters=filters,
@@ -215,8 +222,7 @@ class LDAP:
         Returns:
             LDAPResult: The query result, with pagination information if appropriate.
         """
-        if not base_dn:
-            base_dn = f"{sub_dn or model.sub_dn},{self.basedn}"
+        base_dn = f"{sub_dn or model.sub_dn},{self.basedn}"
         filters = filters or model.filters
         total = None
         if page_size:
