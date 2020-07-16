@@ -58,7 +58,7 @@ class User(Resource):
 @api_v1.param("username", "The user name")
 @api_v1.response(404, "User not found")
 class UserGroups(Resource):
-    @api_v1.doc("list_users_groups")
+    @api_v1.doc("list_user_groups")
     @api_v1.expect(page_request_parser)
     @api_v1.paged_marshal_with(UserGroupsModel, "v1.users_user_groups")
     def get(self, username):
