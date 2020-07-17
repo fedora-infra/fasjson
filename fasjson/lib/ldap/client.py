@@ -163,7 +163,7 @@ class LDAP:
             "sn": surname,
         }
 
-        filter_string = ["(&(objectClass=fasUser)(!(nsAccountLock=TRUE))(&"]
+        filter_string = ["(&", UserModel.filters, "(&"]
         for attribute, filter in filter_fields.items():
             if filter:
                 filter_value = ldap.filter.escape_filter_chars(filter, 0)
