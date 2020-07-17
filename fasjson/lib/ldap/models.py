@@ -37,7 +37,7 @@ class Model:
 
 class UserModel(Model):
     primary_key = "uid"
-    filters = "(&(objectClass=fasUser)(!(nsAccountLock=TRUE)))"
+    filters = "(&(objectClass=fasUser)(!(nsAccountLock=TRUE))(fasStatusNote=active))"
     sub_dn = "cn=users,cn=accounts"
     fields = {
         "username": Converter("uid"),

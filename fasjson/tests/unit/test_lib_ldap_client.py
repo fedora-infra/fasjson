@@ -252,7 +252,8 @@ def test_get_paged_search_filters(mock_connection):
 
     called_filters = [call[1]["filters"] for call in do_search.call_args_list]
     assert called_filters == [
-        "(&(objectClass=fasUser)(!(nsAccountLock=TRUE))(&(uid=*something*)))"
+        "(&(&(objectClass=fasUser)(!(nsAccountLock=TRUE))(fasStatusNote=active))"
+        "(&(uid=*something*)))"
     ]
     expected = LDAPResult(items=[], total=0, page_size=3, page_number=2,)
     assert result == expected
@@ -307,7 +308,8 @@ def test_get_paged_search_no_results(mock_connection):
     called_filters = [call[1]["filters"] for call in do_search.call_args_list]
     assert called_filters == [
         (
-            "(&(objectClass=fasUser)(!(nsAccountLock=TRUE))(&(uid=*something*)"
+            "(&(&(objectClass=fasUser)(!(nsAccountLock=TRUE))(fasStatusNote=active))"
+            "(&(uid=*something*)"
             "(mail=something@example.test)(fasIRCNick=*something*)"
             "(givenName=*some*)(sn=*thing*)))"
         )
