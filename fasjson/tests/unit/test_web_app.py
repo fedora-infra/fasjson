@@ -1,5 +1,5 @@
-import os
 import json
+import os
 import types
 
 import pytest
@@ -11,15 +11,13 @@ from fasjson.web.app import create_app
 def test_app_gss_forbidden_error(client):
     rv = client.get("/")
     body = json.loads(rv.data)
-    expected_codes = {
-        "maj": 851_968,
-        "min": 2_529_639_107,
-        "routine": 851_968,
-        "supplementary": None,
-    }
-
     assert rv.status_code == 403
-    assert body == {"message": "Invalid credentials", "codes": expected_codes}
+    expected_message = (
+        "Invalid credentials (Major (851968): Unspecified GSS failure.  "
+        "Minor code may provide more information, Minor (2529639107): "
+        "No credentials cache found)"
+    )
+    assert body == {"message": expected_message}
 
 
 def test_app_default_unauthorized_error(client, mocker):
