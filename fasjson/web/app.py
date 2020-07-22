@@ -2,17 +2,17 @@ import os
 from logging.config import dictConfig
 
 from flask import Flask
-from werkzeug.routing import BaseConverter
-from werkzeug.exceptions import HTTPException
 from flask_healthz import healthz
+from flask_mod_auth_gssapi import FlaskModAuthGSSAPI
+from flask_restx import abort
+from werkzeug.exceptions import HTTPException
+from werkzeug.routing import BaseConverter
 
+from .apis.errors import api as api_errors
+from .apis.errors import blueprint as blueprint_errors
 from .apis.v1 import blueprint as blueprint_v1
-from .apis.errors import blueprint as blueprint_errors, api as api_errors
-
-from .extensions.flask_gss import FlaskGSSAPI
-from .extensions.flask_ipacfg import IPAConfig
-
 from .base_routes import root
+from .extensions.flask_ipacfg import IPAConfig
 
 
 class NameConverter(BaseConverter):
@@ -41,7 +41,7 @@ def create_app(config=None):
         dictConfig(app.config["LOGGING"])
 
     # Extensions
-    FlaskGSSAPI(app)
+    FlaskModAuthGSSAPI(app, abort=abort)
     IPAConfig(app)
 
     # URL converters

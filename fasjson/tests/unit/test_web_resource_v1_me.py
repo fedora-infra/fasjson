@@ -57,13 +57,11 @@ def test_me_error(client, gss_env):
     rv = client.get("/v1/me/")
     res = rv.get_json()
     expected = {
-        "codes": {
-            "maj": 851968,
-            "min": 2529639107,
-            "routine": 851968,
-            "supplementary": None,
-        },
-        "message": "Invalid credentials",
+        "message": (
+            "Invalid credentials (Major (851968): Unspecified GSS failure.  "
+            "Minor code may provide more information, Minor (2529639107): "
+            "No credentials cache found)"
+        )
     }
 
     assert 403 == rv.status_code
