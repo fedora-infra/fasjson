@@ -12,14 +12,23 @@ def mock_ldap_client(mock_ipa_client):
 
 def test_groups_success(client, gss_user, mock_ldap_client):
     groups = ["group1", "group2"]
-    result = LDAPResult(items=[{"groupname": name} for name in groups])
+    result = LDAPResult(
+        items=[
+            {"groupname": name, "description": f"the {name} group"}
+            for name in groups
+        ]
+    )
     mock_ldap_client(get_groups=lambda page_size, page_number: result,)
 
     rv = client.get("/v1/groups/")
     assert 200 == rv.status_code
     assert rv.get_json() == {
         "result": [
-            {"groupname": name, "uri": f"http://localhost/v1/groups/{name}/"}
+            {
+                "groupname": name,
+                "description": f"the {name} group",
+                "uri": f"http://localhost/v1/groups/{name}/",
+            }
             for name in groups
         ]
     }
@@ -27,7 +36,10 @@ def test_groups_success(client, gss_user, mock_ldap_client):
 
 def test_groups_paginate(client, gss_user, mock_ldap_client):
     result = LDAPResult(
-        items=[{"groupname": "group1"}], total=2, page_number=1, page_size=1
+        items=[{"groupname": "group1", "description": "the group1 group"}],
+        total=2,
+        page_number=1,
+        page_size=1,
     )
     mock_ldap_client(get_groups=lambda page_size, page_number: result,)
 
@@ -37,6 +49,7 @@ def test_groups_paginate(client, gss_user, mock_ldap_client):
         "result": [
             {
                 "groupname": "group1",
+                "description": "the group1 group",
                 "uri": "http://localhost/v1/groups/group1/",
             }
         ],
@@ -147,12 +160,18 @@ def test_group_sponsors_error(client, gss_user, mock_ldap_client):
 
 
 def test_group_success(client, gss_user, mock_ldap_client):
-    mock_ldap_client(get_group=lambda n: {"groupname": "dummy-group"},)
+    mock_ldap_client(
+        get_group=lambda n: {
+            "groupname": "dummy-group",
+            "description": "the dummy-group",
+        },
+    )
 
     rv = client.get("/v1/groups/dummy-group/")
 
     expected = {
         "groupname": "dummy-group",
+        "description": "the dummy-group",
         "uri": "http://localhost/v1/groups/dummy-group/",
     }
     assert 200 == rv.status_code
