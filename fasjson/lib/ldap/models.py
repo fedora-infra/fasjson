@@ -68,4 +68,7 @@ class GroupModel(Model):
     primary_key = "cn"
     filters = "(objectClass=fasGroup)"
     sub_dn = "cn=groups,cn=accounts"
-    fields = {"groupname": Converter("cn")}
+    fields = {
+        "groupname": Converter("cn"),
+        "description": Converter("description"),
+    }
