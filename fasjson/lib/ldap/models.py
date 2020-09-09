@@ -1,10 +1,10 @@
 from ldap.filter import escape_filter_chars
 
 from .converters import (
+    BinaryConverter,
+    BoolConverter,
     Converter,
     GeneralTimeConverter,
-    BoolConverter,
-    BinaryConverter,
 )
 
 
@@ -71,4 +71,13 @@ class GroupModel(Model):
     fields = {
         "groupname": Converter("cn"),
         "description": Converter("description"),
+    }
+
+
+class AgreementModel(Model):
+    primary_key = "cn"
+    filters = "(&(objectClass=fasAgreement)(ipaEnabledFlag=TRUE))"
+    sub_dn = "cn=fasagreements"
+    fields = {
+        "name": Converter("cn"),
     }
