@@ -1,5 +1,5 @@
-import types
 import datetime
+import types
 from unittest import mock
 
 import pytest
@@ -257,6 +257,27 @@ def test_get_user_groups(mock_connection):
             {"groupname": "trust admins"},
         ],
         total=4,
+        page_size=0,
+        page_number=1,
+    )
+    assert result == expected
+
+
+def test_get_user_agreements(mock_connection):
+    mocked = [
+        {"cn": [b"FPCA"]},
+        {"cn": [b"CentOS"]},
+    ]
+    mock_connection.result3 = _single_page_result_factory(mocked)
+
+    ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
+
+    result = ldap.get_user_agreements(
+        username="dummy", page_number=1, page_size=0
+    )
+    expected = LDAPResult(
+        items=[{"name": "FPCA"}, {"name": "CentOS"}],
+        total=2,
         page_size=0,
         page_number=1,
     )

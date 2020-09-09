@@ -1,8 +1,9 @@
 import re
+
 import ldap
 from ldap.controls.pagedresults import SimplePagedResultsControl
 
-from .models import UserModel, GroupModel, SponsorModel
+from .models import AgreementModel, GroupModel, SponsorModel, UserModel
 
 
 class LDAPResult:
@@ -140,6 +141,18 @@ class LDAP:
         filters = f"(&(member={dn},{self.basedn}){GroupModel.filters})"
         return self.search(
             model=GroupModel,
+            filters=filters,
+            page_number=page_number,
+            page_size=page_size,
+        )
+
+    def get_user_agreements(self, username, page_size, page_number):
+        dn = UserModel.get_sub_dn_for(username)
+        filters = (
+            f"(&(memberUser={dn},{self.basedn}){AgreementModel.filters})"
+        )
+        return self.search(
+            model=AgreementModel,
             filters=filters,
             page_number=page_number,
             page_size=page_size,

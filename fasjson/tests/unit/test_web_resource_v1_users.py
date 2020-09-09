@@ -3,7 +3,7 @@ from functools import partial
 import pytest
 
 from fasjson.lib.ldap.client import LDAPResult
-from fasjson.tests.unit.utils import get_user_ldap_data, get_user_api_output
+from fasjson.tests.unit.utils import get_user_api_output, get_user_ldap_data
 
 
 @pytest.fixture
@@ -69,6 +69,32 @@ def test_user_groups_error(client, gss_user, mock_ldap_client):
     mock_ldap_client(get_user=lambda n: None)
 
     rv = client.get("/v1/users/dummy/groups/")
+
+    expected = {"name": "dummy", "message": "User does not exist"}
+
+    assert 404 == rv.status_code
+    assert rv.get_json() == expected
+
+
+def test_user_agreements_success(client, gss_user, mock_ldap_client):
+    agreements = ["agmt1", "agmt2"]
+    result = LDAPResult(items=[{"name": name} for name in agreements])
+    mock_ldap_client(
+        get_user_agreements=lambda username, page_size, page_number: result,
+        get_user=lambda n: {"cn": n},
+    )
+
+    rv = client.get("/v1/users/dummy/agreements/")
+    assert 200 == rv.status_code
+    assert rv.get_json() == {
+        "result": [{"name": name} for name in agreements]
+    }
+
+
+def test_user_agreements_error(client, gss_user, mock_ldap_client):
+    mock_ldap_client(get_user=lambda n: None)
+
+    rv = client.get("/v1/users/dummy/agreements/")
 
     expected = {"name": "dummy", "message": "User does not exist"}
 
