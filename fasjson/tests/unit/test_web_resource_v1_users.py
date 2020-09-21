@@ -35,6 +35,37 @@ def test_user_error(client, gss_user, mock_ldap_client):
     }
 
 
+def test_user_private(client, gss_user, mock_ldap_client):
+    data = get_user_ldap_data("dummy")
+    data["is_private"] = True
+    mock_ldap_client(get_user=lambda u: data)
+
+    rv = client.get("/v1/users/dummy/")
+
+    assert 200 == rv.status_code
+    result = rv.get_json()["result"]
+    assert result["human_name"] is None
+    assert result["surname"] is None
+    assert result["givenname"] is None
+    assert result["ircnicks"] is None
+    assert result["gpgkeyids"] is None
+    assert result["locale"] is None
+    assert result["timezone"] is None
+
+
+def test_user_private_self(client, gss_user, mock_ldap_client):
+    data = get_user_ldap_data("admin")
+    data["is_private"] = True
+    mock_ldap_client(get_user=lambda u: data)
+
+    rv = client.get("/v1/users/admin/")
+
+    expected = get_user_api_output("admin")
+    expected["is_private"] = True
+    assert 200 == rv.status_code
+    assert rv.get_json() == {"result": expected}
+
+
 def test_users_success(client, gss_user, mock_ldap_client):
     data = [get_user_ldap_data(f"dummy-{idx}") for idx in range(1, 10)]
     result = LDAPResult(items=data)

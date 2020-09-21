@@ -1,3 +1,4 @@
+from flask import g
 from flask_restx import Resource, fields
 
 from fasjson.lib.ldap.models import UserModel as LDAPUserModel
@@ -16,6 +17,12 @@ UserModel = api_v1.model(
 )
 
 
+def _maybe_anonymize(user):
+    if user["is_private"] and g.username != user["username"]:
+        user = LDAPUserModel.anonymize(user)
+    return user
+
+
 @api_v1.route("/")
 class UserList(Resource):
     @api_v1.doc("list_users")
@@ -28,6 +35,7 @@ class UserList(Resource):
         result = client.get_users(
             page_size=args.page_size, page_number=args.page_number
         )
+        result.items = [_maybe_anonymize(user) for user in result.items]
         return result
 
 
@@ -43,6 +51,7 @@ class User(Resource):
         res = client.get_user(username)
         if res is None:
             api_v1.abort(404, "User not found", name=username)
+        res = _maybe_anonymize(res)
         return res
 
 

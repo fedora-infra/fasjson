@@ -51,8 +51,27 @@ class UserModel(Model):
         "gpgkeyids": Converter("fasGPGKeyId", multivalued=True),
         "certificates": BinaryConverter("userCertificate", multivalued=True),
         "creation": GeneralTimeConverter("fasCreationTime"),
+        "is_private": BoolConverter("fasIsPrivate"),
         "locked": BoolConverter("nsAccountLock"),
     }
+    private_fields = [
+        "human_name",
+        "surname",
+        "givenname",
+        "ircnicks",
+        "locale",
+        "timezone",
+        "gpgkeyids",
+    ]
+
+    @classmethod
+    def anonymize(cls, user):
+        for attr in cls.private_fields:
+            try:
+                del user[attr]
+            except KeyError:
+                continue
+        return user
 
 
 class SponsorModel(Model):
