@@ -12,6 +12,7 @@ def get_user_ldap_data(name):
         "emails": [f"{name}@example.test"],
         "surname": name,
         "human_name": name,
+        "is_private": False,
     }
 
 
