@@ -18,7 +18,7 @@ UserModel = api_v1.model(
 
 
 def _maybe_anonymize(user):
-    if user["is_private"] and g.username != user["username"]:
+    if user.get("is_private", False) and g.username != user["username"]:
         user = LDAPUserModel.anonymize(user)
     return user
 
