@@ -109,4 +109,36 @@ def test_cert_post_success(client, gss_user, mock_rpc_client, mocker):
     expected = _get_cert_api_output(42)
     assert 200 == rv.status_code
     assert rv.get_json() == {"result": expected}
-    rpc_client.cert_request.assert_called_once_with("dummy-csr", "dummy")
+    rpc_client.cert_request.assert_called_once_with(
+        "dummy-csr", o_principal="dummy", o_profile_id=None
+    )
+
+
+def test_cert_post_with_profile_id(client, gss_user, mock_rpc_client, mocker):
+    data = _get_cert_rpc_data(42)
+    rpc_client = mock_rpc_client(cert_request=mocker.Mock(return_value=data))
+    rv = client.post(
+        "/v1/certs/",
+        data={"csr": "dummy-csr", "user": "dummy", "profile": "userCerts"},
+    )
+    expected = _get_cert_api_output(42)
+    assert 200 == rv.status_code
+    assert rv.get_json() == {"result": expected}
+    rpc_client.cert_request.assert_called_once_with(
+        "dummy-csr", o_principal="dummy", o_profile_id="userCerts"
+    )
+
+
+def test_cert_post_with_configured_profile_id(
+    app, client, gss_user, mock_rpc_client, mocker
+):
+    app.config["CERTIFICATE_PROFILE"] = "cert-profile"
+    data = _get_cert_rpc_data(42)
+    rpc_client = mock_rpc_client(cert_request=mocker.Mock(return_value=data))
+    rv = client.post("/v1/certs/", data={"csr": "dummy-csr", "user": "dummy"})
+    expected = _get_cert_api_output(42)
+    assert 200 == rv.status_code
+    assert rv.get_json() == {"result": expected}
+    rpc_client.cert_request.assert_called_once_with(
+        "dummy-csr", o_principal="dummy", o_profile_id="cert-profile"
+    )

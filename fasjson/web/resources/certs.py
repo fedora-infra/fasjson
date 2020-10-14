@@ -1,9 +1,10 @@
+from flask import current_app
 from flask_restx import Resource, fields, reqparse
 from python_freeipa.exceptions import BadRequest
 
 from fasjson.web.utils.ipa import rpc_client
-from .base import Namespace
 
+from .base import Namespace
 
 api_v1 = Namespace("certs", description="Certificates related operations")
 
@@ -43,6 +44,9 @@ create_request_parser.add_argument("user", required=True, help="User name.")
 create_request_parser.add_argument(
     "csr", required=True, help="Certificate Signing Request."
 )
+create_request_parser.add_argument(
+    "profile", required=False, help="Certificate Profile."
+)
 
 
 @api_v1.route("/")
@@ -55,7 +59,10 @@ class Certs(Resource):
         """Send a CSR and get a signed certificate in return"""
         args = create_request_parser.parse_args()
         client = rpc_client()
-        result = client.cert_request(args["csr"], args["user"])
+        profile = args["profile"] or current_app.config["CERTIFICATE_PROFILE"]
+        result = client.cert_request(
+            args["csr"], o_principal=args["user"], o_profile_id=profile
+        )
         return result["result"]
 
 
