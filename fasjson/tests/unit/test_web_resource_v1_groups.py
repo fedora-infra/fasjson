@@ -14,7 +14,11 @@ def test_groups_success(client, gss_user, mock_ldap_client):
     groups = ["group1", "group2"]
     result = LDAPResult(
         items=[
-            {"groupname": name, "description": f"the {name} group"}
+            {
+                "groupname": name,
+                "description": f"the {name} group",
+                "mailing_list": f"{name}@groups.com",
+            }
             for name in groups
         ]
     )
@@ -27,6 +31,7 @@ def test_groups_success(client, gss_user, mock_ldap_client):
             {
                 "groupname": name,
                 "description": f"the {name} group",
+                "mailing_list": f"{name}@groups.com",
                 "uri": f"http://localhost/v1/groups/{name}/",
             }
             for name in groups
@@ -36,7 +41,13 @@ def test_groups_success(client, gss_user, mock_ldap_client):
 
 def test_groups_paginate(client, gss_user, mock_ldap_client):
     result = LDAPResult(
-        items=[{"groupname": "group1", "description": "the group1 group"}],
+        items=[
+            {
+                "groupname": "group1",
+                "description": "the group1 group",
+                "mailing_list": "group1@groups.com",
+            }
+        ],
         total=2,
         page_number=1,
         page_size=1,
@@ -50,6 +61,7 @@ def test_groups_paginate(client, gss_user, mock_ldap_client):
             {
                 "groupname": "group1",
                 "description": "the group1 group",
+                "mailing_list": "group1@groups.com",
                 "uri": "http://localhost/v1/groups/group1/",
             }
         ],
@@ -164,6 +176,7 @@ def test_group_success(client, gss_user, mock_ldap_client):
         get_group=lambda n: {
             "groupname": "dummy-group",
             "description": "the dummy-group",
+            "mailing_list": "dummy-group@groups.com",
         },
     )
 
@@ -172,6 +185,7 @@ def test_group_success(client, gss_user, mock_ldap_client):
     expected = {
         "groupname": "dummy-group",
         "description": "the dummy-group",
+        "mailing_list": "dummy-group@groups.com",
         "uri": "http://localhost/v1/groups/dummy-group/",
     }
     assert 200 == rv.status_code
