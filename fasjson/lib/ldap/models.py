@@ -90,6 +90,7 @@ class GroupModel(Model):
     fields = {
         "groupname": Converter("cn"),
         "description": Converter("description"),
+        "mailing_list": Converter("fasmailinglist"),
     }
 
 
