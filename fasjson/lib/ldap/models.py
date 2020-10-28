@@ -91,6 +91,8 @@ class GroupModel(Model):
         "groupname": Converter("cn"),
         "description": Converter("description"),
         "mailing_list": Converter("fasmailinglist"),
+        "url": Converter("fasurl"),
+        "irc": Converter("fasircchannel"),
     }
 
 
