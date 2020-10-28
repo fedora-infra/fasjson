@@ -19,7 +19,7 @@ def test_groups_success(client, gss_user, mock_ldap_client):
                 "description": f"the {name} group",
                 "mailing_list": f"{name}@groups.com",
                 "url": f"www.{name}.com",
-                "irc": f"[#{name}]",
+                "irc": [f"#{name}"],
             }
             for name in groups
         ]
@@ -35,7 +35,7 @@ def test_groups_success(client, gss_user, mock_ldap_client):
                 "description": f"the {name} group",
                 "mailing_list": f"{name}@groups.com",
                 "url": f"www.{name}.com",
-                "irc": f"[#{name}]",
+                "irc": [f"#{name}"],
                 "uri": f"http://localhost/v1/groups/{name}/",
             }
             for name in groups
@@ -51,7 +51,7 @@ def test_groups_paginate(client, gss_user, mock_ldap_client):
                 "description": "the group1 group",
                 "mailing_list": "group1@groups.com",
                 "url": "www.group1.com",
-                "irc": "[#group1]",
+                "irc": ["#group1"],
             }
         ],
         total=2,
@@ -69,7 +69,7 @@ def test_groups_paginate(client, gss_user, mock_ldap_client):
                 "description": "the group1 group",
                 "mailing_list": "group1@groups.com",
                 "url": "www.group1.com",
-                "irc": "[#group1]",
+                "irc": ["#group1"],
                 "uri": "http://localhost/v1/groups/group1/",
             }
         ],
@@ -186,7 +186,7 @@ def test_group_success(client, gss_user, mock_ldap_client):
             "description": "the dummy-group",
             "mailing_list": "dummy-group@groups.com",
             "url": "www.dummy-group.com",
-            "irc": "[#dummy-group]",
+            "irc": ["#dummy-group"],
         },
     )
 
@@ -197,7 +197,7 @@ def test_group_success(client, gss_user, mock_ldap_client):
         "description": "the dummy-group",
         "mailing_list": "dummy-group@groups.com",
         "url": "www.dummy-group.com",
-        "irc": "[#dummy-group]",
+        "irc": ["#dummy-group"],
         "uri": "http://localhost/v1/groups/dummy-group/",
     }
     assert 200 == rv.status_code

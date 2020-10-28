@@ -92,7 +92,7 @@ class GroupModel(Model):
         "description": Converter("description"),
         "mailing_list": Converter("fasmailinglist"),
         "url": Converter("fasurl"),
-        "irc": Converter("fasircchannel"),
+        "irc": Converter("fasircchannel", multivalued=True),
     }
 
 
