@@ -119,6 +119,27 @@ class LDAP:
         result = self.search(model=UserModel, filters=filters)
         return result.items
 
+    def check_membership(self, groupname, username):
+        group_dn = GroupModel.get_sub_dn_for(groupname)
+        filters = (
+            "(&"
+            f"(memberOf={group_dn},{self.basedn})"
+            f"{UserModel.filters}"
+            f"(uid={username})"
+            ")"
+        )
+        result = self.search(
+            model=UserModel,
+            filters=filters,
+            attrs=["uid"],
+            scope=ldap.SCOPE_SUBTREE,
+        )
+        if not result.items:
+            return False
+        if len(result.items) == 1:
+            return True
+        raise ValueError(f"Unexpected result length: {len(result.items)}")
+
     def get_users(self, page_size, page_number):
         return self.search(
             model=UserModel,
