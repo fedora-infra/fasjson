@@ -1,7 +1,6 @@
 from functools import partial
 
 import pytest
-
 from fasjson.lib.ldap.client import LDAPResult
 
 
@@ -208,3 +207,27 @@ def test_group_not_found(client, gss_user, mock_ldap_client):
     mock_ldap_client(get_group=lambda n: None)
     rv = client.get("/v1/groups/dummy-group/")
     assert rv.status_code == 404
+    rv = client.get("/v1/groups/dummy-group/is-member/anybody")
+    assert rv.status_code == 404
+
+
+def test_group_is_member_true(client, gss_user, mock_ldap_client):
+    mock_ldap_client(
+        check_membership=lambda groupname, username: True,
+        get_group=lambda n: {"cn": n},
+    )
+
+    rv = client.get("/v1/groups/admins/is-member/admin")
+    assert 200 == rv.status_code
+    assert {"result": True} == rv.get_json()
+
+
+def test_group_is_member_false(client, gss_user, mock_ldap_client):
+    mock_ldap_client(
+        check_membership=lambda groupname, username: False,
+        get_group=lambda n: {"cn": n},
+    )
+
+    rv = client.get("/v1/groups/admins/is-member/someone-else")
+    assert 200 == rv.status_code
+    assert {"result": False} == rv.get_json()

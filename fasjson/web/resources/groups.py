@@ -1,10 +1,9 @@
+from fasjson.lib.ldap.models import GroupModel as LDAPGroupModel
+from fasjson.web.utils.ipa import get_fields_from_ldap_model, ldap_client
+from fasjson.web.utils.pagination import page_request_parser
 from flask_restx import Resource, fields
 
-from fasjson.lib.ldap.models import GroupModel as LDAPGroupModel
-from fasjson.web.utils.ipa import ldap_client, get_fields_from_ldap_model
-from fasjson.web.utils.pagination import page_request_parser
 from .base import Namespace
-
 
 api_v1 = Namespace("groups", description="Groups related operations")
 
@@ -95,3 +94,22 @@ class GroupSponsors(Resource):
             api_v1.abort(404, "Group not found", groupname=groupname)
 
         return client.get_group_sponsors(groupname)
+
+
+@api_v1.route("/<name:groupname>/is-member/<name:username>")
+@api_v1.param("groupname", "The group name")
+@api_v1.param("username", "The user name")
+@api_v1.response(404, "Group not found")
+class IsMember(Resource):
+    @api_v1.doc("check_membership")
+    @api_v1.marshal_with(fields.Boolean())
+    def get(self, groupname, username):
+        """Check whether a user is a member of the group"""
+        client = ldap_client()
+
+        group = client.get_group(groupname)
+        if group is None:
+            api_v1.abort(404, "Group not found", groupname=groupname)
+
+        result = client.check_membership(groupname, username)
+        return result

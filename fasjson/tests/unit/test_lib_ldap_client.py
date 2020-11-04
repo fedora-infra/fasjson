@@ -3,9 +3,8 @@ import types
 from unittest import mock
 
 import pytest
-from ldap.controls.pagedresults import SimplePagedResultsControl
-
 from fasjson.lib.ldap.client import LDAP, LDAPResult
+from ldap.controls.pagedresults import SimplePagedResultsControl
 
 
 @pytest.fixture
@@ -157,6 +156,30 @@ def test_sponsors_to_users(mock_connection):
     result = ldap._sponsors_to_users(sponsors_dn)
     expected = [{"username": "admin"}]
     assert result == expected
+
+
+def test_check_membership(mock_connection):
+    mocked = [{"uid": [b"admin"]}]
+    mock_connection.result3 = _single_page_result_factory(mocked)
+    ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
+    result = ldap.check_membership("admins", "admin")
+    assert result is True
+
+
+def test_check_membership_not_member(mock_connection):
+    mocked = []
+    mock_connection.result3 = _single_page_result_factory(mocked)
+    ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
+    result = ldap.check_membership("admins", "someoneelse")
+    assert result is False
+
+
+def test_check_membership_duplicate(mock_connection):
+    mocked = [{"uid": [b"admin"]}, {"uid": [b"admin"]}]
+    mock_connection.result3 = _single_page_result_factory(mocked)
+    ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
+    with pytest.raises(ValueError):
+        ldap.check_membership("admins", "admin")
 
 
 def test_get_users(mock_connection):
