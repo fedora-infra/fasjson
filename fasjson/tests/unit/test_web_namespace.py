@@ -47,3 +47,16 @@ def test_rpc_bad_request(client, gss_user, mocker):
     assert body["message"] == "dummy message"
     assert body["code"] == 42
     assert body["source"] == "RPC"
+
+
+def test_rpc_bad_request_no_code(client, gss_user, mocker):
+    mocker.patch(
+        "fasjson.web.resources.certs.rpc_client",
+        side_effect=BadRequest(message="dummy message"),
+    )
+    rv = client.get("/v1/certs/1/")
+    assert rv.status_code == 400
+    body = json.loads(rv.data)
+    assert body["message"] == "dummy message"
+    assert body["code"] is None
+    assert body["source"] == "RPC"
