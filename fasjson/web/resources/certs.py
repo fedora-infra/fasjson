@@ -2,7 +2,7 @@ from flask import current_app
 from flask_restx import Resource, fields, reqparse
 from python_freeipa.exceptions import BadRequest
 
-from fasjson.web.utils.ipa import rpc_client
+from fasjson.web.utils.ipa import rpc_client, dummy_rpc_call
 
 from .base import Namespace
 
@@ -58,6 +58,7 @@ class Certs(Resource):
     def post(self):
         """Send a CSR and get a signed certificate in return"""
         args = create_request_parser.parse_args()
+        print(dummy_rpc_call())
         client = rpc_client()
         profile = args["profile"] or current_app.config["CERTIFICATE_PROFILE"]
         result = client.cert_request(

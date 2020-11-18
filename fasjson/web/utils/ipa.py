@@ -51,3 +51,44 @@ def get_fields_from_ldap_model(ldap_model, endpoint, field_args=None):
     result["uri"] = fields.Url(endpoint, absolute=True)
 
     return result
+
+
+def dummy_rpc_call():
+    import gssapi
+    import requests
+    import requests_gssapi
+
+    HOSTNAME = current_app.config["FASJSON_IPA_SERVER"]
+    HEADERS = {
+        'Referer': f'https://{HOSTNAME}/ipa',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+    }
+
+    creds = gssapi.Credentials(name=None, usage="initiate")
+
+    sess = requests.session()
+    print(repr(current_app.config["FASJSON_IPA_CA_CERT_PATH"]))
+    #sess.verify = "/etc/ipa/ca.crt"
+    sess.verify = current_app.config["FASJSON_IPA_CA_CERT_PATH"]
+    #sess.verify = True
+    sess.auth = requests_gssapi.HTTPSPNEGOAuth(
+        opportunistic_auth=True, creds=creds
+    )
+
+    res = sess.post(
+        f"https://{HOSTNAME}/ipa/session/json",
+        headers=HEADERS,
+        json={
+            "method": "ping",
+            "params": [
+                [],
+                {}
+            ]
+        }
+    )
+
+    return res.json()
+
+
+
