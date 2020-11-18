@@ -6,7 +6,8 @@ from fasjson.lib.ldap import get_client, converters
 
 
 def ldap_client():
-    if g.username is None:
+    print("gss_creds:", repr(g.gss_creds))
+    if g.gss_creds is None:
         abort(401)
     return get_client(
         current_app.config["FASJSON_LDAP_URI"],
@@ -17,7 +18,8 @@ def ldap_client():
 
 
 def rpc_client():
-    if g.username is None:
+    print("gss_creds:", repr(g.gss_creds))
+    if g.gss_creds is None:
         abort(401)
     client = ClientMeta(
         current_app.config["FASJSON_IPA_SERVER"],

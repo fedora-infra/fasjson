@@ -45,7 +45,7 @@ def handle_rpc_error(error):
         dict: a description of the error
     """
     return (
-        {"message": error.message, "code": error.code, "source": "RPC"},
+        {"message": error.message, "code": getattr(error, "code", None), "source": "RPC"},
         400,
     )
 
