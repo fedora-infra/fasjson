@@ -21,6 +21,7 @@
       - "@Development Tools"
       - vim
       - tmux
+      - libffi-devel
     state: present
 
 - name: Allow apache to see /srv
@@ -45,7 +46,6 @@
   pip:
     name: poetry
     virtualenv: /srv/venv
-    virtualenv_command: pyvenv
   become: yes
   become_user: vagrant
 
