@@ -1,12 +1,11 @@
+from fasjson.lib.ldap import converters, get_client
 from flask import current_app, g
 from flask_restx import abort, fields
 from python_freeipa import ClientMeta
 
-from fasjson.lib.ldap import get_client, converters
-
 
 def ldap_client():
-    if g.gss_creds is None:
+    if g.gss_creds is None or g.username is None:
         abort(401)
     return get_client(
         current_app.config["FASJSON_LDAP_URI"],
