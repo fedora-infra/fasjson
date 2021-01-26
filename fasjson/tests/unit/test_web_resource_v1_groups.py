@@ -148,6 +148,31 @@ def test_group_members_error(client, gss_user, mock_ldap_client):
     assert expected == rv.get_json()
 
 
+def test_group_members_paginate(client, gss_user, mock_ldap_client):
+    data = [{"username": "admin"}]
+    result = LDAPResult(items=data, total=2, page_number=1, page_size=1)
+    mock_ldap_client(
+        get_group_members=lambda name, page_size, page_number: result,
+        get_group=lambda n: {"cn": n},
+    )
+    rv = client.get("/v1/groups/admins/members/?page_size=1")
+
+    expected = {
+        "result": [
+            {"username": "admin", "uri": "http://localhost/v1/users/admin/"}
+        ],
+        "page": {
+            "total_results": 2,
+            "page_size": 1,
+            "page_number": 1,
+            "total_pages": 2,
+            "next_page": "http://localhost/v1/groups/admins/members/?page_size=1&page_number=2",
+        },
+    }
+    assert 200 == rv.status_code
+    assert expected == rv.get_json()
+
+
 def test_group_sponsors_success(client, gss_user, mock_ldap_client):
     result = [{"username": "admin"}]
     mock_ldap_client(

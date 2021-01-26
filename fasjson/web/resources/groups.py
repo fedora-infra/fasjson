@@ -32,7 +32,7 @@ SponsorModel = api_v1.model(
 class GroupList(Resource):
     @api_v1.doc("list_groups")
     @api_v1.expect(page_request_parser)
-    @api_v1.paged_marshal_with(GroupModel, "v1.groups_group_list")
+    @api_v1.paged_marshal_with(GroupModel)
     def get(self):
         """List all groups"""
         args = page_request_parser.parse_args()
@@ -64,7 +64,7 @@ class Group(Resource):
 class GroupMembers(Resource):
     @api_v1.doc("list_group_members")
     @api_v1.expect(page_request_parser)
-    @api_v1.paged_marshal_with(MemberModel, "v1.groups_group_members")
+    @api_v1.paged_marshal_with(MemberModel)
     def get(self, groupname):
         """Fetch group members given the group name"""
         args = page_request_parser.parse_args()

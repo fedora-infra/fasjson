@@ -1,9 +1,8 @@
-from flask import g
-from flask_restx import Resource, fields
-
 from fasjson.lib.ldap.models import UserModel as LDAPUserModel
 from fasjson.web.utils.ipa import get_fields_from_ldap_model, ldap_client
 from fasjson.web.utils.pagination import page_request_parser
+from flask import g
+from flask_restx import Resource, fields
 
 from .base import Namespace
 
@@ -27,7 +26,7 @@ def _maybe_anonymize(user):
 class UserList(Resource):
     @api_v1.doc("list_users")
     @api_v1.expect(page_request_parser)
-    @api_v1.paged_marshal_with(UserModel, "v1.users_user_list")
+    @api_v1.paged_marshal_with(UserModel)
     def get(self):
         """List all users"""
         args = page_request_parser.parse_args()
@@ -70,7 +69,7 @@ UserGroupsModel = api_v1.model(
 class UserGroups(Resource):
     @api_v1.doc("list_user_groups")
     @api_v1.expect(page_request_parser)
-    @api_v1.paged_marshal_with(UserGroupsModel, "v1.users_user_groups")
+    @api_v1.paged_marshal_with(UserGroupsModel)
     def get(self, username):
         """Fetch a user's groups given their username"""
         args = page_request_parser.parse_args()
@@ -96,9 +95,7 @@ UserAgreementsModel = api_v1.model(
 class UserAgreements(Resource):
     @api_v1.doc("list_user_agreements")
     @api_v1.expect(page_request_parser)
-    @api_v1.paged_marshal_with(
-        UserAgreementsModel, "v1.users_user_agreements"
-    )
+    @api_v1.paged_marshal_with(UserAgreementsModel)
     def get(self, username):
         """Fetch a user's agreements given their username"""
         args = page_request_parser.parse_args()

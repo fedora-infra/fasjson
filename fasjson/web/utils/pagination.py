@@ -1,7 +1,7 @@
 import math
 
-from flask import url_for
-from flask_restx import reqparse, marshal
+from flask import request
+from flask_restx import marshal, reqparse
 
 page_request_parser = reqparse.RequestParser()
 page_request_parser.add_argument("page_size", type=int, help="Page size.")
@@ -10,7 +10,7 @@ page_request_parser.add_argument(
 )
 
 
-def add_page_data(output, result, model, endpoint):
+def add_page_data(output, result, model):
     """Use the pagination data from the LDAP result to add page info to the output.
 
     This function adds a dictionary with pagination info in a ``page`` key in the output dictionary.
@@ -42,11 +42,11 @@ def add_page_data(output, result, model, endpoint):
             "page_number": result.page_number + 1,
         }
         qs = "&".join(f"{k}={v}" for k, v in qs.items())
-        next_page = f"{url_for(endpoint, _external=True)}?{qs}"
-        output["page"]["next_page"] = next_page
+        base_url = request.base_url
+        output["page"]["next_page"] = f"{base_url}?{qs}"
 
 
-def paged_marshal(result, model, endpoint, **kwargs):
+def paged_marshal(result, model, **kwargs):
     output = marshal(result.items, model, envelope="result", **kwargs)
-    add_page_data(output, result, model, endpoint)
+    add_page_data(output, result, model)
     return output

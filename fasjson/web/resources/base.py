@@ -13,9 +13,7 @@ class Namespace(RestXNamespace):
         kwargs.setdefault("envelope", "result")
         return super().marshal_with(fields, *args, **kwargs)
 
-    def paged_marshal_with(
-        self, model, endpoint, description=None, **marshal_kwargs
-    ):
+    def paged_marshal_with(self, model, description=None, **marshal_kwargs):
         """
         A decorator to call paged_marshal. See Namespace.marshal_with for reference.
         """
@@ -36,11 +34,7 @@ class Namespace(RestXNamespace):
             def wrapper(*args, **kwargs):
                 result = func(*args, **kwargs)
                 return paged_marshal(
-                    result,
-                    model,
-                    endpoint,
-                    ordered=self.ordered,
-                    **marshal_kwargs
+                    result, model, ordered=self.ordered, **marshal_kwargs
                 )
 
             return wrapper

@@ -29,7 +29,7 @@ class SearchUsers(Resource):
     @api_v1.doc("search")
     @api_v1.expect(search_request_parser)
     @api_v1.response(400, "Validation Error")
-    @api_v1.paged_marshal_with(UserModel, "v1.search_search_users")
+    @api_v1.paged_marshal_with(UserModel)
     def get(self):
         """Fetch users given a search term"""
         search_args = search_request_parser.parse_args()
