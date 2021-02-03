@@ -98,7 +98,7 @@ class LDAP:
             filters=filters,
             scope=ldap.SCOPE_SUBTREE,
         )
-        if not sponsors_result.items:
+        if not sponsors_result.items or 'sponsors' not in sponsors_result.items[0]:
             return []
         return self._sponsors_to_users(sponsors_result)
 
