@@ -561,7 +561,7 @@ dev = ["pre-commit", "tox"]
 
 [[package]]
 name = "python-freeipa"
-version = "1.0.5"
+version = "1.0.6"
 description = "Lightweight FreeIPA client"
 category = "main"
 optional = false
@@ -1114,8 +1114,8 @@ pytest-mock = [
     {file = "pytest_mock-2.0.0-py2.py3-none-any.whl", hash = "sha256:cb67402d87d5f53c579263d37971a164743dc33c159dfb4fb4a86f37c5552307"},
 ]
 python-freeipa = [
-    {file = "python-freeipa-1.0.5.tar.gz", hash = "sha256:fee5de37e745567e966634596f636f6142c40d189ce95b167b878c10c4602100"},
-    {file = "python_freeipa-1.0.5-py2.py3-none-any.whl", hash = "sha256:a85f6e60863c5b62bfacf1c9fa9f0f22d7c4a922e31a71c00c6edf311c47f4d7"},
+    {file = "python-freeipa-1.0.6.tar.gz", hash = "sha256:6125e36f6de2f0d2e3ee7eab3887407e2e6e84f25c45025a8276e7f61d1f1b13"},
+    {file = "python_freeipa-1.0.6-py2.py3-none-any.whl", hash = "sha256:c7145eba7b353d9d87e89c4ccf02960c000b4094b1dfadbe20628404ca878eed"},
 ]
 python-ldap = [
     {file = "python-ldap-3.2.0.tar.gz", hash = "sha256:7d1c4b15375a533564aad3d3deade789221e450052b21ebb9720fb822eccdb8e"},
