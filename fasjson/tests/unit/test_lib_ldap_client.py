@@ -143,9 +143,7 @@ def test_get_group_sponsors_empty(mock_connection):
     mock_connection.result3 = _single_page_result_factory(mocked)
 
     ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
-    with mock.patch.object(
-        ldap, "search", side_effect=[mocked_conversion]
-    ):
+    with mock.patch.object(ldap, "search", side_effect=[mocked_conversion]):
         result = ldap.get_group_sponsors(groupname="admins")
 
     expected = []
