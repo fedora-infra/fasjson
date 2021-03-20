@@ -14,7 +14,7 @@ flask-restx==0.2.0
 idna==2.9
 importlib-metadata==1.6.0; python_version < "3.8"
 itsdangerous==1.1.0
-jinja2==2.11.2
+jinja2==2.11.3
 jsonschema==3.2.0
 markupsafe==1.1.1
 pyasn1==0.4.8
