@@ -18,7 +18,7 @@ from .extensions.flask_ipacfg import IPAConfig
 class NameConverter(BaseConverter):
     """Limit what a user or group name can look like in the URLs."""
 
-    regex = "[a-zA-Z][a-zA-Z0-9_.-]{0,63}"
+    regex = "[a-zA-Z0-9][a-zA-Z0-9_.-]{0,63}"
 
 
 def create_app(config=None):

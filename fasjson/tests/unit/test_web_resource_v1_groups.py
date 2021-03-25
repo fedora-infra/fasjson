@@ -256,3 +256,25 @@ def test_group_is_member_false(client, gss_user, mock_ldap_client):
     rv = client.get("/v1/groups/admins/is-member/someone-else")
     assert 200 == rv.status_code
     assert {"result": False} == rv.get_json()
+
+
+def test_group_starting_with_number(client, gss_user, mock_ldap_client):
+    mock_ldap_client(
+        get_group=lambda n: {
+            "groupname": "3d-printing-sig",
+            "description": "I start with a number",
+        },
+    )
+
+    rv = client.get("/v1/groups/3d-printing-sig/")
+
+    expected = {
+        "groupname": "3d-printing-sig",
+        "description": "I start with a number",
+        "mailing_list": None,
+        "url": None,
+        "irc": None,
+        "uri": "http://localhost/v1/groups/3d-printing-sig/",
+    }
+    assert 200 == rv.status_code
+    assert rv.get_json() == {"result": expected}
