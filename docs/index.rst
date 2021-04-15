@@ -1,10 +1,21 @@
-fasjson
-=======
+=======================
+FASJSON's documentation
+=======================
 
+.. Release Notes
 
 .. toctree::
    :maxdepth: 2
-   :caption: Usage Guide
+   :caption: Release Notes
+
+   release_notes
+
+
+.. User Guide
+
+.. toctree::
+   :maxdepth: 2
+   :caption: User Guide
 
    installation
    usage
