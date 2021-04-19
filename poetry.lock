@@ -742,11 +742,11 @@ watchdog = ["watchdog"]
 
 [[package]]
 name = "winkerberos"
-version = "0.7.0"
+version = "0.8.0"
 description = "High level interface to SSPI for Kerberos client auth"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "zipp"
@@ -1276,25 +1276,21 @@ werkzeug = [
     {file = "Werkzeug-1.0.1.tar.gz", hash = "sha256:6c80b1e5ad3665290ea39320b91e1be1e0d5f60652b964a3070216de83d2e47c"},
 ]
 winkerberos = [
-    {file = "winkerberos-0.7.0-cp26-cp26m-win32.whl", hash = "sha256:541d9ba58d310a8f06f045e6e2d55d25462b26e1425cc997b6813c4e91c33b4c"},
-    {file = "winkerberos-0.7.0-cp26-cp26m-win_amd64.whl", hash = "sha256:c078ebfcfe65ce68cf59d00293ad5dd3e11b6d7fba4ee0f2cd333fa33ccea3c5"},
-    {file = "winkerberos-0.7.0-cp27-cp27m-win32.whl", hash = "sha256:3e6ad24331b6bd020e43e60357463a1a73d47c935b918255796fc617ba6fae8f"},
-    {file = "winkerberos-0.7.0-cp27-cp27m-win_amd64.whl", hash = "sha256:95af58f2d24a93598ef6d11341910621fd4170912c82b5e5d793f2cafa0daf1f"},
-    {file = "winkerberos-0.7.0-cp33-cp33m-win32.whl", hash = "sha256:47b0279b734b2f497ae20172a3d0ee6dc81be642df5a51fc0a88b695123f4061"},
-    {file = "winkerberos-0.7.0-cp33-cp33m-win_amd64.whl", hash = "sha256:764728ce71f7150da664a9dd4398ecfdd1e44fdb50c5d9fdce719f93b8897de0"},
-    {file = "winkerberos-0.7.0-cp34-cp34m-win32.whl", hash = "sha256:d695f7990f8c04fec11dc64093d6107e42b67263a73653b6ad052d95403d6409"},
-    {file = "winkerberos-0.7.0-cp34-cp34m-win_amd64.whl", hash = "sha256:494358695b1d05342af04149b531ed45bcfd9b351b05f67fc3a0dbb7b5ac3851"},
-    {file = "winkerberos-0.7.0-cp35-cp35m-win32.whl", hash = "sha256:76d22b53fb7d6a9a46e4adce644f7be0023e4e05bcc1e9c27569d1bfe12df8bc"},
-    {file = "winkerberos-0.7.0-cp35-cp35m-win_amd64.whl", hash = "sha256:7c1bb92e0692ebd5b91bb2e11122f72c8da367c9524c0a25326cfd62833195a5"},
-    {file = "winkerberos-0.7.0-cp36-cp36m-win32.whl", hash = "sha256:712f29aec8a6d1bb87e8a05e9a65db3cfc6aa041334e2e3c0d5baebf9433471f"},
-    {file = "winkerberos-0.7.0-cp36-cp36m-win_amd64.whl", hash = "sha256:240a1678c320501ade115511b4d10d44b9ff8e7d724b053dc5b3544cbfe6753b"},
-    {file = "winkerberos-0.7.0-cp37-cp37m-win32.whl", hash = "sha256:14dbbcaeacc13aee0fc8a1d0bb12a29500642fe616c41b50bd9e0ff962372ec9"},
-    {file = "winkerberos-0.7.0-cp37-cp37m-win_amd64.whl", hash = "sha256:0ca44087ab43979b0d8ffccb25353c8955d0bf755718405bcd2ad5e889eddfa8"},
-    {file = "winkerberos-0.7.0-cp38-cp38-win32.whl", hash = "sha256:f0c4309091a409d80d5e181ba726f10980671cd387daaabb239525262171d5ff"},
-    {file = "winkerberos-0.7.0-cp38-cp38-win_amd64.whl", hash = "sha256:893d97172e5260285a5f893c8814f15daa7376b004ef6b8de742569d4e2ff83f"},
-    {file = "winkerberos-0.7.0-cp39-cp39-win32.whl", hash = "sha256:22161b0361552acd7b53e5d9145ef36283989aee67dd2cad7d2111908a13bb01"},
-    {file = "winkerberos-0.7.0-cp39-cp39-win_amd64.whl", hash = "sha256:f1da9ab07884c2f51b83d0fbf0802be897eed2de8339a7e6ad13f12b3ea087cb"},
-    {file = "winkerberos-0.7.0.zip", hash = "sha256:e304c28de838a48206edfe58b8deb5209a3fd8c6a755bd521c1ee6e656b06e27"},
+    {file = "winkerberos-0.8.0-cp27-cp27m-win32.whl", hash = "sha256:1f6fb78c7f1a38f9128cf01733109b500495778b573eceab214d5ee96fd80e0f"},
+    {file = "winkerberos-0.8.0-cp27-cp27m-win_amd64.whl", hash = "sha256:e0a368af62e2ce340ad7da3b94d07c7758f70cd7d251932ca0b203a59148abd8"},
+    {file = "winkerberos-0.8.0-cp34-cp34m-win32.whl", hash = "sha256:b6e79a9042d63ea4dbf94e558d587332aab0d74e5c81a659a121d827ad217832"},
+    {file = "winkerberos-0.8.0-cp34-cp34m-win_amd64.whl", hash = "sha256:378b5be58554ded93cba042d601e3c8b5aa9f6e4e16d1916da5a236296deaad8"},
+    {file = "winkerberos-0.8.0-cp35-cp35m-win32.whl", hash = "sha256:a8f1b76ee723df371d57ded8e75cdc0e273ddf2bf2747b94382cd5702133faf1"},
+    {file = "winkerberos-0.8.0-cp35-cp35m-win_amd64.whl", hash = "sha256:fa98b3c52ed18a8832577618a3a69ec6c5311da72bf2a4a06227965b7c60c95c"},
+    {file = "winkerberos-0.8.0-cp36-cp36m-win32.whl", hash = "sha256:d0e175dcb377b83851e4cb79b2f8e7bb4549b78a04805350ebf07a2948ac9280"},
+    {file = "winkerberos-0.8.0-cp36-cp36m-win_amd64.whl", hash = "sha256:4744447f9a2c372d5ab8d2e94e0527c760526cb9f0b60ce17686713542efa7ee"},
+    {file = "winkerberos-0.8.0-cp37-cp37m-win32.whl", hash = "sha256:c4ce21a6687459625574c70918d6da369925c16f8581cadf3112dd48f7efefc2"},
+    {file = "winkerberos-0.8.0-cp37-cp37m-win_amd64.whl", hash = "sha256:c72dfaa89bf493e4f340e19389b45dab680356c9586b5b2114d62b24a4cf9b31"},
+    {file = "winkerberos-0.8.0-cp38-cp38-win32.whl", hash = "sha256:4c05050cdd38a9c0ed56be7bdc92789da35ce0da1ee6c7489c4981d790665740"},
+    {file = "winkerberos-0.8.0-cp38-cp38-win_amd64.whl", hash = "sha256:f77363b0f20d0c753404ef432156e283f24218c99411029d48c8d2fda5652998"},
+    {file = "winkerberos-0.8.0-cp39-cp39-win32.whl", hash = "sha256:8546ae9ee7906dbad4bf66f8651b8e4fb20177f66c2796723304a23b52165c30"},
+    {file = "winkerberos-0.8.0-cp39-cp39-win_amd64.whl", hash = "sha256:5686eb22f85eb4b4c1825f251bf42a36cb44b00e84dcd040a54ba1ee2718fd87"},
+    {file = "winkerberos-0.8.0.zip", hash = "sha256:2af9776b27dfdfe0bfdce1960c81078302588067112c32c663dc3a01412e04da"},
 ]
 zipp = [
     {file = "zipp-3.1.0-py3-none-any.whl", hash = "sha256:aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b"},
