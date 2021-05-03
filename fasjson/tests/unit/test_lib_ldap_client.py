@@ -278,13 +278,25 @@ def test_get_user_not_found(mock_connection):
 
 
 def test_get_user_groups(mock_connection):
-    mocked = [
-        {"cn": [b"admins"]},
-        {"cn": [b"ipausers"]},
-        {"cn": [b"editors"]},
-        {"cn": [b"trust admins"]},
+    mocked_user = [
+        {
+            "memberof": [
+                b"cn=ipausers,cn=groups,cn=accounts,dc=example,dc=test",
+                b"ipaUniqueID=d5bf8308,cn=caacls,cn=ca,dc=example,dc=test",
+                b"cn=testgroup,cn=groups,cn=accounts,dc=example,dc=test",
+                b"cn=testgroup-parent,cn=groups,cn=accounts,dc=example,dc=test",
+            ]
+        }
     ]
-    mock_connection.result3 = _single_page_result_factory(mocked)
+    mocked_groups = [{"cn": [b"testgroup"]}, {"cn": [b"testgroup-parent"]}]
+
+    def result_mock(*results):
+        for result in results:
+            yield _single_page_result_factory(result)(1)
+
+    mock_connection.result3 = mock.Mock(
+        side_effect=result_mock(mocked_user, mocked_groups)
+    )
 
     ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
 
@@ -293,12 +305,10 @@ def test_get_user_groups(mock_connection):
     )
     expected = LDAPResult(
         items=[
-            {"groupname": "admins"},
-            {"groupname": "ipausers"},
-            {"groupname": "editors"},
-            {"groupname": "trust admins"},
+            {"groupname": "testgroup"},
+            {"groupname": "testgroup-parent"},
         ],
-        total=4,
+        total=2,
         page_size=0,
         page_number=1,
     )

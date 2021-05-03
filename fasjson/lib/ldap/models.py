@@ -13,6 +13,7 @@ class Model:
     filters = "(objectClass=*)"
     sub_dn = None
     fields = {}
+    hidden_fields = []
 
     @classmethod
     def get_sub_dn_for(cls, name):
@@ -21,7 +22,11 @@ class Model:
 
     @classmethod
     def get_ldap_attrs(cls):
-        return [converter.ldap_name for converter in cls.fields.values()]
+        return [
+            converter.ldap_name
+            for key, converter in cls.fields.items()
+            if key not in cls.hidden_fields
+        ]
 
     @classmethod
     def convert_ldap_result(cls, result):
@@ -53,7 +58,9 @@ class UserModel(Model):
         "creation": GeneralTimeConverter("fasCreationTime"),
         "is_private": BoolConverter("fasIsPrivate"),
         "locked": BoolConverter("nsAccountLock"),
+        "memberof": Converter("memberof", multivalued=True),
     }
+    hidden_fields = ["memberof"]
     private_fields = [
         "human_name",
         "surname",

@@ -161,8 +161,13 @@ class LDAP:
         return result.items[0]
 
     def get_user_groups(self, username, page_size, page_number):
-        dn = UserModel.get_sub_dn_for(username)
-        filters = f"(&(member={dn},{self.basedn}){GroupModel.filters})"
+        user = self.get_user(username, ["memberof"])
+        groups_filters = [
+            f"({dn.split(',')[0]})"
+            for dn in user["memberof"]
+            if dn.endswith(f"{GroupModel.sub_dn},{self.basedn}")
+        ]
+        filters = f"(&{GroupModel.filters}(|{''.join(groups_filters)}))"
         return self.search(
             model=GroupModel,
             filters=filters,
