@@ -31,6 +31,9 @@ def get_fields_from_ldap_model(ldap_model, endpoint, field_args=None):
     result = {}
 
     for attr, ldap_converter in ldap_model.fields.items():
+        if attr in ldap_model.hidden_fields:
+            continue
+
         if isinstance(ldap_converter, converters.BoolConverter):
             field = fields.Boolean
         elif isinstance(ldap_converter, converters.GeneralTimeConverter):
