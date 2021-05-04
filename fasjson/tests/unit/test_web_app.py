@@ -3,21 +3,19 @@ import os
 import types
 
 import pytest
-from flask_restx import abort
-
 from fasjson.web.app import create_app
+from flask_restx import abort
 
 
 def test_app_gss_forbidden_error(client):
     rv = client.get("/")
-    body = json.loads(rv.data)
     assert rv.status_code == 403
-    expected_message = (
-        "Invalid credentials (Major (851968): Unspecified GSS failure.  "
-        "Minor code may provide more information, Minor (2529639107): "
-        "No credentials cache found)"
+    body = json.loads(rv.data)
+    assert "message" in body
+    assert body["message"].startswith("Invalid credentials")
+    assert body["message"].endswith(
+        "Minor (2529639107): No credentials cache found)"
     )
-    assert body == {"message": expected_message}
 
 
 def test_app_default_unauthorized_error(client, mocker):
