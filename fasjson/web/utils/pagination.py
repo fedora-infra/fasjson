@@ -1,6 +1,6 @@
 import math
 
-from flask import request
+from flask import current_app, request
 from flask_restx import marshal, reqparse
 
 page_request_parser = reqparse.RequestParser()
@@ -47,6 +47,9 @@ def add_page_data(output, result, model):
 
 
 def paged_marshal(result, model, **kwargs):
+    if kwargs.get("mask") is None:
+        mask_header = current_app.config["RESTX_MASK_HEADER"]
+        kwargs["mask"] = request.headers.get(mask_header)
     output = marshal(result.items, model, envelope="result", **kwargs)
     add_page_data(output, result, model)
     return output

@@ -1,6 +1,6 @@
 from fasjson.lib.ldap import converters, get_client
-from flask import current_app, g
-from flask_restx import abort, fields
+from flask import current_app, g, request
+from flask_restx import Mask, abort, fields
 from python_freeipa import ClientMeta
 
 
@@ -51,3 +51,11 @@ def get_fields_from_ldap_model(ldap_model, endpoint, field_args=None):
     result["uri"] = fields.Url(endpoint, absolute=True)
 
     return result
+
+
+def get_attrs_from_mask(model):
+    mask_header = current_app.config["RESTX_MASK_HEADER"]
+    mask = request.headers.get(mask_header)
+    if mask is None:
+        return None
+    return list(Mask(mask).keys())

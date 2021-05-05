@@ -54,9 +54,10 @@ class LDAP:
                 result["service"] = value.split("@")[0]
         return result
 
-    def get_groups(self, page_size, page_number):
+    def get_groups(self, attrs, page_size, page_number):
         return self.search(
             model=GroupModel,
+            attrs=GroupModel.attrs_to_ldap(attrs),
             scope=ldap.SCOPE_SUBTREE,
             page_size=page_size,
             page_number=page_number,
@@ -65,13 +66,16 @@ class LDAP:
     def get_group(self, groupname, attrs=None):
         dn = GroupModel.get_sub_dn_for(groupname)
         result = self.search(
-            model=GroupModel, sub_dn=dn, attrs=attrs, scope=ldap.SCOPE_BASE
+            model=GroupModel,
+            sub_dn=dn,
+            attrs=GroupModel.attrs_to_ldap(attrs),
+            scope=ldap.SCOPE_BASE,
         )
         if not result.items:
             return None
         return result.items[0]
 
-    def get_group_members(self, groupname, page_size, page_number):
+    def get_group_members(self, groupname, attrs, page_size, page_number):
         group_dn = GroupModel.get_sub_dn_for(groupname)
         filters = (
             "(&"
@@ -82,13 +86,13 @@ class LDAP:
         return self.search(
             model=UserModel,
             filters=filters,
-            attrs=["uid"],
+            attrs=UserModel.attrs_to_ldap(attrs) or ["uid"],
             scope=ldap.SCOPE_SUBTREE,
             page_size=page_size,
             page_number=page_number,
         )
 
-    def get_group_sponsors(self, groupname):
+    def get_group_sponsors(self, groupname, attrs=None):
         group_dn = GroupModel.get_sub_dn_for(groupname)
         filters = f"(&(objectClass=fasGroup)(cn={groupname}))"
         sponsors_result = self.search(
@@ -103,9 +107,9 @@ class LDAP:
             or "sponsors" not in sponsors_result.items[0]
         ):
             return []
-        return self._sponsors_to_users(sponsors_result)
+        return self._sponsors_to_users(sponsors_result, attrs)
 
-    def _sponsors_to_users(self, sponsors_dn):
+    def _sponsors_to_users(self, sponsors_dn, attrs):
         sponsors = []
 
         for sponsor in sponsors_dn.items[0]["sponsors"]:
@@ -119,7 +123,11 @@ class LDAP:
         filters.append("))")
         filters = "".join(filters)
 
-        result = self.search(model=UserModel, filters=filters)
+        result = self.search(
+            model=UserModel,
+            filters=filters,
+            attrs=UserModel.attrs_to_ldap(attrs) or ["uid"],
+        )
         return result.items
 
     def check_membership(self, groupname, username):
@@ -143,9 +151,10 @@ class LDAP:
             return True
         raise ValueError(f"Unexpected result length: {len(result.items)}")
 
-    def get_users(self, page_size, page_number):
+    def get_users(self, attrs, page_size, page_number):
         return self.search(
             model=UserModel,
+            attrs=UserModel.attrs_to_ldap(attrs),
             scope=ldap.SCOPE_SUBTREE,
             page_size=page_size,
             page_number=page_number,
@@ -154,13 +163,16 @@ class LDAP:
     def get_user(self, username, attrs=None):
         dn = UserModel.get_sub_dn_for(username)
         result = self.search(
-            model=UserModel, sub_dn=dn, attrs=attrs, scope=ldap.SCOPE_BASE
+            model=UserModel,
+            sub_dn=dn,
+            attrs=UserModel.attrs_to_ldap(attrs),
+            scope=ldap.SCOPE_BASE,
         )
         if not result.items:
             return None
         return result.items[0]
 
-    def get_user_groups(self, username, page_size, page_number):
+    def get_user_groups(self, username, attrs, page_size, page_number):
         user = self.get_user(username, ["memberof"])
         groups_filters = [
             f"({dn.split(',')[0]})"
@@ -170,6 +182,7 @@ class LDAP:
         filters = f"(&{GroupModel.filters}(|{''.join(groups_filters)}))"
         return self.search(
             model=GroupModel,
+            attrs=GroupModel.attrs_to_ldap(attrs),
             filters=filters,
             page_number=page_number,
             page_size=page_size,
@@ -189,6 +202,7 @@ class LDAP:
 
     def search_users(
         self,
+        attrs,
         page_number,
         page_size,
         username,
@@ -219,6 +233,7 @@ class LDAP:
         return self.search(
             model=UserModel,
             filters=filter_string,
+            attrs=UserModel.attrs_to_ldap(attrs),
             page_size=page_size,
             page_number=page_number,
         )

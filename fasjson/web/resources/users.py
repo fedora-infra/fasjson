@@ -1,5 +1,10 @@
+from fasjson.lib.ldap.models import GroupModel as LDAPGroupModel
 from fasjson.lib.ldap.models import UserModel as LDAPUserModel
-from fasjson.web.utils.ipa import get_fields_from_ldap_model, ldap_client
+from fasjson.web.utils.ipa import (
+    get_attrs_from_mask,
+    get_fields_from_ldap_model,
+    ldap_client,
+)
 from fasjson.web.utils.pagination import page_request_parser
 from flask import g
 from flask_restx import Resource, fields
@@ -32,7 +37,9 @@ class UserList(Resource):
         args = page_request_parser.parse_args()
         client = ldap_client()
         result = client.get_users(
-            page_size=args.page_size, page_number=args.page_number
+            attrs=get_attrs_from_mask(UserModel),
+            page_size=args.page_size,
+            page_number=args.page_number,
         )
         result.items = [_maybe_anonymize(user) for user in result.items]
         return result
@@ -47,7 +54,7 @@ class User(Resource):
     def get(self, username):
         """Fetch a user given their name"""
         client = ldap_client()
-        res = client.get_user(username)
+        res = client.get_user(username, attrs=get_attrs_from_mask(UserModel))
         if res is None:
             api_v1.abort(404, "User not found", name=username)
         res = _maybe_anonymize(res)
@@ -56,10 +63,8 @@ class User(Resource):
 
 UserGroupsModel = api_v1.model(
     "UserGroup",
-    {
-        "groupname": fields.String(),
-        "uri": fields.Url("v1.groups_group", absolute=True),
-    },
+    get_fields_from_ldap_model(LDAPGroupModel, "v1.groups_group"),
+    mask="{groupname,uri}",
 )
 
 
@@ -79,6 +84,7 @@ class UserGroups(Resource):
             api_v1.abort(404, "User does not exist", name=username)
         return client.get_user_groups(
             username=username,
+            attrs=get_attrs_from_mask(UserGroupsModel),
             page_size=args.page_size,
             page_number=args.page_number,
         )

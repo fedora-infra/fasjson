@@ -1,6 +1,6 @@
 from flask_restx import Resource
 
-from fasjson.web.utils.ipa import ldap_client
+from fasjson.web.utils.ipa import ldap_client, get_attrs_from_mask
 from fasjson.web.utils.pagination import page_request_parser
 from .base import Namespace
 from .users import UserModel
@@ -38,7 +38,10 @@ class SearchUsers(Resource):
 
         client = ldap_client()
         result = client.search_users(
-            page_size=page_size, page_number=page_number, **search_args
+            attrs=get_attrs_from_mask(UserModel),
+            page_size=page_size,
+            page_number=page_number,
+            **search_args
         )
         return result
 
