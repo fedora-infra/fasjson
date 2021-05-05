@@ -54,6 +54,7 @@ class UserModel(Model):
         "locale": Converter("fasLocale"),
         "timezone": Converter("fasTimeZone"),
         "gpgkeyids": Converter("fasGPGKeyId", multivalued=True),
+        "sshpubkeys": Converter("ipaSshPubKey", multivalued=True),
         "certificates": BinaryConverter("userCertificate", multivalued=True),
         "creation": GeneralTimeConverter("fasCreationTime"),
         "is_private": BoolConverter("fasIsPrivate"),
