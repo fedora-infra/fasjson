@@ -7,6 +7,7 @@ def get_user_ldap_data(name):
         "creation": datetime(2020, 3, 9, 10, 32, 3, tzinfo=timezone.utc),
         "givenname": "",
         "gpgkeyids": None,
+        "sshpubkeys": None,
         "locked": False,
         "username": name,
         "emails": [f"{name}@example.test"],
