@@ -29,6 +29,14 @@ class Model:
         ]
 
     @classmethod
+    def attrs_to_ldap(cls, attrs):
+        if attrs is None:
+            return None
+        return [
+            cls.fields[name].ldap_name for name in attrs if name in cls.fields
+        ]
+
+    @classmethod
     def convert_ldap_result(cls, result):
         new_result = {}
         for dest_name, converter in cls.fields.items():

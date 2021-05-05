@@ -23,7 +23,7 @@ def test_groups_success(client, gss_user, mock_ldap_client):
             for name in groups
         ]
     )
-    mock_ldap_client(get_groups=lambda page_size, page_number: result,)
+    mock_ldap_client(get_groups=lambda attrs, page_size, page_number: result)
 
     rv = client.get("/v1/groups/")
     assert 200 == rv.status_code
@@ -42,65 +42,46 @@ def test_groups_success(client, gss_user, mock_ldap_client):
     }
 
 
-def test_groups_paginate(client, gss_user, mock_ldap_client):
+def test_groups_with_mask(client, gss_user, mock_ldap_client, mocker):
+    groups = ["group1", "group2"]
     result = LDAPResult(
         items=[
             {
-                "groupname": "group1",
-                "description": "the group1 group",
-                "mailing_list": "group1@groups.com",
-                "url": "www.group1.com",
-                "irc": ["#group1"],
+                "groupname": name,
+                "description": f"the {name} group",
+                "mailing_list": f"{name}@groups.com",
+                "url": f"www.{name}.com",
+                "irc": [f"#{name}"],
             }
-        ],
-        total=2,
-        page_number=1,
-        page_size=1,
+            for name in groups
+        ]
     )
-    mock_ldap_client(get_groups=lambda page_size, page_number: result,)
+    mock = mock_ldap_client(get_groups=mocker.Mock(return_value=result))
 
-    rv = client.get("/v1/groups/?page_size=1")
+    rv = client.get(
+        "/v1/groups/", headers={"X-Fields": "{groupname,description,uri}"}
+    )
     assert 200 == rv.status_code
     assert rv.get_json() == {
         "result": [
             {
-                "groupname": "group1",
-                "description": "the group1 group",
-                "mailing_list": "group1@groups.com",
-                "url": "www.group1.com",
-                "irc": ["#group1"],
-                "uri": "http://localhost/v1/groups/group1/",
+                "groupname": name,
+                "description": f"the {name} group",
+                "uri": f"http://localhost/v1/groups/{name}/",
             }
-        ],
-        "page": {
-            "total_results": 2,
-            "page_size": 1,
-            "page_number": 1,
-            "total_pages": 2,
-            "next_page": "http://localhost/v1/groups/?page_size=1&page_number=2",
-        },
+            for name in groups
+        ]
     }
-
-
-def test_groups_paginate_last_page(client, gss_user, mock_ldap_client):
-    result = LDAPResult(
-        items=[{"groupname": "group2"}], total=2, page_number=2, page_size=1
+    mock.get_groups.assert_called_with(
+        attrs=["groupname", "description", "uri"],
+        page_size=None,
+        page_number=1,
     )
-    mock_ldap_client(get_groups=lambda page_size, page_number: result,)
-
-    rv = client.get("/v1/groups/?page_size=1&page_number=2")
-    assert 200 == rv.status_code
-    assert rv.get_json()["page"] == {
-        "total_results": 2,
-        "page_size": 1,
-        "page_number": 2,
-        "total_pages": 2,
-    }
 
 
 def test_groups_no_groups(client, gss_user, mock_ldap_client):
     result = LDAPResult(items=[])
-    mock_ldap_client(get_groups=lambda page_size, page_number: result,)
+    mock_ldap_client(get_groups=lambda attrs, page_size, page_number: result)
     rv = client.get("/v1/groups/")
 
     assert 200 == rv.status_code
@@ -118,8 +99,8 @@ def test_group_members_success(client, gss_user, mock_ldap_client):
     data = [{"username": "admin"}]
     result = LDAPResult(items=data)
     mock_ldap_client(
-        get_group_members=lambda name, page_size, page_number: result,
-        get_group=lambda n: {"cn": n},
+        get_group_members=lambda name, attrs, page_size, page_number: result,
+        get_group=lambda n, attrs=None: {"cn": n},
     )
     rv = client.get("/v1/groups/admins/members/")
 
@@ -135,7 +116,7 @@ def test_group_members_success(client, gss_user, mock_ldap_client):
 def test_group_members_error(client, gss_user, mock_ldap_client):
     mock_ldap_client(
         # get_group_members=lambda name, ps, pn: result,
-        get_group=lambda n: None,
+        get_group=lambda n, attrs=None: None,
     )
 
     rv = client.get("/v1/groups/editors/members/")
@@ -148,26 +129,32 @@ def test_group_members_error(client, gss_user, mock_ldap_client):
     assert expected == rv.get_json()
 
 
-def test_group_members_paginate(client, gss_user, mock_ldap_client):
-    data = [{"username": "admin"}]
-    result = LDAPResult(items=data, total=2, page_number=1, page_size=1)
+def test_group_members_with_mask(client, gss_user, mock_ldap_client):
+    data = [
+        {
+            "username": "admin",
+            "emails": ["admin@example.test"],
+            "timezone": "UTC",
+        }
+    ]
+    result = LDAPResult(items=data)
     mock_ldap_client(
-        get_group_members=lambda name, page_size, page_number: result,
-        get_group=lambda n: {"cn": n},
+        get_group_members=lambda name, attrs, page_size, page_number: result,
+        get_group=lambda n, attrs=None: {"cn": n},
     )
-    rv = client.get("/v1/groups/admins/members/?page_size=1")
+    rv = client.get(
+        "/v1/groups/admins/members/",
+        headers={"X-Fields": "{username,emails,uri}"},
+    )
 
     expected = {
         "result": [
-            {"username": "admin", "uri": "http://localhost/v1/users/admin/"}
-        ],
-        "page": {
-            "total_results": 2,
-            "page_size": 1,
-            "page_number": 1,
-            "total_pages": 2,
-            "next_page": "http://localhost/v1/groups/admins/members/?page_size=1&page_number=2",
-        },
+            {
+                "username": "admin",
+                "emails": ["admin@example.test"],
+                "uri": "http://localhost/v1/users/admin/",
+            }
+        ]
     }
     assert 200 == rv.status_code
     assert expected == rv.get_json()
@@ -176,8 +163,8 @@ def test_group_members_paginate(client, gss_user, mock_ldap_client):
 def test_group_sponsors_success(client, gss_user, mock_ldap_client):
     result = [{"username": "admin"}]
     mock_ldap_client(
-        get_group_sponsors=lambda groupname: result,
-        get_group=lambda n: {"cn": n},
+        get_group_sponsors=lambda groupname, attrs: result,
+        get_group=lambda n, attrs=None: {"cn": n},
     )
     rv = client.get("/v1/groups/admins/sponsors/")
 
@@ -190,8 +177,38 @@ def test_group_sponsors_success(client, gss_user, mock_ldap_client):
     assert expected == rv.get_json()
 
 
+def test_group_sponsors_with_mask(client, gss_user, mock_ldap_client):
+    result = [
+        {
+            "username": "admin",
+            "emails": ["admin@example.test"],
+            "timezone": "UTC",
+        }
+    ]
+    mock_ldap_client(
+        get_group_sponsors=lambda groupname, attrs: result,
+        get_group=lambda n, attrs=None: {"cn": n},
+    )
+    rv = client.get(
+        "/v1/groups/admins/sponsors/",
+        headers={"X-Fields": "{username,emails,uri}"},
+    )
+
+    expected = {
+        "result": [
+            {
+                "username": "admin",
+                "emails": ["admin@example.test"],
+                "uri": "http://localhost/v1/users/admin/",
+            }
+        ]
+    }
+    assert 200 == rv.status_code
+    assert expected == rv.get_json()
+
+
 def test_group_sponsors_error(client, gss_user, mock_ldap_client):
-    mock_ldap_client(get_group=lambda n: None,)
+    mock_ldap_client(get_group=lambda n, attrs=None: None,)
 
     rv = client.get("/v1/groups/editors/sponsors/")
 
@@ -205,7 +222,7 @@ def test_group_sponsors_error(client, gss_user, mock_ldap_client):
 
 def test_group_success(client, gss_user, mock_ldap_client):
     mock_ldap_client(
-        get_group=lambda n: {
+        get_group=lambda n, attrs: {
             "groupname": "dummy-group",
             "description": "the dummy-group",
             "mailing_list": "dummy-group@groups.com",
@@ -228,8 +245,33 @@ def test_group_success(client, gss_user, mock_ldap_client):
     assert rv.get_json() == {"result": expected}
 
 
+def test_group_with_mask(client, gss_user, mock_ldap_client):
+    mock_ldap_client(
+        get_group=lambda n, attrs: {
+            "groupname": "dummy-group",
+            "description": "the dummy-group",
+            "mailing_list": "dummy-group@groups.com",
+            "url": "www.dummy-group.com",
+            "irc": ["#dummy-group"],
+        },
+    )
+
+    rv = client.get(
+        "/v1/groups/dummy-group/",
+        headers={"X-Fields": "{groupname,description,uri}"},
+    )
+
+    expected = {
+        "groupname": "dummy-group",
+        "description": "the dummy-group",
+        "uri": "http://localhost/v1/groups/dummy-group/",
+    }
+    assert 200 == rv.status_code
+    assert rv.get_json() == {"result": expected}
+
+
 def test_group_not_found(client, gss_user, mock_ldap_client):
-    mock_ldap_client(get_group=lambda n: None)
+    mock_ldap_client(get_group=lambda n, attrs=None: None)
     rv = client.get("/v1/groups/dummy-group/")
     assert rv.status_code == 404
     rv = client.get("/v1/groups/dummy-group/is-member/anybody")
@@ -239,7 +281,7 @@ def test_group_not_found(client, gss_user, mock_ldap_client):
 def test_group_is_member_true(client, gss_user, mock_ldap_client):
     mock_ldap_client(
         check_membership=lambda groupname, username: True,
-        get_group=lambda n: {"cn": n},
+        get_group=lambda n, attrs=None: {"cn": n},
     )
 
     rv = client.get("/v1/groups/admins/is-member/admin")
@@ -250,7 +292,7 @@ def test_group_is_member_true(client, gss_user, mock_ldap_client):
 def test_group_is_member_false(client, gss_user, mock_ldap_client):
     mock_ldap_client(
         check_membership=lambda groupname, username: False,
-        get_group=lambda n: {"cn": n},
+        get_group=lambda n, attrs=None: {"cn": n},
     )
 
     rv = client.get("/v1/groups/admins/is-member/someone-else")
@@ -260,7 +302,7 @@ def test_group_is_member_false(client, gss_user, mock_ldap_client):
 
 def test_group_starting_with_number(client, gss_user, mock_ldap_client):
     mock_ldap_client(
-        get_group=lambda n: {
+        get_group=lambda n, attrs: {
             "groupname": "3d-printing-sig",
             "description": "I start with a number",
         },

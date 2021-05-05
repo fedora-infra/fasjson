@@ -1,5 +1,10 @@
 from fasjson.lib.ldap.models import GroupModel as LDAPGroupModel
-from fasjson.web.utils.ipa import get_fields_from_ldap_model, ldap_client
+from fasjson.lib.ldap.models import UserModel as LDAPUserModel
+from fasjson.web.utils.ipa import (
+    get_attrs_from_mask,
+    get_fields_from_ldap_model,
+    ldap_client,
+)
 from fasjson.web.utils.pagination import page_request_parser
 from flask_restx import Resource, fields
 
@@ -13,18 +18,14 @@ GroupModel = api_v1.model(
 
 MemberModel = api_v1.model(
     "Member",
-    {
-        "username": fields.String(),
-        "uri": fields.Url("v1.users_user", absolute=True),
-    },
+    get_fields_from_ldap_model(LDAPUserModel, "v1.users_user"),
+    mask="{username,uri}",
 )
 
 SponsorModel = api_v1.model(
     "Sponsor",
-    {
-        "username": fields.String(),
-        "uri": fields.Url("v1.users_user", absolute=True),
-    },
+    get_fields_from_ldap_model(LDAPUserModel, "v1.users_user"),
+    mask="{username,uri}",
 )
 
 
@@ -38,7 +39,9 @@ class GroupList(Resource):
         args = page_request_parser.parse_args()
         client = ldap_client()
         result = client.get_groups(
-            page_size=args.page_size, page_number=args.page_number
+            attrs=get_attrs_from_mask(GroupModel),
+            page_size=args.page_size,
+            page_number=args.page_number,
         )
         return result
 
@@ -52,7 +55,9 @@ class Group(Resource):
     def get(self, groupname):
         """Fetch a group given their name"""
         client = ldap_client()
-        res = client.get_group(groupname)
+        res = client.get_group(
+            groupname, attrs=get_attrs_from_mask(GroupModel)
+        )
         if res is None:
             api_v1.abort(404, "Group not found", groupname=groupname)
         return res
@@ -75,7 +80,10 @@ class GroupMembers(Resource):
             api_v1.abort(404, "Group not found", groupname=groupname)
 
         return client.get_group_members(
-            groupname, page_size=args.page_size, page_number=args.page_number
+            groupname,
+            attrs=get_attrs_from_mask(MemberModel),
+            page_size=args.page_size,
+            page_number=args.page_number,
         )
 
 
@@ -93,7 +101,9 @@ class GroupSponsors(Resource):
         if group is None:
             api_v1.abort(404, "Group not found", groupname=groupname)
 
-        return client.get_group_sponsors(groupname)
+        return client.get_group_sponsors(
+            groupname, attrs=get_attrs_from_mask(SponsorModel)
+        )
 
 
 @api_v1.route("/<name:groupname>/is-member/<name:username>")
