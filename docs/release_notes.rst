@@ -4,6 +4,32 @@ Release notes
 
 .. towncrier release notes start
 
+v1.1.0
+======
+This is a feature release.
+
+
+Features
+^^^^^^^^
+
+* Field mask support: request more or less object attributes with a HTTP header
+  (:issue:`144`).
+* Expose users' SSH keys (:issue:`186`).
+
+Bug Fixes
+^^^^^^^^^
+
+* Display indirect groups as well (:issue:`188`).
+
+Contributors
+^^^^^^^^^^^^
+
+Many thanks to the contributors of bug reports, pull requests, and pull request
+reviews for this release:
+
+* Aurélien Bompard
+
+
 v1.0.0
 ======
 
