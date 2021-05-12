@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
 here=$(realpath $(dirname $0))
 output="${here}/requirements.txt"
-excluded="gssapi python-ldap requests-kerberos pykerberos winkerberos flask-mod-auth-gssapi"
+excluded="gssapi python-ldap requests-kerberos pykerberos winkerberos"
 
 set -x
 
@@ -17,5 +17,7 @@ done
 
 # Add toml to parse the version in conf.py
 echo toml >> "${output}"
+# Add pytest because it is imported in the source code
+echo pytest >> "${output}"
 # Add Sphinx dependencies
 echo -e "sphinx\nsphinxcontrib-napoleon\nsphinxcontrib-openapi" >> "${output}"

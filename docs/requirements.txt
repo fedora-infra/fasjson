@@ -9,6 +9,7 @@ decorator==5.0.7
 dnspython==1.16.0
 flask==1.1.2
 flask-healthz==0.0.1
+flask-mod-auth-gssapi==0.1.0
 flask-restx==0.2.0
 idna==2.10
 importlib-metadata==4.0.1
@@ -30,6 +31,7 @@ urllib3==1.26.4
 werkzeug==1.0.1
 zipp==3.4.1
 toml
+pytest
 sphinx
 sphinxcontrib-napoleon
 sphinxcontrib-openapi
