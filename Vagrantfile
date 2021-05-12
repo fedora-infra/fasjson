@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+ENV['VAGRANT_NO_PARALLEL'] = 'yes'
+
 Vagrant.configure(2) do |config| 
   config.hostmanager.enabled = true
   config.hostmanager.manage_host = true
