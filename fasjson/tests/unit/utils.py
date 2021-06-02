@@ -14,6 +14,10 @@ def get_user_ldap_data(name):
         "surname": name,
         "human_name": name,
         "is_private": False,
+        "github_username": name,
+        "gitlab_username": name,
+        "website": f"{name}.example.com",
+        "pronouns": ["they/them/theirs"],
     }
 
 

@@ -68,6 +68,10 @@ class UserModel(Model):
         "is_private": BoolConverter("fasIsPrivate"),
         "locked": BoolConverter("nsAccountLock"),
         "memberof": Converter("memberof", multivalued=True),
+        "github_username": Converter("fasGitHubUsername"),
+        "gitlab_username": Converter("fasGitLabUsername"),
+        "website": Converter("fasWebsiteURL"),
+        "pronouns": Converter("fasPronoun", multivalued=True),
     }
     hidden_fields = ["memberof"]
     private_fields = [
@@ -78,6 +82,10 @@ class UserModel(Model):
         "locale",
         "timezone",
         "gpgkeyids",
+        "github_username",
+        "gitlab_username",
+        "website",
+        "pronouns",
     ]
 
     @classmethod
