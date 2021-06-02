@@ -267,6 +267,10 @@ def test_get_user(mock_connection):
             # "fasGPGKeyId": None,
             "fasCreationTime": [b"20200309103203Z"],  # %Y%m%d%H%M%SZ
             "nsAccountLock": [b"false"],
+            "fasGitHubUsername": [b"admin"],
+            "fasGitLabUsername": [b"admin"],
+            "fasWebsiteURL": [b"http://admin.example.com"],
+            "fasPronoun": [b"they/them/theirs"],
         }
     ]
     mock_connection.result3 = _single_page_result_factory(mocked)
@@ -282,6 +286,10 @@ def test_get_user(mock_connection):
         "emails": ["admin@example.test"],
         "surname": "Administrator",
         "timezone": "UTC",
+        "github_username": "admin",
+        "gitlab_username": "admin",
+        "website": "http://admin.example.com",
+        "pronouns": ["they/them/theirs"],
     }
     assert expected == ldap.get_user("admin")
 
