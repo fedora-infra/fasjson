@@ -17,3 +17,7 @@ python:
   version: 3.7
   install:
     - requirements: docs/requirements.txt
+
+build:
+  apt_packages:
+    - libkrb5-dev
