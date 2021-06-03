@@ -281,7 +281,7 @@ typing-extensions = {version = ">=3.7.4.0", markers = "python_version < \"3.8\""
 
 [[package]]
 name = "gssapi"
-version = "1.6.12"
+version = "1.6.13"
 description = "Python GSSAPI Wrapper"
 category = "main"
 optional = false
@@ -969,11 +969,9 @@ gitpython = [
     {file = "GitPython-3.1.17.tar.gz", hash = "sha256:ee24bdc93dce357630764db659edaf6b8d664d4ff5447ccfeedd2dc5c253f41e"},
 ]
 gssapi = [
-    {file = "gssapi-1.6.12-cp36-cp36m-win_amd64.whl", hash = "sha256:18a494c8edb6efb141ca243d77d3781a0e34785f788e47189f1774a765080182"},
-    {file = "gssapi-1.6.12-cp37-cp37m-win_amd64.whl", hash = "sha256:48f6537ccfc59b4e7fb6d2e69e340b70c3cddc8dc645335686b6d5cfdddaf98a"},
-    {file = "gssapi-1.6.12-cp38-cp38-win_amd64.whl", hash = "sha256:9b523392315bf9f724b1ab9bee9862f10f90c787e3473574a8d8fc4be2788cd6"},
-    {file = "gssapi-1.6.12-cp39-cp39-win_amd64.whl", hash = "sha256:c2ec22c0d5719e44d4aaabe0e9641b590f9d235e248df902b5517571622ad278"},
-    {file = "gssapi-1.6.12.tar.gz", hash = "sha256:16ed3b5d7fc37683be27f34a2a65062cb11d815d019bb2e89ffeb395576e51c8"},
+    {file = "gssapi-1.6.13-cp36-cp36m-win_amd64.whl", hash = "sha256:041e97de728e37eae70db5bb5fe3db83f419441f54ec173b2670d2adf3c072ed"},
+    {file = "gssapi-1.6.13-cp37-cp37m-win_amd64.whl", hash = "sha256:e0b3d704b5fbfa1ea8fe4bea2d5df81f9b0c05e7784963403091d1ad21b46c7e"},
+    {file = "gssapi-1.6.13.tar.gz", hash = "sha256:5947b93d8188baab88871c93770a8db394b0e522d4f92d5d4f5c9edb48ac0f9f"},
 ]
 idna = [
     {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},
