@@ -2,6 +2,7 @@ name: Auto-approve Dependabot PRs
 on:
   schedule:
     - cron: "7 * * * *"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -11,7 +12,6 @@ jobs:
   auto-approve:
     name: Auto-approve minor and patch updates
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
     steps:
       - uses: actions/checkout@v2
       - uses: koj-co/dependabot-pr-action@master
