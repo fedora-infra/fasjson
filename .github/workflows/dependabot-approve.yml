@@ -9,13 +9,24 @@ permissions:
   pull-requests: write
 
 jobs:
+  # auto-approve:
+  #   runs-on: ubuntu-latest
+  #   if: github.actor == 'dependabot[bot]'
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: ahmadnassri/action-dependabot-auto-merge@v2.4
+  #       with:
+  #         target: minor
+  #         approve: true
+  #         github-token: ${{ secrets.GITHUB_TOKEN }}
   auto-approve:
+    name: Auto-approve minor and patch updates
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]'
     steps:
       - uses: actions/checkout@v2
-      - uses: ahmadnassri/action-dependabot-auto-merge@v2.4
+      - uses: koj-co/dependabot-pr-action@master
         with:
-          target: minor
-          approve: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          approve-minor: true
+          approve-patch: true
