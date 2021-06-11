@@ -11,8 +11,8 @@ pull_request_rules:
   - approved-reviews-by=@fedora-infra/authdev
   - "#approved-reviews-by>=1"
   - status-success=DCO
-  - status-success=CI on f32
   - status-success=CI on f33
+  - status-success=CI on f34
 
 - name: Automatic merge Dependabot PRs
   actions:
@@ -25,5 +25,5 @@ pull_request_rules:
   - author=dependabot[bot]
   - approved-reviews-by=github-actions[bot]
   - status-success=DCO
-  - status-success=CI on f32
   - status-success=CI on f33
+  - status-success=CI on f34
