@@ -117,6 +117,11 @@ authorized_licenses = [
 [tool.liccheck.authorized_packages]
 requests-kerberos = "<0.12.1"
 
+[tool.pytest.ini_options]
+testpaths = [
+    "fasjson/tests/unit",
+]
+
 [build-system]
 requires = ["poetry>=1.0.0"]
 build-backend = "poetry.masonry.api"
