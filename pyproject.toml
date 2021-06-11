@@ -34,9 +34,16 @@ pytest-cov = "^2.8"
 liccheck = "^0.4.2"
 bandit = "^1.6"
 black = {version = "^19.10b0", allow-prereleases = true}
+isort = "^5.8.0"
 
 [tool.black]
 line-length = 78
+
+[tool.isort]
+profile = "black"
+line_length = 78
+lines_after_imports = 2
+force_alphabetical_sort_within_sections = true
 
 [tool.towncrier]
 package = "fasjson"
