@@ -22,6 +22,7 @@ import os
 import sys
 from subprocess import check_output
 
+
 EXCLUDE = ["dependabot[bot]", "dependabot-preview[bot]", "Weblate (bot)"]
 
 try:

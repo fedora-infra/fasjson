@@ -1,4 +1,5 @@
 import pytest
+
 from fasjson.lib.ldap.client import LDAPResult
 from fasjson.web.resources.groups import GroupModel
 from fasjson.web.utils.pagination import add_page_data, paged_marshal

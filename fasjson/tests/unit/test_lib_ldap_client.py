@@ -3,8 +3,9 @@ import types
 from unittest import mock
 
 import pytest
-from fasjson.lib.ldap.client import LDAP, LDAPResult
 from ldap.controls.pagedresults import SimplePagedResultsControl
+
+from fasjson.lib.ldap.client import LDAP, LDAPResult
 
 
 @pytest.fixture

@@ -1,3 +1,5 @@
+from flask_restx import fields, Resource
+
 from fasjson.lib.ldap.models import GroupModel as LDAPGroupModel
 from fasjson.lib.ldap.models import UserModel as LDAPUserModel
 from fasjson.web.utils.ipa import (
@@ -6,9 +8,9 @@ from fasjson.web.utils.ipa import (
     ldap_client,
 )
 from fasjson.web.utils.pagination import page_request_parser
-from flask_restx import Resource, fields
 
 from .base import Namespace
+
 
 api_v1 = Namespace("groups", description="Groups related operations")
 

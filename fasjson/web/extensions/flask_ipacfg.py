@@ -1,9 +1,9 @@
 import configparser
-import random
 import operator
+import random
 
-import dns.resolver
 import dns.rdatatype
+import dns.resolver
 from dns.exception import DNSException
 from flask import current_app
 

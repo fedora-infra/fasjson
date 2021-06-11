@@ -1,6 +1,7 @@
 from functools import partial
 
 import pytest
+
 from fasjson.lib.ldap.client import LDAPResult
 
 

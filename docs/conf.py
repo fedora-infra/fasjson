@@ -7,10 +7,12 @@
 import os
 import sys
 
+
 topdir = os.path.abspath("../")
 sys.path.insert(0, topdir)
 
 import fasjson  # NOQA
+
 
 # Set the full version, including alpha/beta/rc tags
 release = fasjson.__version__

@@ -1,10 +1,12 @@
 from flask_restx import Resource
 
 from fasjson.web.utils import maybe_anonymize
-from fasjson.web.utils.ipa import ldap_client, get_attrs_from_mask
+from fasjson.web.utils.ipa import get_attrs_from_mask, ldap_client
 from fasjson.web.utils.pagination import page_request_parser
+
 from .base import Namespace
 from .users import UserModel
+
 
 search_request_parser = page_request_parser.copy()
 search_request_parser.add_argument("email", help="The email to search for")
