@@ -1,10 +1,11 @@
 from flask import current_app
-from flask_restx import Resource, fields, reqparse
+from flask_restx import fields, reqparse, Resource
 from python_freeipa.exceptions import BadRequest
 
 from fasjson.web.utils.ipa import rpc_client
 
 from .base import Namespace
+
 
 api_v1 = Namespace("certs", description="Certificates related operations")
 

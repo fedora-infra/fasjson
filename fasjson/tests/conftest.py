@@ -1,7 +1,7 @@
-import pytest
 import os
 import types
 
+import pytest
 from flask.testing import FlaskClient
 
 from fasjson.web.app import create_app

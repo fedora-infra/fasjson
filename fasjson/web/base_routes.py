@@ -1,8 +1,7 @@
 import re
 
-
 import ldap
-from flask import jsonify, url_for, current_app
+from flask import current_app, jsonify, url_for
 from flask_healthz import HealthError
 
 

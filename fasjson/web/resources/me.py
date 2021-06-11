@@ -1,7 +1,8 @@
 from flask import url_for
-from flask_restx import Resource, fields
+from flask_restx import fields, Resource
 
 from fasjson.web.utils.ipa import ldap_client
+
 from .base import Namespace
 
 

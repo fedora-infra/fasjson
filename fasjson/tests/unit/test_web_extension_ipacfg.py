@@ -2,15 +2,15 @@ import os
 from types import SimpleNamespace
 from unittest import mock
 
-import pytest
 import dns
 import dns.rdtypes.IN.SRV
+import pytest
 
 from fasjson.web.extensions.flask_ipacfg import (
+    _mix_weight,
     IPAConfig,
     query_srv,
     sort_prio_weight,
-    _mix_weight,
 )
 
 

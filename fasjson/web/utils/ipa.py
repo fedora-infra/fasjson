@@ -1,7 +1,8 @@
-from fasjson.lib.ldap import converters, get_client
 from flask import current_app, g, request
-from flask_restx import Mask, abort, fields
+from flask_restx import abort, fields, Mask
 from python_freeipa import ClientMeta
+
+from fasjson.lib.ldap import converters, get_client
 
 
 def ldap_client():

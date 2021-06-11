@@ -1,6 +1,7 @@
 import pytest
-from fasjson.web.resources.base import Namespace
 from flask_restx import fields
+
+from fasjson.web.resources.base import Namespace
 
 
 @pytest.fixture

@@ -3,6 +3,7 @@ import math
 from flask import current_app, request
 from flask_restx import marshal, reqparse
 
+
 page_request_parser = reqparse.RequestParser()
 page_request_parser.add_argument("page_size", type=int, help="Page size.")
 page_request_parser.add_argument(

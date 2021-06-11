@@ -1,7 +1,8 @@
 import pytest
-from fasjson.web.utils.ipa import ldap_client, rpc_client
 from flask import g
 from werkzeug.exceptions import Unauthorized
+
+from fasjson.web.utils.ipa import ldap_client, rpc_client
 
 
 def test_ldap_client(mocker, gss_user, app):

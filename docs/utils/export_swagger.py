@@ -4,8 +4,8 @@
 # it saves a copy of the openapi / swagger spec so we can use
 # it in sphinx with the sphinxcontrib-openapi plugin
 
-import os
 import json
+import os
 from importlib import import_module
 
 from fasjson.web.app import create_app

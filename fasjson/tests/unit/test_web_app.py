@@ -3,8 +3,9 @@ import os
 import types
 
 import pytest
-from fasjson.web.app import create_app
 from flask_restx import abort
+
+from fasjson.web.app import create_app
 
 
 def test_app_gss_forbidden_error(client):
