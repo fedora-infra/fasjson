@@ -281,11 +281,11 @@ typing-extensions = {version = ">=3.7.4.0", markers = "python_version < \"3.8\""
 
 [[package]]
 name = "gssapi"
-version = "1.6.13"
+version = "1.6.14"
 description = "Python GSSAPI Wrapper"
 category = "main"
 optional = false
-python-versions = ">=3.6.*"
+python-versions = ">=3.6"
 
 [package.dependencies]
 decorator = "*"
@@ -970,9 +970,15 @@ gitpython = [
     {file = "GitPython-3.1.18.tar.gz", hash = "sha256:b838a895977b45ab6f0cc926a9045c8d1c44e2b653c1fcc39fe91f42c6e8f05b"},
 ]
 gssapi = [
-    {file = "gssapi-1.6.13-cp36-cp36m-win_amd64.whl", hash = "sha256:041e97de728e37eae70db5bb5fe3db83f419441f54ec173b2670d2adf3c072ed"},
-    {file = "gssapi-1.6.13-cp37-cp37m-win_amd64.whl", hash = "sha256:e0b3d704b5fbfa1ea8fe4bea2d5df81f9b0c05e7784963403091d1ad21b46c7e"},
-    {file = "gssapi-1.6.13.tar.gz", hash = "sha256:5947b93d8188baab88871c93770a8db394b0e522d4f92d5d4f5c9edb48ac0f9f"},
+    {file = "gssapi-1.6.14-cp36-cp36m-win32.whl", hash = "sha256:12bfda5634fb542e649c5d13afea683a1256d54296fecea940e3275b79242a02"},
+    {file = "gssapi-1.6.14-cp36-cp36m-win_amd64.whl", hash = "sha256:20cc2873798d123ca6726365c706854cb589297ceabfabf30589b2c298bca8aa"},
+    {file = "gssapi-1.6.14-cp37-cp37m-win32.whl", hash = "sha256:c0d339e593494a3c0cb347711ea50ff806529da30fb2fdb9165c8127c91d4f8e"},
+    {file = "gssapi-1.6.14-cp37-cp37m-win_amd64.whl", hash = "sha256:7b4ee387d6d61291be699c56e77504facd4dca9804d12a1359ef8a1635d6d782"},
+    {file = "gssapi-1.6.14-cp38-cp38-win32.whl", hash = "sha256:d7ddd253c49b27753809401e4136dabff75389d326707899ae616da4abcd3ca6"},
+    {file = "gssapi-1.6.14-cp38-cp38-win_amd64.whl", hash = "sha256:dac4dae90416f89a3c4924ce365f0fdb7adfeaf68a997341d9c74a779837ab39"},
+    {file = "gssapi-1.6.14-cp39-cp39-win32.whl", hash = "sha256:68f772f4ef757ae9a7a7126cba118bf995159a2d5f66846bd351cf4690ec8279"},
+    {file = "gssapi-1.6.14-cp39-cp39-win_amd64.whl", hash = "sha256:a2d2883cdf04d16070c7bca209f7366ac07e382d025bc9f164fb3e99ab3306b3"},
+    {file = "gssapi-1.6.14.tar.gz", hash = "sha256:1bb0a41c9985ad78b973aa3c9f1fa200b543013e3a1b2a24463c2e5d8d1afaf1"},
 ]
 idna = [
     {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},
