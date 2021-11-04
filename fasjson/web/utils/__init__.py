@@ -1,5 +1,6 @@
-from fasjson.lib.ldap.models import UserModel as LDAPUserModel
 from flask import g
+
+from fasjson.lib.ldap.models import UserModel as LDAPUserModel
 
 
 def maybe_anonymize(user):

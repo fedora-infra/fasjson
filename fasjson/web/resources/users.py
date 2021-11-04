@@ -1,4 +1,3 @@
-from flask import g
 from flask_restx import fields, Resource
 
 from fasjson.lib.ldap.models import GroupModel as LDAPGroupModel
