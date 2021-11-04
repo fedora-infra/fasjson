@@ -1,9 +1,9 @@
 from functools import partial
 
 import pytest
-
 from fasjson.lib.ldap.client import LDAPResult
-from fasjson.tests.unit.utils import get_user_ldap_data, get_user_api_output
+from fasjson.lib.ldap.models import UserModel
+from fasjson.tests.unit.utils import get_user_api_output, get_user_ldap_data
 
 
 @pytest.fixture
@@ -13,9 +13,12 @@ def mock_ldap_client(mock_ipa_client):
 
 @pytest.fixture()
 def ldap_with_search_result(mock_ldap_client, gss_user):
-    def mock(num, page_size, page_number, total_results):
+    def mock(
+        num, page_size, page_number, total_results, ldap_data_factory=None
+    ):
+        ldap_data_factory = ldap_data_factory or get_user_ldap_data
         data = [
-            get_user_ldap_data(f"dummy-{idx + 1}") for idx in range(0, num)
+            ldap_data_factory(f"dummy-{idx + 1}") for idx in range(0, num)
         ]
         result = LDAPResult(
             items=data,
@@ -157,3 +160,39 @@ def test_search_user_outside_page_range(client, ldap_with_search_result):
     }
     assert 200 == rv.status_code
     assert expected == rv.get_json()
+
+
+def test_search_user_private(client, ldap_with_search_result):
+    # Make sure the search does not return private information
+    def get_user_ldap_data_private(name):
+        data = get_user_ldap_data(name)
+        data["is_private"] = True
+        return data
+
+    def get_user_api_output_private(name):
+        data = get_user_api_output(name)
+        data["is_private"] = True
+        for field_name in UserModel.private_fields:
+            data[field_name] = None
+        return data
+
+    ldap_with_search_result(
+        num=1,
+        page_size=10,
+        page_number=1,
+        total_results=1,
+        ldap_data_factory=get_user_ldap_data_private,
+    )
+    rv = client.get("/v1/search/users/?username=dummy")
+
+    expected = [get_user_api_output_private("dummy-1")]
+    page = {
+        "total_results": 1,
+        "page_size": 10,
+        "page_number": 1,
+        "total_pages": 1,
+    }
+    assert 200 == rv.status_code
+    print(expected[0])
+    print(rv.get_json()["result"][0])
+    assert rv.get_json() == {"result": expected, "page": page}
