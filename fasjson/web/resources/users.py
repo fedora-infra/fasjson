@@ -1,12 +1,12 @@
 from fasjson.lib.ldap.models import GroupModel as LDAPGroupModel
 from fasjson.lib.ldap.models import UserModel as LDAPUserModel
+from fasjson.web.utils import maybe_anonymize
 from fasjson.web.utils.ipa import (
     get_attrs_from_mask,
     get_fields_from_ldap_model,
     ldap_client,
 )
 from fasjson.web.utils.pagination import page_request_parser
-from flask import g
 from flask_restx import Resource, fields
 
 from .base import Namespace
@@ -19,12 +19,6 @@ UserModel = api_v1.model(
         LDAPUserModel, "v1.users_user", {"locked": {"default": False}}
     ),
 )
-
-
-def _maybe_anonymize(user):
-    if user.get("is_private", False) and g.username != user["username"]:
-        user = LDAPUserModel.anonymize(user)
-    return user
 
 
 @api_v1.route("/")
@@ -41,7 +35,7 @@ class UserList(Resource):
             page_size=args.page_size,
             page_number=args.page_number,
         )
-        result.items = [_maybe_anonymize(user) for user in result.items]
+        result.items = [maybe_anonymize(user) for user in result.items]
         return result
 
 
@@ -57,7 +51,7 @@ class User(Resource):
         res = client.get_user(username, attrs=get_attrs_from_mask(UserModel))
         if res is None:
             api_v1.abort(404, "User not found", name=username)
-        res = _maybe_anonymize(res)
+        res = maybe_anonymize(res)
         return res
 
 

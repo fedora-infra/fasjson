@@ -1,5 +1,6 @@
 from flask_restx import Resource
 
+from fasjson.web.utils import maybe_anonymize
 from fasjson.web.utils.ipa import ldap_client, get_attrs_from_mask
 from fasjson.web.utils.pagination import page_request_parser
 from .base import Namespace
@@ -43,6 +44,7 @@ class SearchUsers(Resource):
             page_number=page_number,
             **search_args
         )
+        result.items = [maybe_anonymize(user) for user in result.items]
         return result
 
     def _parse_page_args(self, search_args):
