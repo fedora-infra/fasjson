@@ -18,7 +18,6 @@ Features
 Bug Fixes
 ^^^^^^^^^
 
-* Display indirect groups as well (:issue:`188`).
 * Respect user's privacy setting on the search endpoint (:issue:`257`).
 
 
