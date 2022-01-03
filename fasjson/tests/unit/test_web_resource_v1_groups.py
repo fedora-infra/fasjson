@@ -209,7 +209,9 @@ def test_group_sponsors_with_mask(client, gss_user, mock_ldap_client):
 
 
 def test_group_sponsors_error(client, gss_user, mock_ldap_client):
-    mock_ldap_client(get_group=lambda n, attrs=None: None,)
+    mock_ldap_client(
+        get_group=lambda n, attrs=None: None,
+    )
 
     rv = client.get("/v1/groups/editors/sponsors/")
 

@@ -4,7 +4,7 @@ set -e
 
 here=$(realpath $(dirname $0))
 output="${here}/requirements.txt"
-excluded="gssapi python-ldap requests-kerberos pykerberos winkerberos"
+excluded="gssapi python-ldap requests-kerberos pykerberos winkerberos dataclasses"
 
 set -x
 
@@ -24,3 +24,5 @@ echo toml >> "${output}"
 echo pytest >> "${output}"
 # Add Sphinx dependencies
 echo -e "sphinx\nsphinxcontrib-napoleon\nsphinxcontrib-openapi" >> "${output}"
+# Lock mitsune because of https://github.com/sphinx-contrib/openapi/issues/123
+echo -e "mistune<2.0.0" >> "${output}"

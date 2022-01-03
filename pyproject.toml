@@ -15,27 +15,27 @@ repository = "https://github.com/fedora-infra/fasjson"
 homepage = "https://github.com/fedora-infra/fasjson"
 
 [tool.poetry.dependencies]
-python = "^3.6"
-Flask = "^1.1.1"
+python = "^3.6.2"
+Flask = "^2.0.2"
 python-ldap = "^3.2.0"
-dnspython = "^1.16.0"
-typing = "^3.7.4.1"
+dnspython = "^2.1.0"
 flask-restx = "^0.5.0"
-flask-healthz = "^0.0.1"
+flask-healthz = "^0.0.3"
 python-freeipa = "^1.0.5"
-requests-kerberos = "^0.12.0"
-flask-mod-auth-gssapi = "^0.1.0"
+requests-kerberos = "^0.14.0"
+flask-mod-auth-gssapi = "^0.2.0"
 
 [tool.poetry.dev-dependencies]
-flake8 = "^3.7"
-pytest = "^5.3.5"
-pytest-mock = "^2.0.0"
-pytest-cov = "^2.8"
-liccheck = "^0.4.2"
+flake8 = "^4.0.1"
+pytest = "^6.2.5"
+pytest-mock = "^3.6.1"
+pytest-cov = "^3.0.0"
+liccheck = "^0.6.4"
 bandit = "^1.6"
-black = {version = "^19.10b0", allow-prereleases = true}
-isort = "^5.8.0"
+black = {version = "^21.12b0", allow-prereleases = true}
+isort = "^5.10.1"
 safety = "^1.10.3"
+typing = "*"
 
 [tool.black]
 line-length = 78
@@ -118,12 +118,10 @@ authorized_licenses = [
   "zpl 2.1",
   "mpl-2.0",
   "MPL 2.0",
+  "Mozilla Public License 2.0 (MPL 2.0)",
   "lgpl",
   "BSD-like",
 ]
-
-[tool.liccheck.authorized_packages]
-requests-kerberos = "<0.12.1"
 
 [tool.pytest.ini_options]
 testpaths = [

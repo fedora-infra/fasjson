@@ -15,7 +15,8 @@ from .base import Namespace
 api_v1 = Namespace("groups", description="Groups related operations")
 
 GroupModel = api_v1.model(
-    "Group", get_fields_from_ldap_model(LDAPGroupModel, "v1.groups_group"),
+    "Group",
+    get_fields_from_ldap_model(LDAPGroupModel, "v1.groups_group"),
 )
 
 MemberModel = api_v1.model(

@@ -63,7 +63,9 @@ def _make_dns_answer(records):
         rdclass=dns.rdataclass.IN,
         response=SimpleNamespace(
             answer=dns.message.ANSWER,
-            find_rrset=lambda *a, **kw: mocked_records,
+            resolve_chaining=lambda: SimpleNamespace(
+                canonical_name=qname, answer=mocked_records, minimum_ttl=3600
+            ),
         ),
     )
     return mocked_answer
