@@ -72,8 +72,7 @@ class IPAConfig:
 
 
 def _mix_weight(records):
-    """Weighted population sorting for records with same priority
-    """
+    """Weighted population sorting for records with same priority"""
     # trivial case
     if len(records) <= 1:
         return records

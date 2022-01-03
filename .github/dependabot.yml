@@ -8,14 +8,3 @@ updates:
   versioning-strategy: lockfile-only
   allow:
   - dependency-type: all
-  ignore:
-  - dependency-name: cryptography
-    versions:
-    - 3.4.4
-    - 3.4.5
-  - dependency-name: flake8
-    versions:
-    - 3.8.4
-  - dependency-name: pytest
-    versions:
-    - 5.4.3

@@ -99,7 +99,9 @@ def test_user_with_mask(client, gss_user, mock_ldap_client):
 def test_users_success(client, gss_user, mock_ldap_client):
     data = [get_user_ldap_data(f"dummy-{idx}") for idx in range(1, 10)]
     result = LDAPResult(items=data)
-    mock_ldap_client(get_users=lambda attrs, page_size, page_number: result,)
+    mock_ldap_client(
+        get_users=lambda attrs, page_size, page_number: result,
+    )
 
     rv = client.get("/v1/users/")
 
@@ -165,7 +167,8 @@ def test_user_groups_with_mask(client, gss_user, mock_ldap_client):
     )
 
     rv = client.get(
-        "/v1/users/dummy/groups/", headers={"X-Fields": "{groupname,irc}"},
+        "/v1/users/dummy/groups/",
+        headers={"X-Fields": "{groupname,irc}"},
     )
     assert 200 == rv.status_code
     assert rv.get_json() == {

@@ -87,7 +87,8 @@ class UserGroups(Resource):
 
 
 UserAgreementsModel = api_v1.model(
-    "UserAgreement", {"name": fields.String()},
+    "UserAgreement",
+    {"name": fields.String()},
 )
 
 
