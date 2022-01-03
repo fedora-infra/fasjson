@@ -36,6 +36,7 @@ black = {version = "^21.12b0", allow-prereleases = true}
 isort = "^5.10.1"
 safety = "^1.10.3"
 typing = "*"
+pre-commit = "^2.16.0"
 
 [tool.black]
 line-length = 78
@@ -52,7 +53,7 @@ filename = "docs/release_notes.rst"
 directory = "news/"
 title_format = "v{version}"
 issue_format = "{issue}"
-template = "news/_template.rst"
+template = "news/_template.rst.j2"
 underlines = "=^-"
 wrap = true
 all_bullets = true
@@ -109,6 +110,7 @@ authorized_licenses = [
   "gnu lgpl",
   "gpl v2",
   "GNU General Public License v2 or later (GPLv2+)",
+  "GNU Library or Lesser General Public License (LGPL)",
   "gpl v3",
   "lgpl with exceptions or zpl",
   "isc",
@@ -121,6 +123,7 @@ authorized_licenses = [
   "Mozilla Public License 2.0 (MPL 2.0)",
   "lgpl",
   "BSD-like",
+  "Public Domain",
 ]
 
 [tool.pytest.ini_options]
