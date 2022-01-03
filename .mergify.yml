@@ -1,29 +1,59 @@
+queue_rules:
+  - name: default
+    conditions:
+      # Conditions to get out of the queue (= merged)
+      - status-success=Misc tests (lint)
+      - status-success=Misc tests (format)
+      - status-success=Misc tests (licenses)
+      - status-success=Misc tests (security)
+      - status-success=Misc tests (docs)
+      - status-success=Unit tests (py36-unittest)
+      - status-success=Unit tests (py37-unittest)
+      - status-success=Unit tests (py38-unittest)
+      - status-success=Unit tests (py39-unittest)
+      - status-success=Unit tests (py310-unittest)
+
 pull_request_rules:
+  - name: Automatic merge on approval
+    actions:
+      merge:
+        method: rebase
+        rebase_fallback: null
+        strict: true
+    conditions:
+    - label!=WIP
+    - approved-reviews-by=@fedora-infra/authdev
+    - "#approved-reviews-by>=1"
+    - status-success=DCO
+    - status-success=Misc tests (lint)
+    - status-success=Misc tests (format)
+    - status-success=Misc tests (licenses)
+    - status-success=Misc tests (security)
+    - status-success=Misc tests (docs)
+    - status-success=Unit tests (py36-unittest)
+    - status-success=Unit tests (py37-unittest)
+    - status-success=Unit tests (py38-unittest)
+    - status-success=Unit tests (py39-unittest)
+    - status-success=Unit tests (py310-unittest)
 
-- name: Automatic merge on approval
-  actions:
-    merge:
-      method: rebase
-      rebase_fallback: null
-      strict: true
-  conditions:
-  - label!=WIP
-  - approved-reviews-by=@fedora-infra/authdev
-  - "#approved-reviews-by>=1"
-  - status-success=DCO
-  - status-success=CI on f33
-  - status-success=CI on f34
-
-- name: Automatic merge Dependabot PRs
-  actions:
-    merge:
-      method: rebase
-      rebase_fallback: null
-      strict: true
-  conditions:
-  - label!=WIP
-  - author=dependabot[bot]
-  - approved-reviews-by=github-actions[bot]
-  - status-success=DCO
-  - status-success=CI on f33
-  - status-success=CI on f34
+  - name: Automatic merge Dependabot PRs
+    actions:
+      merge:
+        method: rebase
+        rebase_fallback: null
+        strict: true
+    conditions:
+    - label!=WIP
+    - author=dependabot[bot]
+    - approved-reviews-by=github-actions[bot]
+    - status-success=DCO
+    - status-success=Misc tests (lint)
+    - status-success=Misc tests (format)
+    - status-success=Misc tests (licenses)
+    - status-success=Misc tests (security)
+    - status-success=Misc tests (docs)
+    - status-success=Unit tests (py36-unittest)
+    - status-success=Unit tests (py37-unittest)
+    - status-success=Unit tests (py38-unittest)
+    - status-success=Unit tests (py39-unittest)
+    - status-success=Unit tests (py310-unittest)
