@@ -14,46 +14,50 @@ queue_rules:
       - status-success=Unit tests (py310-unittest)
 
 pull_request_rules:
-  - name: Automatic merge on approval
-    actions:
-      merge:
-        method: rebase
-        rebase_fallback: null
-        strict: true
-    conditions:
-    - label!=WIP
-    - approved-reviews-by=@fedora-infra/authdev
-    - "#approved-reviews-by>=1"
-    - status-success=DCO
-    - status-success=Misc tests (lint)
-    - status-success=Misc tests (format)
-    - status-success=Misc tests (licenses)
-    - status-success=Misc tests (security)
-    - status-success=Misc tests (docs)
-    - status-success=Unit tests (py36-unittest)
-    - status-success=Unit tests (py37-unittest)
-    - status-success=Unit tests (py38-unittest)
-    - status-success=Unit tests (py39-unittest)
-    - status-success=Unit tests (py310-unittest)
 
-  - name: Automatic merge Dependabot PRs
+  - name: Merge on approval
     actions:
-      merge:
+      queue:
+        name: default
         method: rebase
-        rebase_fallback: null
-        strict: true
+        rebase_fallback: none
     conditions:
-    - label!=WIP
-    - author=dependabot[bot]
-    - approved-reviews-by=github-actions[bot]
-    - status-success=DCO
-    - status-success=Misc tests (lint)
-    - status-success=Misc tests (format)
-    - status-success=Misc tests (licenses)
-    - status-success=Misc tests (security)
-    - status-success=Misc tests (docs)
-    - status-success=Unit tests (py36-unittest)
-    - status-success=Unit tests (py37-unittest)
-    - status-success=Unit tests (py38-unittest)
-    - status-success=Unit tests (py39-unittest)
-    - status-success=Unit tests (py310-unittest)
+      - label!=WIP
+      - -draft
+      - approved-reviews-by=@fedora-infra/authdev
+      - "#changes-requested-reviews-by=0"
+      - status-success=DCO
+      - status-success=Misc tests (lint)
+      - status-success=Misc tests (format)
+      - status-success=Misc tests (licenses)
+      - status-success=Misc tests (security)
+      - status-success=Misc tests (docs)
+      - status-success=Unit tests (py36-unittest)
+      - status-success=Unit tests (py37-unittest)
+      - status-success=Unit tests (py38-unittest)
+      - status-success=Unit tests (py39-unittest)
+      - status-success=Unit tests (py310-unittest)
+
+  - name: Merge Dependabot PRs
+    actions:
+      queue:
+        name: default
+        method: rebase
+        rebase_fallback: none
+    conditions:
+      - label!=WIP
+      - -draft
+      - author=dependabot[bot]
+      - approved-reviews-by=github-actions[bot]
+      - "#changes-requested-reviews-by=0"
+      - status-success=DCO
+      - status-success=Misc tests (lint)
+      - status-success=Misc tests (format)
+      - status-success=Misc tests (licenses)
+      - status-success=Misc tests (security)
+      - status-success=Misc tests (docs)
+      - status-success=Unit tests (py36-unittest)
+      - status-success=Unit tests (py37-unittest)
+      - status-success=Unit tests (py38-unittest)
+      - status-success=Unit tests (py39-unittest)
+      - status-success=Unit tests (py310-unittest)
