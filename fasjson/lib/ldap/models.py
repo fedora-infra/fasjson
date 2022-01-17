@@ -72,6 +72,7 @@ class UserModel(Model):
         "gitlab_username": Converter("fasGitLabUsername"),
         "website": Converter("fasWebsiteURL"),
         "pronouns": Converter("fasPronoun", multivalued=True),
+        "rhbzemail": Converter("fasRHBZEmail"),
     }
     hidden_fields = ["memberof"]
     private_fields = [

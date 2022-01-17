@@ -272,6 +272,7 @@ def test_get_user(mock_connection):
             "fasGitLabUsername": [b"admin"],
             "fasWebsiteURL": [b"http://admin.example.com"],
             "fasPronoun": [b"they/them/theirs"],
+            "fasRHBZEmail": [b"admin@rhbz_example.test"],
         }
     ]
     mock_connection.result3 = _single_page_result_factory(mocked)
@@ -291,6 +292,7 @@ def test_get_user(mock_connection):
         "gitlab_username": "admin",
         "website": "http://admin.example.com",
         "pronouns": ["they/them/theirs"],
+        "rhbzemail": "admin@rhbz_example.test",
     }
     assert expected == ldap.get_user("admin")
 
