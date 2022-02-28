@@ -32,7 +32,7 @@ pytest-mock = "^3.6.1"
 pytest-cov = "^3.0.0"
 liccheck = "^0.6.4"
 bandit = "^1.6"
-black = {version = "^21.12b0", allow-prereleases = true}
+black = "^22.0"
 isort = "^5.10.1"
 safety = "^1.10.3"
 typing = "*"
