@@ -24,6 +24,7 @@ flask-healthz = "^0.0.3"
 python-freeipa = "^1.0.5"
 requests-kerberos = "^0.14.0"
 flask-mod-auth-gssapi = "^0.2.0"
+requests-gssapi = "^1.2.3"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^4.0.1"
