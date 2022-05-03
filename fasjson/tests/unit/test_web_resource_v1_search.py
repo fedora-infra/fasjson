@@ -197,3 +197,36 @@ def test_search_user_private(client, ldap_with_search_result):
     print(expected[0])
     print(rv.get_json()["result"][0])
     assert rv.get_json() == {"result": expected, "page": page}
+
+
+def test_search_json_body(client, ldap_with_search_result):
+    ldap_with_search_result(
+        num=0, page_size=1, page_number=1, total_results=0
+    )
+    rv = client.get("/v1/search/users/", json={"username": "dummy"})
+
+    assert 200 == rv.status_code
+    page = {
+        "total_results": 0,
+        "page_size": 1,
+        "page_number": 1,
+        "total_pages": 0,
+    }
+    assert rv.get_json() == {"result": [], "page": page}
+
+
+def test_search_bad_json_body(client, ldap_with_search_result):
+    # This should trigger the error handling in AnyJsonRequest
+    ldap_with_search_result(
+        num=0, page_size=1, page_number=1, total_results=0
+    )
+    rv = client.get(
+        "/v1/search/users/", data="bad-json", content_type="application/json"
+    )
+
+    assert 400 == rv.status_code
+    assert rv.get_json() == {
+        "message": (
+            "The browser (or proxy) sent a request that this server could not understand."
+        )
+    }
