@@ -2,6 +2,7 @@ import os
 from logging.config import dictConfig
 
 from flask import Flask
+from flask.wrappers import Request
 from flask_healthz import healthz
 from flask_mod_auth_gssapi import FlaskModAuthGSSAPI
 from flask_restx import abort
@@ -21,10 +22,21 @@ class NameConverter(BaseConverter):
     regex = "[a-zA-Z0-9][a-zA-Z0-9_.-]{0,63}"
 
 
+# https://github.com/pallets/flask/issues/4552#issuecomment-1109785314
+class AnyJsonRequest(Request):
+    def on_json_loading_failed(self, e):
+        if e is not None:
+            return super().on_json_loading_failed(e)
+
+
 def create_app(config=None):
     """See https://flask.palletsprojects.com/en/1.1.x/patterns/appfactories/"""
 
     app = Flask(__name__)
+
+    # Don't crash if content-type is not set to application/json.
+    # https://github.com/python-restx/flask-restx/issues/422
+    app.request_class = AnyJsonRequest
 
     # Load default configuration
     app.config.from_pyfile("defaults.cfg")
