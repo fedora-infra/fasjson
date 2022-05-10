@@ -14,6 +14,12 @@ readme = 'README.md'
 repository = "https://github.com/fedora-infra/fasjson"
 homepage = "https://github.com/fedora-infra/fasjson"
 
+include = [
+  "devel/ansible/roles/fasjson/files/fasjson.wsgi",
+  "devel/ansible/roles/fasjson/files/config/",
+  "COPYING",
+]
+
 [tool.poetry.dependencies]
 python = "^3.6.2"
 Flask = "^2.0.2"

@@ -1,8 +1,9 @@
 %global debug_package %{nil}
 %global ipa_version 4.8.0
+%global pypi_name fasjson
 
-Name:           fasjson
-Version:        0.0.1
+Name:           python-%{pypi_name}
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        JSON REST API for Fedora Account System
 
@@ -62,19 +63,19 @@ rm -rf $RPM_BUILD_ROOT
 %py3_install
 
 %__mkdir_p %{buildroot}%{_usr}/share/fasjson
-cp fasjson.wsgi %{buildroot}%{_usr}/share/fasjson
+cp devel/ansible/roles/fasjson/files/fasjson.wsgi %{buildroot}%{_usr}/share/fasjson
 
 %__mkdir_p %{buildroot}%{_sysconfdir}/gssproxy
-cp config/gssproxy-fasjson.conf %{buildroot}%{_sysconfdir}/gssproxy/99-fasjson.conf
+cp devel/ansible/roles/fasjson/files/config/gssproxy-fasjson.conf %{buildroot}%{_sysconfdir}/gssproxy/99-fasjson.conf
 
 %__mkdir_p %{buildroot}%{_unitdir}/httpd.service.d
-cp config/systemd-httpd-service-fasjson.conf  %{buildroot}/%{_unitdir}/httpd.service.d/fasjson.conf
+cp devel/ansible/roles/fasjson/files/config/systemd-httpd-service-fasjson.conf  %{buildroot}/%{_unitdir}/httpd.service.d/fasjson.conf
 
 %__mkdir_p %{buildroot}%{_sysconfdir}/httpd/conf.d
-cp config/httpd-fasjson.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/fasjson.conf
+cp devel/ansible/roles/fasjson/files/config/httpd-fasjson.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/fasjson.conf
 
 %__mkdir_p %{buildroot}%{_tmpfilesdir}
-cp config/tmpfiles-fasjson.conf %{buildroot}%{_tmpfilesdir}/fasjson.conf
+cp devel/ansible/roles/fasjson/files/config/tmpfiles-fasjson.conf %{buildroot}%{_tmpfilesdir}/fasjson.conf
 
 
 %post
@@ -114,5 +115,8 @@ systemctl try-restart httpd.service
 
 
 %changelog
+* Mon May 09 2022 Stephen Coady <scoady@redhat.com> - 1.2.0-1
+- Bump specfile to 1.2.0
+
 * Tue Nov 19 2019 Christian Heimes <cheimes@redhat.com> - 0.0.1-1
 - Initial release
