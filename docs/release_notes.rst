@@ -4,6 +4,30 @@ Release notes
 
 .. towncrier release notes start
 
+v1.2.1
+======
+
+Released on 2022-05-16.
+
+Development Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Allow users to set bugzilla email using fasRHBZEmail attribute
+  (:issue:`288`).
+* Update dependencies
+* Drop support for Python < 3.9
+
+Contributors
+^^^^^^^^^^^^
+
+Many thanks to the contributors of bug reports, pull requests, and pull request
+reviews for this release:
+
+* Aurélien Bompard
+* Pedro Moura
+* Stephen Coady
+
+
 v1.2.0
 ======
 
