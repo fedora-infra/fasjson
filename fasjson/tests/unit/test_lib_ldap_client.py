@@ -93,7 +93,10 @@ def test_get_groups_with_attrs(mock_connection, mocker):
         ["groupname", "url", "unknown"], page_number=1, page_size=0
     )
     mock_connection.search_ext.assert_called_once()
-    mock_connection.search_ext.call_args[1]["attrlist"] == ["cn", "fasUrl"]
+    assert mock_connection.search_ext.call_args[1]["attrlist"] == [
+        "cn",
+        "fasurl",
+    ]
 
 
 def test_get_group(mock_connection):
@@ -305,7 +308,10 @@ def test_get_user_with_attrs(mock_connection, mocker):
     ldap.get_user("admin", ["username", "surname"])
 
     mock_connection.search_ext.assert_called_once()
-    mock_connection.search_ext.call_args[1]["attrlist"] == ["uid", "sn"]
+    assert mock_connection.search_ext.call_args[1]["attrlist"] == [
+        "uid",
+        "sn",
+    ]
 
 
 def test_get_user_not_found(mock_connection):
