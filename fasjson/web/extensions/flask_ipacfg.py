@@ -154,5 +154,5 @@ def query_srv(qname, resolver=None, **kwargs):
     """
     if resolver is None:
         resolver = dns.resolver
-    answer = resolver.query(qname, rdtype=dns.rdatatype.SRV, **kwargs)
+    answer = resolver.resolve(qname, rdtype=dns.rdatatype.SRV, **kwargs)
     return sort_prio_weight(answer)
