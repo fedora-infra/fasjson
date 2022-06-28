@@ -211,6 +211,7 @@ class LDAP:
         givenname,
         surname,
         human_name,
+        creation_before,
     ):
         filter_fields = {
             "uid": username,
@@ -229,6 +230,9 @@ class LDAP:
                     filter_string.append(f"({attribute}={filter_value})")
                 else:
                     filter_string.append(f"({attribute}=*{filter_value}*)")
+        if creation_before:
+            filter_value = ldap.filter.escape_filter_chars(creation_before, 0)
+            filter_string.append(f"(fasCreationTime<={filter_value})")
         filter_string.append("))")
         filter_string = "".join(filter_string)
 
