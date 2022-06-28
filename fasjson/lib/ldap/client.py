@@ -231,7 +231,9 @@ class LDAP:
                 else:
                     filter_string.append(f"({attribute}=*{filter_value}*)")
         if creation_before:
-            filter_value = ldap.filter.escape_filter_chars(creation_before, 0)
+            filter_value = ldap.filter.escape_filter_chars(
+                creation_before.strftime("%Y%m%d%H%M%SZ"), 0
+            )
             filter_string.append(f"(fasCreationTime<={filter_value})")
         filter_string.append("))")
         filter_string = "".join(filter_string)

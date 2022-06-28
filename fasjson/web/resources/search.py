@@ -1,4 +1,5 @@
 from flask_restx import Resource
+from flask_restx.inputs import datetime_from_iso8601
 
 from fasjson.web.utils import maybe_anonymize
 from fasjson.web.utils.ipa import get_attrs_from_mask, ldap_client
@@ -26,7 +27,9 @@ search_request_parser.add_argument(
     "human_name", help="The full human name to search for"
 )
 search_request_parser.add_argument(
-    "creation_before", help="Search for users created before this date"
+    "creation_before",
+    help="Search for users created before this date",
+    type=datetime_from_iso8601,
 )
 
 
@@ -85,6 +88,8 @@ class SearchUsers(Resource):
         if not any(search_args.values()):
             api_v1.abort(400, "At least one search term must be provided.")
         for search_term, search_value in search_args.items():
+            if search_term == "creation_before":
+                continue  # It's a datetime already
             if search_value and len(search_value) < 3:
                 api_v1.abort(
                     400,

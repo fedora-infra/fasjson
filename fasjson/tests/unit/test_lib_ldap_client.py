@@ -433,7 +433,10 @@ def test_search_users(mock_connection):
     [
         ({"username": "something"}, "(uid=*something*)"),
         ({"human_name": "something"}, "(displayName=*something*)"),
-        ({"creation_before": "20420101"}, "(fasCreationTime<=20420101)"),
+        (
+            {"creation_before": datetime.datetime(2042, 1, 1)},
+            "(fasCreationTime<=20420101000000Z)",
+        ),
     ],
 )
 def test_search_users_filters(
