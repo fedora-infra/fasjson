@@ -98,3 +98,11 @@ def test_add_page_data_last_page(app, ldap_result):
         "page_number": 2,
         "total_pages": 2,
     }
+
+
+def test_add_page_data_existing_qs(app, ldap_result):
+    with app.test_request_context("/?foo=bar"):
+        output = paged_marshal(ldap_result, GroupModel)
+
+    expected_next_page = "http://localhost/?foo=bar&page_size=1&page_number=2"
+    assert output["page"]["next_page"] == expected_next_page
