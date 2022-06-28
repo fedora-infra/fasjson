@@ -9,8 +9,8 @@ Vagrant.configure(2) do |config|
   config.hostmanager.manage_guest = true
 
   config.vm.define "freeipa" do |freeipa|
-    freeipa.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/releases/34/Cloud/x86_64/images/Fedora-Cloud-Base-Vagrant-34-1.2.x86_64.vagrant-libvirt.box"
-    freeipa.vm.box = "f34-cloud-libvirt"
+    freeipa.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/releases/36/Cloud/x86_64/images/Fedora-Cloud-Base-Vagrant-36-1.5.x86_64.vagrant-libvirt.box"
+    freeipa.vm.box = "f36-cloud-libvirt"
     freeipa.vm.hostname = "ipa.example.test"
     freeipa.hostmanager.aliases = ("kerberos.example.test")
     
@@ -29,8 +29,8 @@ Vagrant.configure(2) do |config|
   end
   
   config.vm.define "fasjson" do |fasjson|
-    fasjson.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/releases/34/Cloud/x86_64/images/Fedora-Cloud-Base-Vagrant-34-1.2.x86_64.vagrant-libvirt.box"
-    fasjson.vm.box = "f34-cloud-libvirt"
+    fasjson.vm.box_url = "https://download.fedoraproject.org/pub/fedora/linux/releases/36/Cloud/x86_64/images/Fedora-Cloud-Base-Vagrant-36-1.5.x86_64.vagrant-libvirt.box"
+    fasjson.vm.box = "f36-cloud-libvirt"
     fasjson.vm.hostname = "fasjson.example.test"
     
     fasjson.vm.synced_folder ".", "/vagrant/", type: "sshfs"
