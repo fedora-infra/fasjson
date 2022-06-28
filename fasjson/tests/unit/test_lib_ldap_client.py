@@ -395,6 +395,7 @@ def test_search_users(mock_connection):
         ircnick="dummy-1@example.test",
         givenname="",
         surname="",
+        human_name="",
         attrs=None,
         page_number=1,
         page_size=0,
@@ -420,6 +421,43 @@ def test_search_users(mock_connection):
     assert result == expected
 
 
+@pytest.mark.parametrize(
+    "query,expected_filter",
+    [
+        ({"username": "something"}, "(uid=*something*)"),
+        ({"human_name": "something"}, "(displayName=*something*)"),
+    ],
+)
+def test_search_users_filters(
+    mock_connection, mocker, query, expected_filter
+):
+    mock_connection.result3 = _single_page_result_factory([])
+    mock_connection.search_ext = mocker.Mock(return_value=1)
+
+    ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
+    search_query = dict(
+        username="",
+        email="",
+        ircnick="",
+        givenname="",
+        surname="",
+        human_name="",
+    )
+    search_query.update(query)
+
+    ldap.search_users(
+        attrs=None,
+        page_number=1,
+        page_size=0,
+        **search_query,
+    )
+    mock_connection.search_ext.assert_called_once()
+    assert (
+        mock_connection.search_ext.call_args[0][2]
+        == f"(&(&(objectClass=fasUser)(!(nsAccountLock=TRUE)))(&{expected_filter}))"
+    )
+
+
 def test_get_paged_search_filters(mock_connection):
     mocked = []
 
@@ -436,6 +474,7 @@ def test_get_paged_search_filters(mock_connection):
             ircnick=None,
             givenname=None,
             surname=None,
+            human_name=None,
         )
 
     called_filters = [call[1]["filters"] for call in do_search.call_args_list]
@@ -496,6 +535,7 @@ def test_get_paged_search_no_results(mock_connection):
             ircnick="something",
             givenname="some",
             surname="thing",
+            human_name="something",
         )
 
     called_filters = [call[1]["filters"] for call in do_search.call_args_list]
@@ -503,7 +543,7 @@ def test_get_paged_search_no_results(mock_connection):
         (
             "(&(&(objectClass=fasUser)(!(nsAccountLock=TRUE)))(&(uid=*something*)"
             "(mail=something@example.test)(fasIRCNick=*something*)"
-            "(givenName=*some*)(sn=*thing*)))"
+            "(givenName=*some*)(sn=*thing*)(displayName=*something*)))"
         )
     ]
     expected = LDAPResult(
