@@ -143,7 +143,7 @@ def test_detect_dns(mocker, app):
 
 def test_dns_query():
     resolver = mock.Mock()
-    resolver.query.return_value = _make_dns_answer(
+    resolver.resolve.return_value = _make_dns_answer(
         [
             dict(name="ldap1", priority=30),
             dict(name="ldap2", priority=20, weight=2),
@@ -161,7 +161,7 @@ def test_dns_query():
 def test_dns_query_same_prio_same_weight():
     names = ["ldap1", "ldap2", "ldap3"]
     resolver = mock.Mock()
-    resolver.query.return_value = _make_dns_answer(
+    resolver.resolve.return_value = _make_dns_answer(
         [{"name": name} for name in names]
     )
     result = query_srv("_ldap._tcp.example.com", resolver)
@@ -171,7 +171,7 @@ def test_dns_query_same_prio_same_weight():
 
 def test_dns_query_no_record():
     resolver = mock.Mock()
-    resolver.query.return_value = _make_dns_answer([])
+    resolver.resolve.return_value = _make_dns_answer([])
     result = query_srv("_ldap._tcp.example.com", resolver)
     assert len(result) == 0
 
