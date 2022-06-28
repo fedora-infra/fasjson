@@ -25,6 +25,9 @@ search_request_parser.add_argument(
 search_request_parser.add_argument(
     "human_name", help="The full human name to search for"
 )
+search_request_parser.add_argument(
+    "creation_before", help="Search for users created before this date"
+)
 
 
 api_v1 = Namespace("search", description="Search related operations")
