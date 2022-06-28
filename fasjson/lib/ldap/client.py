@@ -210,6 +210,7 @@ class LDAP:
         ircnick,
         givenname,
         surname,
+        human_name,
     ):
         filter_fields = {
             "uid": username,
@@ -217,6 +218,7 @@ class LDAP:
             "fasIRCNick": ircnick,
             "givenName": givenname,
             "sn": surname,
+            "displayName": human_name,
         }
 
         filter_string = ["(&", UserModel.filters, "(&"]

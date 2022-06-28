@@ -22,6 +22,9 @@ search_request_parser.add_argument(
 search_request_parser.add_argument(
     "surname", help="The surname to search for"
 )
+search_request_parser.add_argument(
+    "human_name", help="The full human name to search for"
+)
 
 
 api_v1 = Namespace("search", description="Search related operations")
