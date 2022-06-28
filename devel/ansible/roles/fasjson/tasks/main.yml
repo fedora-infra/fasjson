@@ -22,6 +22,7 @@
       - vim
       - tmux
       - libffi-devel
+      - openldap-devel
     state: present
 
 - name: Allow apache to see /srv
@@ -55,6 +56,12 @@
     chdir: /vagrant/
   become: yes
   become_user: vagrant
+
+# https://github.com/python-ldap/python-ldap/issues/432#issuecomment-974799221
+- name: Workaround for python-ldap and openldap 2.5+
+  copy:
+    dest: /usr/lib64/libldap_r.so
+    content: INPUT ( libldap.so )
 
 - name: Install python dependencies with poetry
   shell: /srv/venv/bin/poetry install
