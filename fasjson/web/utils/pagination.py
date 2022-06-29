@@ -38,10 +38,13 @@ def add_page_data(output, result, model):
         "total_pages": total_pages,
     }
     if result.page_number < total_pages:
-        qs = {
-            "page_size": result.page_size,
-            "page_number": result.page_number + 1,
-        }
+        qs = request.args.copy()
+        qs.update(
+            {
+                "page_size": result.page_size,
+                "page_number": result.page_number + 1,
+            }
+        )
         qs = "&".join(f"{k}={v}" for k, v in qs.items())
         base_url = request.base_url
         output["page"]["next_page"] = f"{base_url}?{qs}"
