@@ -16,11 +16,6 @@ import fasjson  # NOQA
 
 # Set the full version, including alpha/beta/rc tags
 release = fasjson.__version__
-if release is None:
-    import toml
-
-    pyproject = toml.load(os.path.join(topdir, "pyproject.toml"))
-    release = pyproject["tool"]["poetry"]["version"]
 
 
 # -- Project information -----------------------------------------------------
