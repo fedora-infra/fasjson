@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fasjson"
-version = "1.2.1"
+version = "1.3.0"
 description = "fasjson makes it possible for applications to talk to the fedora account system."
 
 license = "MIT"

@@ -4,6 +4,33 @@ Release notes
 
 .. towncrier release notes start
 
+
+v1.3.0
+======
+
+This is a feature release that adds user search terms.
+
+Features
+^^^^^^^^
+
+* Add the ``human_name`` and ``creation_before`` search terms for users
+  (:pr:`343`).
+
+Development Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Upgrade the Vagrant VM to F36 (:pr:`343`).
+
+Contributors
+^^^^^^^^^^^^
+
+Many thanks to the contributors of bug reports, pull requests, and pull request
+reviews for this release:
+
+* Aurélien Bompard
+* Stephen Coady
+
+
 v1.2.1
 ======
 
