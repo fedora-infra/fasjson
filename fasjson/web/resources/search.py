@@ -28,6 +28,9 @@ search_request_parser.add_argument(
     "human_name", help="The full human name to search for"
 )
 search_request_parser.add_argument(
+    "github_username", help="The username in GitHub.com"
+)
+search_request_parser.add_argument(
     "creation__before",
     help="Search for users created before this date",
     type=datetime_from_iso8601,

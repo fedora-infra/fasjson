@@ -433,6 +433,10 @@ def test_search_users(mock_connection):
         ({"human_name": "something"}, "(displayName=*something*)"),
         ({"human_name__exact": "something"}, "(displayName=something)"),
         (
+            {"github_username__exact": "something"},
+            "(fasGitHubUsername=something)",
+        ),
+        (
             {"creation__before": datetime.datetime(2042, 1, 1)},
             "(fasCreationTime<=20420101000000Z)",
         ),
