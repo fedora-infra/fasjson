@@ -4,6 +4,25 @@ Release notes
 
 .. towncrier release notes start
 
+v1.4.0
+======
+
+Released on 2022-06-30.
+This is a feature release that adds exact value search and GitHub username
+search.
+
+
+Features
+^^^^^^^^
+
+* Allow searching for the exact value (:issue:`266`).
+* Add a way to search users with GitHub usernames (:issue:`348`).
+
+The ``creation_before`` search term has been renamed to ``creation__before``
+for coherence. This is technically a backwards incompatible change, but the
+term has only been added a few days ago and not advertised, so I'm fairly
+confident noone uses it yet.
+
 
 v1.3.0
 ======
