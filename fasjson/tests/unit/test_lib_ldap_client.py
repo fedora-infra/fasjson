@@ -399,10 +399,6 @@ def test_search_users(mock_connection):
         username="dummy",
         email="dummy",
         ircnick="dummy-1@example.test",
-        givenname="",
-        surname="",
-        human_name="",
-        creation_before="",
         attrs=None,
         page_number=1,
         page_size=0,
@@ -446,22 +442,11 @@ def test_search_users_filters(
     mock_connection.search_ext = mocker.Mock(return_value=1)
 
     ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
-    search_query = dict(
-        username="",
-        email="",
-        ircnick="",
-        givenname="",
-        surname="",
-        human_name="",
-        creation_before="",
-    )
-    search_query.update(query)
-
     ldap.search_users(
         attrs=None,
         page_number=1,
         page_size=0,
-        **search_query,
+        **query,
     )
     mock_connection.search_ext.assert_called_once()
     assert (
@@ -482,12 +467,6 @@ def test_get_paged_search_filters(mock_connection):
             page_number=2,
             page_size=3,
             username="something",
-            email=None,
-            ircnick=None,
-            givenname=None,
-            surname=None,
-            human_name=None,
-            creation_before=None,
         )
 
     called_filters = [call[1]["filters"] for call in do_search.call_args_list]
@@ -549,7 +528,6 @@ def test_get_paged_search_no_results(mock_connection):
             givenname="some",
             surname="thing",
             human_name="something",
-            creation_before="",
         )
 
     called_filters = [call[1]["filters"] for call in do_search.call_args_list]

@@ -29,11 +29,15 @@ class Model:
         ]
 
     @classmethod
+    def attr_to_ldap(cls, attr):
+        return cls.fields[attr].ldap_name
+
+    @classmethod
     def attrs_to_ldap(cls, attrs):
         if attrs is None:
             return None
         return [
-            cls.fields[name].ldap_name for name in attrs if name in cls.fields
+            cls.attr_to_ldap(name) for name in attrs if name in cls.fields
         ]
 
     @classmethod
@@ -46,6 +50,15 @@ class Model:
                 continue
             new_result[dest_name] = converter.from_ldap(existing_value)
         return new_result
+
+    @classmethod
+    def get_search_attrs_map(cls):
+        result = {}
+        for name, converter in cls.fields.items():
+            if name.endswith("s") and converter.multivalued:
+                name = name[:-1]
+            result[name] = converter.ldap_name
+        return result
 
 
 class UserModel(Model):

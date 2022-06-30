@@ -205,34 +205,27 @@ class LDAP:
         attrs,
         page_number,
         page_size,
-        username,
-        email,
-        ircnick,
-        givenname,
-        surname,
-        human_name,
-        creation_before,
+        **filters,
     ):
-        filter_fields = {
-            "uid": username,
-            "mail": email,
-            "fasIRCNick": ircnick,
-            "givenName": givenname,
-            "sn": surname,
-            "displayName": human_name,
-        }
-
         filter_string = ["(&", UserModel.filters, "(&"]
-        for attribute, filter in filter_fields.items():
-            if filter:
-                filter_value = ldap.filter.escape_filter_chars(filter, 0)
-                if attribute == "mail":
-                    filter_string.append(f"({attribute}={filter_value})")
-                else:
-                    filter_string.append(f"({attribute}=*{filter_value}*)")
-        if creation_before:
+        attrs_map = UserModel.get_search_attrs_map()
+        for term, filter in filters.items():
+            if not filter:
+                continue
+            try:
+                attribute = attrs_map[term]
+            except KeyError:
+                continue
+            filter_value = ldap.filter.escape_filter_chars(filter, 0)
+            if attribute == "mail":
+                # Strict matching on email
+                filter_string.append(f"({attribute}={filter_value})")
+            else:
+                # Substring matching on other attributes
+                filter_string.append(f"({attribute}=*{filter_value}*)")
+        if filters.get("creation_before"):
             filter_value = ldap.filter.escape_filter_chars(
-                creation_before.strftime("%Y%m%d%H%M%SZ"), 0
+                filters["creation_before"].strftime("%Y%m%d%H%M%SZ"), 0
             )
             filter_string.append(f"(fasCreationTime<={filter_value})")
         filter_string.append("))")
