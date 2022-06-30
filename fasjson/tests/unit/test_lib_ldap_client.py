@@ -427,10 +427,13 @@ def test_search_users(mock_connection):
 @pytest.mark.parametrize(
     "query,expected_filter",
     [
+        ({"username": ""}, ""),
         ({"username": "something"}, "(uid=*something*)"),
+        ({"username__exact": "something"}, "(uid=something)"),
         ({"human_name": "something"}, "(displayName=*something*)"),
+        ({"human_name__exact": "something"}, "(displayName=something)"),
         (
-            {"creation_before": datetime.datetime(2042, 1, 1)},
+            {"creation__before": datetime.datetime(2042, 1, 1)},
             "(fasCreationTime<=20420101000000Z)",
         ),
     ],

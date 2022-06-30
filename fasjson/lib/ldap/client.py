@@ -212,20 +212,25 @@ class LDAP:
         for term, filter in filters.items():
             if not filter:
                 continue
+
+            substring_match = True
+            if term.endswith("__exact"):
+                term = term[:-7]
+                substring_match = False
+            if term == "email":
+                substring_match = False
+
             try:
                 attribute = attrs_map[term]
             except KeyError:
                 continue
             filter_value = ldap.filter.escape_filter_chars(filter, 0)
-            if attribute == "mail":
-                # Strict matching on email
-                filter_string.append(f"({attribute}={filter_value})")
-            else:
-                # Substring matching on other attributes
-                filter_string.append(f"({attribute}=*{filter_value}*)")
-        if filters.get("creation_before"):
+            if substring_match:
+                filter_value = f"*{filter_value}*"
+            filter_string.append(f"({attribute}={filter_value})")
+        if filters.get("creation__before"):
             filter_value = ldap.filter.escape_filter_chars(
-                filters["creation_before"].strftime("%Y%m%d%H%M%SZ"), 0
+                filters["creation__before"].strftime("%Y%m%d%H%M%SZ"), 0
             )
             filter_string.append(f"(fasCreationTime<={filter_value})")
         filter_string.append("))")
