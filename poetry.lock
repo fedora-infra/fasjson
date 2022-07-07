@@ -711,7 +711,7 @@ tests = ["responses"]
 
 [[package]]
 name = "python-ldap"
-version = "3.4.0"
+version = "3.4.2"
 description = "Python modules for implementing LDAP clients"
 category = "main"
 optional = false
@@ -1399,7 +1399,7 @@ python-freeipa = [
     {file = "python_freeipa-1.0.6-py2.py3-none-any.whl", hash = "sha256:c7145eba7b353d9d87e89c4ccf02960c000b4094b1dfadbe20628404ca878eed"},
 ]
 python-ldap = [
-    {file = "python-ldap-3.4.0.tar.gz", hash = "sha256:60464c8fc25e71e0fd40449a24eae482dcd0fb7fcf823e7de627a6525b3e0d12"},
+    {file = "python-ldap-3.4.2.tar.gz", hash = "sha256:b16470a0983aaf09a00ffb8f40b69a2446f3d0be639a229256bce381fcb268f7"},
 ]
 pytz = [
     {file = "pytz-2022.1-py2.py3-none-any.whl", hash = "sha256:e68985985296d9a66a881eb3193b0906246245294a881e7c8afe623866ac6a5c"},
