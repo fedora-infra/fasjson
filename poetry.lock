@@ -11,7 +11,7 @@ dev = ["black", "coverage", "isort", "pre-commit", "pyenchant", "pylint"]
 
 [[package]]
 name = "atomicwrites"
-version = "1.4.0"
+version = "1.4.1"
 description = "Atomic file writes."
 category = "dev"
 optional = false
