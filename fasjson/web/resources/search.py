@@ -35,6 +35,9 @@ search_request_parser.add_argument(
     help="Search for users created before this date",
     type=datetime_from_iso8601,
 )
+search_request_parser.add_argument(
+    "rhbzemail", help="The bugzilla email to search for"
+)
 add_exact_arguments(search_request_parser)
 
 
