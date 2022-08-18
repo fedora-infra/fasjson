@@ -26,3 +26,5 @@ echo pytest >> "${output}"
 echo -e "sphinx\nsphinxcontrib-napoleon\nsphinxcontrib-openapi" >> "${output}"
 # Lock mitsune because of https://github.com/sphinx-contrib/openapi/issues/123
 echo -e "mistune<2.0.0" >> "${output}"
+# Lock docutils to avoid: cannot import name 'ErrorString' from 'docutils.core'
+echo -e "docutils<0.19" >> "${output}"
