@@ -440,6 +440,14 @@ def test_search_users(mock_connection):
             {"creation__before": datetime.datetime(2042, 1, 1)},
             "(fasCreationTime<=20420101000000Z)",
         ),
+        (
+            {"rhbzemail": "something"},
+            "(fasRHBZEmail=*something*)",
+        ),
+        (
+            {"rhbzemail__exact": "something"},
+            "(fasRHBZEmail=something)",
+        ),
     ],
 )
 def test_search_users_filters(
