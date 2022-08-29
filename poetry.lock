@@ -889,11 +889,11 @@ testing = ["coverage (>=6.2)", "coverage-enable-subprocess (>=1)", "flaky (>=3.7
 
 [[package]]
 name = "werkzeug"
-version = "2.0.3"
+version = "2.1.2"
 description = "The comprehensive WSGI web application library."
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 
 [package.extras]
 watchdog = ["watchdog"]
@@ -913,7 +913,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9.0"
-content-hash = "df3c5c78d0924e896fdb57b3e886a14547428c63561599897daef5cc5e714f19"
+content-hash = "15ff2cd27179c6b19b623f3264374685d2fa9ef737265b9650b747c1c7e67eef"
 
 [metadata.files]
 aniso8601 = []
