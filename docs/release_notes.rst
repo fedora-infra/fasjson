@@ -4,6 +4,27 @@ Release notes
 
 .. towncrier release notes start
 
+v1.5.0
+======
+
+Released on 2022-08-29.
+This is a feature release that adds rhbzemail field searching.
+
+Features
+^^^^^^^^
+
+* Allow search by rhbzemail field (:issue:`370`).
+
+Contributors
+^^^^^^^^^^^^
+
+Many thanks to the contributors of bug reports, pull requests, and pull request
+reviews for this release:
+
+* Aurélien Bompard
+* Michal Konečný
+
+
 v1.4.0
 ======
 
