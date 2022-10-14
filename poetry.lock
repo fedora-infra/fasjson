@@ -416,7 +416,7 @@ i18n = ["Babel (>=2.7)"]
 
 [[package]]
 name = "jsonschema"
-version = "4.11.0"
+version = "4.16.0"
 description = "An implementation of JSON Schema validation for Python"
 category = "main"
 optional = false
@@ -1220,8 +1220,8 @@ jinja2 = [
     {file = "Jinja2-3.1.2.tar.gz", hash = "sha256:31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852"},
 ]
 jsonschema = [
-    {file = "jsonschema-4.11.0-py3-none-any.whl", hash = "sha256:2ac503b91b4a9dcf9c93764b26e926e386ec1065fec4f685c0e458a375dadedf"},
-    {file = "jsonschema-4.11.0.tar.gz", hash = "sha256:706bbcafb49b1350fbcea40b209bdce8aed07c3288f7a77e9539bd5b3ddead3d"},
+    {file = "jsonschema-4.16.0-py3-none-any.whl", hash = "sha256:9e74b8f9738d6a946d70705dc692b74b5429cd0960d58e79ffecfc43b2221eb9"},
+    {file = "jsonschema-4.16.0.tar.gz", hash = "sha256:165059f076eff6971bae5b742fc029a7b4ef3f9bcf04c14e4776a7605de14b23"},
 ]
 krb5 = [
     {file = "krb5-0.4.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:d808d499edeb8604d1445e8b8e9f6daf4b639a3793ed6e21dacaf46e7eb2d037"},
