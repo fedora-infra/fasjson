@@ -337,7 +337,7 @@ gitdb = ">=4.0.1,<5"
 
 [[package]]
 name = "gssapi"
-version = "1.8.1"
+version = "1.8.2"
 description = "Python GSSAPI Wrapper"
 category = "main"
 optional = false
@@ -1181,22 +1181,26 @@ GitPython = [
     {file = "GitPython-3.1.29.tar.gz", hash = "sha256:cc36bfc4a3f913e66805a28e84703e419d9c264c1077e537b54f0e1af85dbefd"},
 ]
 gssapi = [
-    {file = "gssapi-1.8.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:35909a2daa31170dca54ce0815e7166eff67b6cb77594806055552c96ff8829b"},
-    {file = "gssapi-1.8.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:8dd2b036a596f2f87bfd18242c438a11aef1ed78a6a345c2677d0a150897f33f"},
-    {file = "gssapi-1.8.1-cp310-cp310-win32.whl", hash = "sha256:783f4d816f439e050a83ad682bea57507d5c452ed2f9ea4fcb600a9371ffd940"},
-    {file = "gssapi-1.8.1-cp310-cp310-win_amd64.whl", hash = "sha256:a30a5e39772eb3db0c87471c48bd04d44f20b3b15472e5b40a29fa227b206aa6"},
-    {file = "gssapi-1.8.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:721a365d4f6bfdced10e60c82301894e6d6c607c177272f70c3e6e03daad92b3"},
-    {file = "gssapi-1.8.1-cp37-cp37m-win32.whl", hash = "sha256:1dca47b430e0222cc38e326a6c34c81c6351ba5bd286ee4499e0a59fe0a9b016"},
-    {file = "gssapi-1.8.1-cp37-cp37m-win_amd64.whl", hash = "sha256:eafb54fea882f7d8b0796a5a7830ad76742511101202923cb6e0bdb7becfee5f"},
-    {file = "gssapi-1.8.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:59d9e3b1dc481026e3590da8b79969bf1c48de58a039958efc0b395941679d9c"},
-    {file = "gssapi-1.8.1-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:eaf1e9cb5eec54509466847df7f8246876a9b809274305042bdbcada69623df9"},
-    {file = "gssapi-1.8.1-cp38-cp38-win32.whl", hash = "sha256:d84b084033af2a3c5beadafba3a793dcb2f8f139239f59f165eaaa6a40b3b058"},
-    {file = "gssapi-1.8.1-cp38-cp38-win_amd64.whl", hash = "sha256:2e85f72d2fa6933d4f3aff26c66638c17ce4fe23e9e2d64b81264a4425fb776f"},
-    {file = "gssapi-1.8.1-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:ec6ee12b0ac1c649c4d6693277025c3a23f6586c3dea01cf9e7067d0f713bd63"},
-    {file = "gssapi-1.8.1-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:56488a179a3fd346fd2e16c979299da67e6207ecc22ff918d431e05d5c5dfe1f"},
-    {file = "gssapi-1.8.1-cp39-cp39-win32.whl", hash = "sha256:ef1cca01e099771e21328228cd1683ec284d8ec983ad18c9ba82e91a455687bb"},
-    {file = "gssapi-1.8.1-cp39-cp39-win_amd64.whl", hash = "sha256:39f75364ab86cba3defc13bbac359aac3cdf7ea081f704b73c0af85834f1e36e"},
-    {file = "gssapi-1.8.1.tar.gz", hash = "sha256:893aa38ae769d1febe89963aa9f59194a966736ade2263fe14e0081126d64a72"},
+    {file = "gssapi-1.8.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:7c14cf97d61073d8211abfded77066af791356868022acda10224a8212639cf5"},
+    {file = "gssapi-1.8.2-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:a36bc089036196aa03c3c312ea1639677065b3d7e8f37edbba731f61f5e56dd6"},
+    {file = "gssapi-1.8.2-cp310-cp310-win32.whl", hash = "sha256:cdd6bff2cf7f3a5a5a24cddde137b6e117fe53aad81f240dee2e8e383c0b289b"},
+    {file = "gssapi-1.8.2-cp310-cp310-win_amd64.whl", hash = "sha256:f75b094913a1757e5e634b70b03e808cab0eb02c802ec50b760636b23b0aa50c"},
+    {file = "gssapi-1.8.2-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:47d69b1fd3bd0764d7a14500c6cbd8fd08198ee6e1737048a01ad7024d57f67d"},
+    {file = "gssapi-1.8.2-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:67c85758a6b40042509c96bb00d0873a501491453ad5b0da88dbfa9343c8ffea"},
+    {file = "gssapi-1.8.2-cp311-cp311-win32.whl", hash = "sha256:4aaed04439aed8eba525ea44dd7219ecd97d520254320e66ac53d9ae4acb8fe5"},
+    {file = "gssapi-1.8.2-cp311-cp311-win_amd64.whl", hash = "sha256:8b4c1c664635153b0055a08bf30ec1552c8aa064a76f565d7905057500f334b3"},
+    {file = "gssapi-1.8.2-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:02e0a8f35e1f5b1c0eada646e3da1af3022c25e8df26ded3fd18ee78abb155ea"},
+    {file = "gssapi-1.8.2-cp37-cp37m-win32.whl", hash = "sha256:84bfd1b3954a5a608302884a36586eed6f623f6f38fcd331ad55937eca1ea89f"},
+    {file = "gssapi-1.8.2-cp37-cp37m-win_amd64.whl", hash = "sha256:85e7e623dfe51fef3f613acb965c4fa1866e7a7ee2c2558cbe2f203798171510"},
+    {file = "gssapi-1.8.2-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:512a2bd98e8003f48d98908bf54d1ed94c5388764e0a09fdc24cc691422a4162"},
+    {file = "gssapi-1.8.2-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:13aba9a947994f5f5f1fb6f425b397a359b191cee2983fa33911cf5e212d6cfb"},
+    {file = "gssapi-1.8.2-cp38-cp38-win32.whl", hash = "sha256:43c8b1acb8efa1f881ff7f7e912ccdc611689484190b7cc83f538b44f8992cbd"},
+    {file = "gssapi-1.8.2-cp38-cp38-win_amd64.whl", hash = "sha256:787262e0db124d302c972d30e6f4b7c81423e696d08ee6e07047194a9bce2664"},
+    {file = "gssapi-1.8.2-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:d6be1d8e07cc151e217f8a0ccf7c28ca5a1bb0ae00c8512586642c9f876a7298"},
+    {file = "gssapi-1.8.2-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:75763c49b3e18da60e160d76e8ac9a27b0bbd637c6e88513150fbb7158ae15d7"},
+    {file = "gssapi-1.8.2-cp39-cp39-win32.whl", hash = "sha256:dcd2be270bf490b6007eb3734795aaeddf92848f79b69d6a23f6204ccaa9b6c7"},
+    {file = "gssapi-1.8.2-cp39-cp39-win_amd64.whl", hash = "sha256:fac7d1f4b14383bd29d3996cf5f6f23d0dc50ffd7965d2bc35bcc0849da24152"},
+    {file = "gssapi-1.8.2.tar.gz", hash = "sha256:b78e0a021cc91158660e4c5cc9263e07c719346c35a9c0f66725e914b235c89a"},
 ]
 identify = [
     {file = "identify-2.5.7-py2.py3-none-any.whl", hash = "sha256:7a67b2a6208d390fd86fd04fb3def94a3a8b7f0bcbd1d1fcd6736f4defe26390"},
