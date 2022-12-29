@@ -451,7 +451,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "liccheck"
-version = "0.7.2"
+version = "0.8.2"
 description = "Check python packages from requirement.txt and report issues"
 category = "dev"
 optional = false
@@ -1245,8 +1245,8 @@ krb5 = [
     {file = "krb5-0.4.0.tar.gz", hash = "sha256:6eb0e91e044d37cb34c84b831310f4a48951f2902d4ebb65b97cbac5ff1b2264"},
 ]
 liccheck = [
-    {file = "liccheck-0.7.2-py2.py3-none-any.whl", hash = "sha256:a50d212b943d119f61d822080e0b7bcefbae4c3b7cc7b54b47b465c191bfc8aa"},
-    {file = "liccheck-0.7.2.tar.gz", hash = "sha256:1961ee9bd9ae72c21f79da6db3a2048536f0912f4c5fde0f0c062d65ea5fbf0a"},
+    {file = "liccheck-0.8.2-py2.py3-none-any.whl", hash = "sha256:a9ca471ed543be4eccde7813481fb70a93a2ba7e29add66f351c655814e38f03"},
+    {file = "liccheck-0.8.2.tar.gz", hash = "sha256:c2937aba67740162fc7db9459e3a6457901d11c02cc47fdb99f3c127b1ffd885"},
 ]
 markupsafe = [
     {file = "MarkupSafe-2.1.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:86b1f75c4e7c2ac2ccdaec2b9022845dbb81880ca318bb7a0a01fbf7813e3812"},
