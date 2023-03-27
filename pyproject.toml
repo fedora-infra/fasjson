@@ -28,16 +28,16 @@ flask-mod-auth-gssapi = "^0.2.0"
 requests-gssapi = "^1.2.3"
 
 [tool.poetry.dev-dependencies]
-flake8 = "^4.0.1"
-pytest = "^7.1.2"
-pytest-mock = "^3.6.1"
-pytest-cov = "^3.0.0"
+flake8 = "*"
+pytest = "*"
+pytest-mock = "*"
+pytest-cov = "*"
 liccheck = "*"
-bandit = "^1.6"
-black = "^22.0"
-isort = "^5.10.1"
-safety = "^1.10.3"
-pre-commit = "^2.16.0"
+bandit = "*"
+black = "*"
+isort = "*"
+safety = "*"
+pre-commit = "*"
 
 [tool.black]
 line-length = 78
