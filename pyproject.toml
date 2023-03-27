@@ -37,6 +37,8 @@ black = "*"
 isort = "*"
 safety = "*"
 pre-commit = "*"
+# For the licenses check, follow Poetry's dep
+platformdirs = "^2.5.2"
 
 [tool.black]
 line-length = 78
