@@ -226,7 +226,5 @@ def test_search_bad_json_body(client, ldap_with_search_result):
 
     assert 400 == rv.status_code
     assert rv.get_json() == {
-        "message": (
-            "The browser (or proxy) sent a request that this server could not understand."
-        )
+        "message": "At least one search term must be provided."
     }
