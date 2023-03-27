@@ -125,6 +125,7 @@ authorized_licenses = [
   "lgpl",
   "BSD-like",
   "Public Domain",
+  "The Unlicense (Unlicense)",
 ]
 
 [tool.pytest.ini_options]
