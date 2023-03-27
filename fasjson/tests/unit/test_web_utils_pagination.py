@@ -35,7 +35,6 @@ def page_output():
 
 
 def test_paged_marshal(app, ldap_result, page_output):
-
     with app.test_request_context("/"):
         output = paged_marshal(ldap_result, GroupModel)
 
