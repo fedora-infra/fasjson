@@ -358,6 +358,23 @@ def test_get_user_groups(mock_connection):
     assert result == expected
 
 
+def test_get_user_groups_no_group(mock_connection):
+    mock_connection.result3 = _single_page_result_factory([{}])
+    ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
+
+    result = ldap.get_user_groups(
+        username="dummy", attrs=["groupname"], page_number=1, page_size=0
+    )
+
+    expected = LDAPResult(
+        items=[],
+        total=0,
+        page_size=0,
+        page_number=1,
+    )
+    assert result == expected
+
+
 def test_get_user_agreements(mock_connection):
     mocked = [
         {"cn": [b"FPCA"]},
