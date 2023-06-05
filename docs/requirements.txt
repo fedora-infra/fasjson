@@ -28,7 +28,7 @@ pyspnego[kerberos]==0.8.0
 python-freeipa==1.0.6 
 pytz==2023.2 
 requests-gssapi==1.2.3 
-requests==2.28.2 
+requests==2.31.0 
 urllib3==1.26.15 
 werkzeug==2.3.3 
 zipp==3.15.0 
