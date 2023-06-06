@@ -23,7 +23,12 @@ import sys
 from subprocess import check_output
 
 
-EXCLUDE = ["dependabot[bot]", "dependabot-preview[bot]", "Weblate (bot)"]
+EXCLUDE = [
+    "dependabot[bot]",
+    "dependabot-preview[bot]",
+    "Weblate (bot)",
+    "renovate[bot]",
+]
 
 try:
     target = sys.argv[1].strip()
