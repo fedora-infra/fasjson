@@ -21,10 +21,6 @@
   "labels": ["dependencies"],
   "packageRules": [
     {
-      "matchLanguages": ["python"],
-      "addLabels": ["python"]
-    },
-    {
       "matchDepTypes": ["devDependencies"],
       "automerge": true,
       "groupName": "dev dependencies"
