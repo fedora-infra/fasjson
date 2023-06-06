@@ -7,13 +7,15 @@
     ":maintainLockFilesWeekly",
     ":separateMultipleMajorReleases",
     ":automergeMinor",
-    ":gitSignOff"
+    ":gitSignOff",
+    ":enablePreCommit",
+    ":enableVulnerabilityAlertsWithLabel(security)"
   ],
   "lockFileMaintenance": {
     "extends": [
       "group:allNonMajor"
     ],
-    "commitMessageAction": "Update"
+    "commitMessageAction": "Update dependencies in lockfile"
   },
   "automergeStrategy": "rebase",
   "rangeStrategy": "widen",
@@ -24,6 +26,12 @@
       "matchDepTypes": ["devDependencies"],
       "automerge": true,
       "groupName": "dev dependencies"
+    },
+    {
+      "matchPackageNames": [
+        "certifi"
+      ],
+      "automerge": true
     }
   ]
 }
