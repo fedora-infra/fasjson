@@ -26,7 +26,7 @@ RUN python3 -m venv /opt/venv
 RUN /opt/venv/bin/pip install poetry
 RUN /opt/venv/bin/poetry config virtualenvs.create false
 COPY ./ /opt/fasjson
-RUN cd /opt/fasjson && /opt/venv/bin/poetry install --no-dev
+RUN cd /opt/fasjson && /opt/venv/bin/poetry install --only main
 RUN rm -f /etc/krb5.conf && ln -sf /etc/krb5/krb5.conf /etc/krb5.conf && \
     rm -f /etc/openldap/ldap.conf && ln -sf /etc/ipa/ldap.conf /etc/openldap/ldap.conf
 EXPOSE 8080
