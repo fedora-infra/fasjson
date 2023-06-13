@@ -37,5 +37,5 @@ pytest
 sphinx
 sphinxcontrib-napoleon
 sphinxcontrib-openapi
-mistune<3.0.1
+mistune<3.0.2
 docutils<0.21
