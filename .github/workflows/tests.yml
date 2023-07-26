@@ -20,10 +20,10 @@ jobs:
           mkdir -p /home/runner/work/_temp/_github_home/
           git config --file /home/runner/work/_temp/_github_home/.gitconfig --add safe.directory /github/workspace
       - name: Run tests
-        uses: fedora-python/tox-github-action@master
+        uses: fedora-python/tox-github-action@main
         with:
           tox_env: ${{ matrix.tox_env }}
-          dnf_install: krb5-devel openldap-devel git
+          dnf_install: krb5-devel openldap-devel git python-distlib
     strategy:
       matrix:
         tox_env:
@@ -43,10 +43,10 @@ jobs:
           mkdir -p /home/runner/work/_temp/_github_home/
           git config --file /home/runner/work/_temp/_github_home/.gitconfig --add safe.directory /github/workspace
       - name: Run tests
-        uses: fedora-python/tox-github-action@master
+        uses: fedora-python/tox-github-action@main
         with:
           tox_env: ${{ matrix.tox_env }}
-          dnf_install: krb5-devel openldap-devel
+          dnf_install: krb5-devel openldap-devel python-distlib
     strategy:
       matrix:
         tox_env:
