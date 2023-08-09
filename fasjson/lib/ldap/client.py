@@ -109,16 +109,31 @@ class LDAP:
             return []
         return self._sponsors_to_users(sponsors_result, attrs)
 
+    def _list_sponsors_uid(self, sponsors_dn, attrs):
+        for sponsor in sponsors_dn.items[0]["sponsors"]:
+            group_match = re.findall("(?<=cn=)([^,]+)", sponsor)
+            if group_match:
+                members = self.get_group_members(
+                    group_match[0], ["uid"], page_size=0, page_number=1
+                )
+                for member in members.items:
+                    yield member["username"]
+            user_match = re.findall("(?<=uid=)([^,]+)", sponsor)
+            if user_match:
+                yield user_match[0]
+
     def _sponsors_to_users(self, sponsors_dn, attrs):
         sponsors = []
 
-        for sponsor in sponsors_dn.items[0]["sponsors"]:
-            username = re.findall("(?<=uid=)([^,]+)", sponsor)[0]
+        for username in self._list_sponsors_uid(sponsors_dn, attrs):
             uid = f"uid={username}"
             sponsors.append(uid)
 
+        if not sponsors:
+            return []
+
         filters = ["(&(objectClass=fasUser)(|"]
-        for uid in sponsors:
+        for uid in set(sponsors):
             filters.append(f"({uid})")
         filters.append("))")
         filters = "".join(filters)

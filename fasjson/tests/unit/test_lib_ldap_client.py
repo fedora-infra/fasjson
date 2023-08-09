@@ -196,6 +196,38 @@ def test_sponsors_to_users(mock_connection):
     assert result == expected
 
 
+def test_sponsors_to_users_empty(mock_connection):
+    mocked = []
+    mock_connection.result3 = _single_page_result_factory(mocked)
+    ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
+
+    sponsors_dn = LDAPResult(items=[{"sponsors": []}])
+
+    result = ldap._sponsors_to_users(sponsors_dn, attrs=None)
+    expected = []
+    assert result == expected
+
+
+def test_list_sponsors_uid(mock_connection):
+    mocked = [{"uid": [b"josephthornton"]}]
+    mock_connection.result3 = _single_page_result_factory(mocked)
+
+    ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
+    sponsors_dn = LDAPResult(
+        items=[
+            {
+                "sponsors": [
+                    "cn=translators,cn=groups,cn=accounts,dc=example,dc=test"
+                ]
+            }
+        ]
+    )
+    result = ldap._list_sponsors_uid(sponsors_dn, attrs=None)
+
+    expected = ["josephthornton"]
+    assert list(result) == expected
+
+
 def test_check_membership(mock_connection):
     mocked = [{"uid": [b"admin"]}]
     mock_connection.result3 = _single_page_result_factory(mocked)
