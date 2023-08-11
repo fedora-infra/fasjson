@@ -308,6 +308,7 @@ def test_get_user(mock_connection):
             "fasWebsiteURL": [b"http://admin.example.com"],
             "fasPronoun": [b"they/them/theirs"],
             "fasRHBZEmail": [b"admin@rhbz_example.test"],
+            "fasRssURL": [b"http://admin.example.com/feed"]
         }
     ]
     mock_connection.result3 = _single_page_result_factory(mocked)
@@ -328,6 +329,7 @@ def test_get_user(mock_connection):
         "website": "http://admin.example.com",
         "pronouns": ["they/them/theirs"],
         "rhbzemail": "admin@rhbz_example.test",
+        "rssurl": "http://admin.example.com/feed"
     }
     assert expected == ldap.get_user("admin")
 
