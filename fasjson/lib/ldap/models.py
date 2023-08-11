@@ -84,6 +84,7 @@ class UserModel(Model):
         "github_username": Converter("fasGitHubUsername"),
         "gitlab_username": Converter("fasGitLabUsername"),
         "website": Converter("fasWebsiteURL"),
+        "rssurl": Converter("fasRssURL"),
         "pronouns": Converter("fasPronoun", multivalued=True),
         "rhbzemail": Converter("fasRHBZEmail"),
     }
@@ -99,6 +100,7 @@ class UserModel(Model):
         "github_username",
         "gitlab_username",
         "website",
+        "rssurl",
         "pronouns",
     ]
 
