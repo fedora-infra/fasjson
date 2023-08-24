@@ -6,6 +6,10 @@ from ldap.controls.pagedresults import SimplePagedResultsControl
 from .models import AgreementModel, GroupModel, SponsorModel, UserModel
 
 
+GROUP_DN_RE = re.compile("^cn=([^,]+)")
+USER_DN_RE = re.compile("^uid=([^,]+)")
+
+
 class LDAPResult:
     def __init__(
         self, items=None, total=None, page_size=None, page_number=None
@@ -111,16 +115,16 @@ class LDAP:
 
     def _list_sponsors_uid(self, sponsors_dn, attrs):
         for sponsor in sponsors_dn.items[0]["sponsors"]:
-            group_match = re.findall("(?<=cn=)([^,]+)", sponsor)
+            group_match = GROUP_DN_RE.match(sponsor)
             if group_match:
                 members = self.get_group_members(
-                    group_match[0], ["uid"], page_size=0, page_number=1
+                    group_match.group(1), ["uid"], page_size=0, page_number=1
                 )
                 for member in members.items:
                     yield member["username"]
-            user_match = re.findall("(?<=uid=)([^,]+)", sponsor)
+            user_match = USER_DN_RE.match(sponsor)
             if user_match:
-                yield user_match[0]
+                yield user_match.group(1)
 
     def _sponsors_to_users(self, sponsors_dn, attrs):
         sponsors = []
