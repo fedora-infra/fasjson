@@ -14,7 +14,7 @@ jobs:
   misc_tests:
     name: Misc tests
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: mark the working directory as safe for Git
         run: |
           mkdir -p /home/runner/work/_temp/_github_home/
@@ -37,7 +37,7 @@ jobs:
   unit_test:
     name: Unit tests
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: mark the working directory as safe for Git
         run: |
           mkdir -p /home/runner/work/_temp/_github_home/
