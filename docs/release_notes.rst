@@ -4,6 +4,34 @@ Release notes
 
 .. towncrier release notes start
 
+v1.6.0
+======
+
+Released on 2023-09-21.
+This is a feature release that adds the ``rssurl`` field.
+
+Features
+^^^^^^^^
+
+* Add the rssurl field (:issue:`558`).
+
+Bug Fixes
+^^^^^^^^^
+
+* Don't crash when a user has no groups (:issue:`399`).
+* Don't crash when group is a sponsor of a group (:issue:`444`).
+
+Contributors
+^^^^^^^^^^^^
+
+Many thanks to the contributors of bug reports, pull requests, and pull request
+reviews for this release:
+
+* Aurélien Bompard
+* Lenka Segura
+* Pedro Moura
+
+
 v1.5.0
 ======
 
@@ -31,7 +59,6 @@ v1.4.0
 Released on 2022-06-30.
 This is a feature release that adds exact value search and GitHub username
 search.
-
 
 Features
 ^^^^^^^^
@@ -114,8 +141,8 @@ Bug Fixes
 
 v1.1.0
 ======
-This is a feature release.
 
+This is a feature release.
 
 Features
 ^^^^^^^^
@@ -143,7 +170,6 @@ v1.0.0
 
 This is a the first stable release, as deployed in production in the Fedora infrastructure
 on March 24th 2021.
-
 
 Contributors
 ^^^^^^^^^^^^
