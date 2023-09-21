@@ -31,7 +31,7 @@ requests-gssapi==1.2.3
 requests==2.31.0 
 urllib3==1.26.16 
 werkzeug==2.3.7 
-zipp==3.16.2 
+zipp==3.17.0 
 toml
 pytest
 sphinx
