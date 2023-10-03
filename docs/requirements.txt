@@ -29,7 +29,7 @@ python-freeipa==1.0.6
 pytz==2023.3.post1 
 requests-gssapi==1.2.3 
 requests==2.31.0 
-urllib3==1.26.16 
+urllib3==1.26.17 
 werkzeug==2.3.7 
 zipp==3.17.0 
 toml
