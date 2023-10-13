@@ -10,7 +10,7 @@ cryptography==41.0.4
 decorator==5.1.1 
 dnspython==2.4.2 
 flask-healthz==1.0.0 
-flask-mod-auth-gssapi==0.3.0 
+flask-mod-auth-gssapi==1.0.0 
 flask-restx==1.1.0 
 flask==2.3.3 
 idna==3.4 
