@@ -585,17 +585,17 @@ flask = "<3.0.1"
 
 [[package]]
 name = "flask-mod-auth-gssapi"
-version = "0.3.0"
+version = "1.0.0"
 description = "A Flask extention to make use of the authentication provided by the mod_auth_gssapi extention of Apache's HTTPd."
 optional = false
 python-versions = ">=3.8.0,<4.0.0"
 files = [
-    {file = "flask-mod-auth-gssapi-0.3.0.tar.gz", hash = "sha256:d501b779f07678ce0f460c9229ff1007cb0ae728ac498f61321b02c8a6dcb514"},
-    {file = "flask_mod_auth_gssapi-0.3.0-py3-none-any.whl", hash = "sha256:1176e9a94832b78d6a303cad2307903aaeb46a919453d0dd5a553ba8cf21fb3b"},
+    {file = "flask_mod_auth_gssapi-1.0.0-py3-none-any.whl", hash = "sha256:03dabe61939f928cd44153ae459463591c296de274dfcbc521ef4d9c4af08312"},
+    {file = "flask_mod_auth_gssapi-1.0.0.tar.gz", hash = "sha256:d542372c15e11f3e6c0171ecc322c86c7671742ef71e6de94fa44b07e67eebd2"},
 ]
 
 [package.dependencies]
-flask = "<3.0.0"
+flask = "<3.0.1"
 gssapi = ">=1.6.2,<2.0.0"
 
 [[package]]
@@ -1881,4 +1881,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9.0"
-content-hash = "7e36b5b155605a8315f1e76ec019a69939c750a1980f9d394ce147ed8038b560"
+content-hash = "af12bfec314a87591a74c50c2431d6dc09fbbc05d83dcee074ac585929009a1f"
