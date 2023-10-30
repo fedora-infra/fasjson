@@ -39,6 +39,9 @@ safety = "*"
 pre-commit = "*"
 towncrier = "*"
 
+[tool.poetry.group.dev.dependencies]
+myst-parser = "^2.0.0"
+
 [tool.black]
 line-length = 78
 
@@ -50,14 +53,13 @@ force_alphabetical_sort_within_sections = true
 
 [tool.towncrier]
 package = "fasjson"
-filename = "docs/release_notes.rst"
+filename = "docs/release_notes.md"
 directory = "news/"
-title_format = "v{version}"
+start_string = "<!-- towncrier release notes start -->\n"
+underlines = ["", "", ""]
+template = "news/_template.md.j2"
+title_format = "## v{version}"
 issue_format = "{issue}"
-template = "news/_template.rst.j2"
-underlines = "=^-"
-wrap = true
-all_bullets = true
 
   [[tool.towncrier.type]]
   directory = "bic"

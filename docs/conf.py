@@ -5,6 +5,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 import os
+import re
 import sys
 
 
@@ -40,6 +41,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
     "sphinxcontrib.openapi",
+    "myst_parser",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -85,16 +87,21 @@ html_static_path = ["_static"]
 
 autodoc_mock_imports = ["gssapi", "requests_gssapi"]
 
+source_suffix = {
+    ".rst": "restructuredtext",
+    ".md": "markdown",
+}
+
+myst_enable_extensions = [
+    "colon_fence",
+]
+myst_heading_anchors = 3
+
+
 # -- Options for intersphinx extension ---------------------------------------
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
-
-extlinks = {
-    "commit": ("https://github.com/fedora-infra/fasjson/commit/%s", "%s"),
-    "issue": ("https://github.com/fedora-infra/fasjson/issues/%s", "#%s"),
-    "pr": ("https://github.com/fedora-infra/fasjson/pull/%s", "PR#%s"),
-}
 
 
 # -- Misc -----
@@ -129,6 +136,20 @@ def run_apidoc(_):
     )
 
 
+github_url = "https://github.com/fedora-infra/fasjson"
+
+
+def changelog_github_links(app, docname, source):
+    if docname != "release_notes":
+        return
+    github_issue_re = re.compile(r"#(\d+)")
+    for docnr, doc in enumerate(source):
+        source[docnr] = github_issue_re.sub(
+            r"[#\1](" + github_url + r"/issues/\1)", doc
+        )
+
+
 def setup(app):
     app.connect("builder-inited", run_apidoc)
     app.connect("builder-inited", export_swagger)
+    app.connect("source-read", changelog_github_links)
