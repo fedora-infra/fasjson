@@ -16,7 +16,7 @@ homepage = "https://github.com/fedora-infra/fasjson"
 
 [tool.poetry.dependencies]
 python = "^3.9.0"
-Flask = "^2.2.0"
+Flask = "^2.2.0 || ^3.0.0"
 python-ldap = "^3.2.0"
 dnspython = "^2.1.0"
 flask-restx = "^1.1.0"
