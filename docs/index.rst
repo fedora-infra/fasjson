@@ -2,7 +2,7 @@
 FASJSON's documentation
 =======================
 
-.. image:: https://github.com/fedora-infra/fasjson/actions/workflows/tests.yml/badge.svg?branch=dev
+.. image:: https://github.com/fedora-infra/fasjson/actions/workflows/main.yml/badge.svg?branch=dev
 
 .. image:: https://readthedocs.org/projects/fasjson/badge/?version=latest
 
