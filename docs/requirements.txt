@@ -12,7 +12,7 @@ dnspython==2.4.2
 flask-healthz==1.0.0 
 flask-mod-auth-gssapi==1.0.0 
 flask-restx==1.1.0 
-flask==2.3.3 
+flask==3.0.0 
 idna==3.4 
 importlib-metadata==6.8.0 
 itsdangerous==2.1.2 
