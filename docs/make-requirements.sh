@@ -4,7 +4,7 @@ set -e
 
 here=$(realpath $(dirname $0))
 output="${here}/requirements.txt"
-excluded="gssapi python-ldap requests-kerberos pykerberos winkerberos dataclasses"
+excluded="gssapi python-ldap requests-kerberos pykerberos winkerberos dataclasses jsonschema"
 
 set -x
 
