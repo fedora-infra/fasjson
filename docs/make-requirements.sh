@@ -23,7 +23,7 @@ echo toml >> "${output}"
 # Add pytest because it is imported in the source code
 echo pytest >> "${output}"
 # Add Sphinx dependencies
-echo -e "sphinx\nsphinxcontrib-napoleon\nsphinxcontrib-openapi" >> "${output}"
+echo -e "sphinx\nsphinxcontrib-napoleon\nsphinxcontrib-openapi\nmyst-parser" >> "${output}"
 # Lock mitsune because of https://github.com/sphinx-contrib/openapi/issues/123
 echo -e "mistune<2.0.0" >> "${output}"
 # Lock docutils to avoid: cannot import name 'ErrorString' from 'docutils.core'
