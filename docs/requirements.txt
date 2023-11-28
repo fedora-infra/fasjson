@@ -13,7 +13,7 @@ flask-healthz==1.0.1
 flask-mod-auth-gssapi==1.0.1
 flask-restx==1.2.0
 flask==2.3.3
-idna==3.5
+idna==3.6
 importlib-metadata==6.8.0
 importlib-resources==6.1.1
 itsdangerous==2.1.2
