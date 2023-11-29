@@ -6,7 +6,7 @@ cffi==1.16.0
 charset-normalizer==3.3.2
 click==8.1.7
 colorama==0.4.6
-cryptography==41.0.5
+cryptography==41.0.6
 decorator==5.1.1
 dnspython==2.4.2
 flask-healthz==1.0.1
