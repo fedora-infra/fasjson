@@ -39,5 +39,5 @@ sphinx
 sphinxcontrib-napoleon
 sphinxcontrib-openapi
 myst-parser
-mistune<2.0.0
+mistune<3.0.3
 docutils<0.21
