@@ -1,4 +1,5 @@
 from functools import partial
+from unittest import mock
 
 import pytest
 
@@ -14,7 +15,7 @@ def mock_ldap_client(mock_ipa_client):
 
 @pytest.fixture()
 def ldap_with_search_result(mock_ldap_client, gss_user):
-    def mock(
+    def _mocker(
         num, page_size, page_number, total_results, ldap_data_factory=None
     ):
         ldap_data_factory = ldap_data_factory or get_user_ldap_data
@@ -27,9 +28,10 @@ def ldap_with_search_result(mock_ldap_client, gss_user):
             page_size=page_size,
             page_number=page_number,
         )
-        return mock_ldap_client(search_users=lambda *a, **kw: result)
+        mocked_function = mock.Mock(return_value=result)
+        return mock_ldap_client(search_users=mocked_function)
 
-    return mock
+    return _mocker
 
 
 def test_search_user_success(client, ldap_with_search_result):
@@ -228,3 +230,25 @@ def test_search_bad_json_body(client, ldap_with_search_result):
     assert rv.get_json() == {
         "message": "At least one search term must be provided."
     }
+
+
+def test_search_user_gitlab(client, ldap_with_search_result):
+    mocked = ldap_with_search_result(
+        num=1, page_size=40, page_number=1, total_results=1
+    )
+    rv = client.get("/v1/search/users/?gitlab_username=dummy")
+
+    expected = [get_user_api_output("dummy-1")]
+    page = {
+        "total_results": 1,
+        "page_size": 40,
+        "page_number": 1,
+        "total_pages": 1,
+    }
+    mocked.search_users.assert_called_once()
+    last_call_kw = mocked.search_users.call_args_list[-1][1]
+    assert "gitlab_username" in last_call_kw
+    assert last_call_kw["gitlab_username"] == "dummy"
+
+    assert 200 == rv.status_code
+    assert rv.get_json() == {"result": expected, "page": page}
