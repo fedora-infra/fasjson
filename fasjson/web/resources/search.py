@@ -31,6 +31,9 @@ search_request_parser.add_argument(
     "github_username", help="The username in GitHub.com"
 )
 search_request_parser.add_argument(
+    "gitlab_username", help="The username in GitLab.com"
+)
+search_request_parser.add_argument(
     "creation__before",
     help="Search for users created before this date",
     type=datetime_from_iso8601,
