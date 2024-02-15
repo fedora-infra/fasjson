@@ -15,6 +15,7 @@ def ldap_result():
                 "mailing_list": "group1@groups.com",
                 "url": "www.group1.com",
                 "irc": ["#group1"],
+                "discussion_url": "https://discussion.test/group1",
             }
         ],
         total=2,
@@ -45,6 +46,7 @@ def test_paged_marshal(app, ldap_result, page_output):
         "url": "www.group1.com",
         "irc": ["#group1"],
         "uri": "http://localhost/v1/groups/group1/",
+        "discussion_url": "https://discussion.test/group1",
     }
 
     assert output == {
