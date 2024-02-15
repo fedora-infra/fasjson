@@ -20,6 +20,7 @@ def test_groups_success(client, gss_user, mock_ldap_client):
                 "mailing_list": f"{name}@groups.com",
                 "url": f"www.{name}.com",
                 "irc": [f"#{name}"],
+                "discussion_url": f"https://discussion.test/{name}",
             }
             for name in groups
         ]
@@ -37,6 +38,7 @@ def test_groups_success(client, gss_user, mock_ldap_client):
                 "url": f"www.{name}.com",
                 "irc": [f"#{name}"],
                 "uri": f"http://localhost/v1/groups/{name}/",
+                "discussion_url": f"https://discussion.test/{name}",
             }
             for name in groups
         ]
@@ -53,6 +55,7 @@ def test_groups_with_mask(client, gss_user, mock_ldap_client, mocker):
                 "mailing_list": f"{name}@groups.com",
                 "url": f"www.{name}.com",
                 "irc": [f"#{name}"],
+                "discussion_url": f"https://discussion.test/{name}",
             }
             for name in groups
         ]
@@ -231,6 +234,7 @@ def test_group_success(client, gss_user, mock_ldap_client):
             "mailing_list": "dummy-group@groups.com",
             "url": "www.dummy-group.com",
             "irc": ["#dummy-group"],
+            "discussion_url": "https://discussion.test/dummy-group",
         },
     )
 
@@ -243,6 +247,7 @@ def test_group_success(client, gss_user, mock_ldap_client):
         "url": "www.dummy-group.com",
         "irc": ["#dummy-group"],
         "uri": "http://localhost/v1/groups/dummy-group/",
+        "discussion_url": "https://discussion.test/dummy-group",
     }
     assert 200 == rv.status_code
     assert rv.get_json() == {"result": expected}
@@ -320,6 +325,7 @@ def test_group_starting_with_number(client, gss_user, mock_ldap_client):
         "url": None,
         "irc": None,
         "uri": "http://localhost/v1/groups/3d-printing-sig/",
+        "discussion_url": None,
     }
     assert 200 == rv.status_code
     assert rv.get_json() == {"result": expected}
