@@ -1,0 +1,17 @@
+/build/
+/dist/
+__pycache__
+*.pyc
+*.pyo
+
+# test related
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+
+# docs related
+docs/_source
+docs/_build
+docs/_api
