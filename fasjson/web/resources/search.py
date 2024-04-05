@@ -1,6 +1,7 @@
 from flask_restx import Resource
 from flask_restx.inputs import datetime_from_iso8601
 
+from fasjson.lib.ldap.models import UserModel as LDAPUserModel
 from fasjson.web.utils import maybe_anonymize
 from fasjson.web.utils.ipa import get_attrs_from_mask, ldap_client
 from fasjson.web.utils.pagination import page_request_parser
@@ -12,6 +13,9 @@ from .users import UserModel
 
 search_request_parser = page_request_parser.copy()
 search_request_parser.add_argument("email", help="The email to search for")
+search_request_parser.add_argument(
+    "email__exact", help="DEPRECATED: use email"
+)
 search_request_parser.add_argument(
     "username", help="The username to search for"
 )
@@ -41,7 +45,10 @@ search_request_parser.add_argument(
 search_request_parser.add_argument(
     "rhbzemail", help="The bugzilla email to search for"
 )
-add_exact_arguments(search_request_parser)
+search_request_parser.add_argument(
+    "group", action="append", help="Users must be a member of this group"
+)
+add_exact_arguments(search_request_parser, LDAPUserModel)
 
 
 api_v1 = Namespace("search", description="Search related operations")
@@ -101,6 +108,8 @@ class SearchUsers(Resource):
         for search_term, search_value in search_args.items():
             if search_term == "creation__before":
                 continue  # It's a datetime already
+            if search_term == "group":
+                continue  # These may be smaller than 3 chars, and will be matched exactly anyway.
             if search_value and len(search_value) < 3:
                 api_v1.abort(
                     400,

@@ -22,7 +22,7 @@ repos:
     rev: 5.13.2
     hooks:
       - id: isort
-        args: ["-c"]
+        args: ["-c", "--df"]
 
   - repo: https://github.com/Lucas-C/pre-commit-hooks-bandit
     rev: v1.0.6

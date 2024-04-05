@@ -252,3 +252,25 @@ def test_search_user_gitlab(client, ldap_with_search_result):
 
     assert 200 == rv.status_code
     assert rv.get_json() == {"result": expected, "page": page}
+
+
+def test_search_user_by_group(client, ldap_with_search_result):
+    mocked = ldap_with_search_result(
+        num=1, page_size=40, page_number=1, total_results=1
+    )
+    rv = client.get("/v1/search/users/?group=dummy")
+
+    expected = [get_user_api_output("dummy-1")]
+    page = {
+        "total_results": 1,
+        "page_size": 40,
+        "page_number": 1,
+        "total_pages": 1,
+    }
+    mocked.search_users.assert_called_once()
+    last_call_kw = mocked.search_users.call_args_list[-1][1]
+    assert "group" in last_call_kw
+    assert last_call_kw["group"] == ["dummy"]
+
+    assert 200 == rv.status_code
+    assert rv.get_json() == {"result": expected, "page": page}

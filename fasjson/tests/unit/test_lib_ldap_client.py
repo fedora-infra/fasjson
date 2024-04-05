@@ -499,6 +499,15 @@ def test_search_users(mock_connection):
             {"rhbzemail__exact": "something"},
             "(fasRHBZEmail=something)",
         ),
+        (
+            {"group": ["something"]},
+            "(memberof=cn=something,cn=groups,cn=accounts,dc=example,dc=test)",
+        ),
+        (
+            {"group": ["group1", "group2"]},
+            "(memberof=cn=group1,cn=groups,cn=accounts,dc=example,dc=test)"
+            "(memberof=cn=group2,cn=groups,cn=accounts,dc=example,dc=test)",
+        ),
     ],
 )
 def test_search_users_filters(

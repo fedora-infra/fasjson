@@ -33,6 +33,13 @@ class LDAPResult:
         )
 
 
+def _get_filter_string(attribute, value, substring_match):
+    value = ldap.filter.escape_filter_chars(value, 0)
+    if substring_match:
+        value = f"*{value}*"
+    return f"({attribute}={value})"
+
+
 class LDAP:
     def __init__(
         self, uri, basedn, login="", timeout=ldap.NO_LIMIT, trace_level=0
@@ -195,7 +202,7 @@ class LDAP:
         user = self.get_user(username, ["memberof"])
         groups_filters = [
             f"({dn.split(',')[0]})"
-            for dn in user.get("memberof", [])
+            for dn in user.get("groups", [])
             if dn.endswith(f"{GroupModel.sub_dn},{self.basedn}")
         ]
         if not groups_filters:
@@ -243,22 +250,35 @@ class LDAP:
             if term.endswith("__exact"):
                 term = term[:-7]
                 substring_match = False
-            if term == "email":
+            if term in UserModel.always_exact_match:
                 substring_match = False
+            if term == "group":
+                filter = [
+                    f"{GroupModel.get_sub_dn_for(name)},{self.basedn}"
+                    for name in filter
+                ]
 
             try:
                 attribute = attrs_map[term]
             except KeyError:
                 continue
-            filter_value = ldap.filter.escape_filter_chars(filter, 0)
-            if substring_match:
-                filter_value = f"*{filter_value}*"
-            filter_string.append(f"({attribute}={filter_value})")
+
+            # the group filter is a list, handle them all as lists
+            if not isinstance(filter, list):
+                filter = [filter]
+            for filter_item in filter:
+                filter_string.append(
+                    _get_filter_string(
+                        attribute, filter_item, substring_match
+                    )
+                )
+
         if filters.get("creation__before"):
             filter_value = ldap.filter.escape_filter_chars(
                 filters["creation__before"].strftime("%Y%m%d%H%M%SZ"), 0
             )
             filter_string.append(f"(fasCreationTime<={filter_value})")
+
         filter_string.append("))")
         filter_string = "".join(filter_string)
 

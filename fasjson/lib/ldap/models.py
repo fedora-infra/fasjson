@@ -14,6 +14,8 @@ class Model:
     sub_dn = None
     fields = {}
     hidden_fields = []
+    # Search attributes that will never be a searched as a substring
+    always_exact_match = []
 
     @classmethod
     def get_sub_dn_for(cls, name):
@@ -80,7 +82,7 @@ class UserModel(Model):
         "creation": GeneralTimeConverter("fasCreationTime"),
         "is_private": BoolConverter("fasIsPrivate"),
         "locked": BoolConverter("nsAccountLock"),
-        "memberof": Converter("memberof", multivalued=True),
+        "groups": Converter("memberof", multivalued=True),
         "github_username": Converter("fasGitHubUsername"),
         "gitlab_username": Converter("fasGitLabUsername"),
         "website": Converter("fasWebsiteURL"),
@@ -88,7 +90,7 @@ class UserModel(Model):
         "pronouns": Converter("fasPronoun", multivalued=True),
         "rhbzemail": Converter("fasRHBZEmail"),
     }
-    hidden_fields = ["memberof"]
+    hidden_fields = ["groups"]
     private_fields = [
         "human_name",
         "surname",
@@ -103,6 +105,7 @@ class UserModel(Model):
         "rssurl",
         "pronouns",
     ]
+    always_exact_match = ["email", "group"]
 
     @classmethod
     def anonymize(cls, user):
