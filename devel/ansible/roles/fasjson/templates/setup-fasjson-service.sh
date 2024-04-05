@@ -2,7 +2,7 @@
 
 set -e
 
-PRINCIPAL="HTTP/fasjson.example.test"
+PRINCIPAL="{{ krb_service }}/{{ ansible_fqdn }}"
 DELEGATION="fasjson-delegation"
 
 ipa service-find $PRINCIPAL &> /dev/null || ipa service-add $PRINCIPAL --force
@@ -25,8 +25,8 @@ ipa servicedelegationrule-show $DELEGATION | grep "Allowed Target:" | grep -qs i
 
 ipa servicedelegationtarget-find ipa-http-delegation-targets &> /dev/null || ipa servicedelegationtarget-add ipa-http-delegation-targets
 
-ipa servicedelegationtarget-show ipa-http-delegation-targets | grep "Member principals:" | grep -qs HTTP/ipa.example.test || (
-	ipa servicedelegationtarget-add-member ipa-http-delegation-targets --principals=HTTP/ipa.example.test@EXAMPLE.TEST
+ipa servicedelegationtarget-show ipa-http-delegation-targets | grep "Member principals:" | grep -qs HTTP/ipa.{{ ansible_domain }} || (
+	ipa servicedelegationtarget-add-member ipa-http-delegation-targets --principals=HTTP/ipa.{{ ansible_domain }}@{{ ansible_domain | upper }}
 )
 
 ipa servicedelegationrule-show $DELEGATION | grep "Allowed Target:" | grep -qs ipa-http-delegation-targets || (

@@ -2,5 +2,15 @@
 - hosts: fasjson
   become: true
   become_method: sudo
+  vars_files:
+    - vars.yml
   roles:
+    - common
+    - ipa-client
+    - role: ipa-keytab
+      krb_service: HTTP
+      keytab_path: /etc/httpd/conf/fasjson.keytab
+      keytab_owner: apache
+      keytab_group: apache
+    - apache
     - fasjson

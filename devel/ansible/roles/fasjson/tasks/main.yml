@@ -2,10 +2,10 @@
 - name: Install RPM packages
   dnf:
     name:
-      - ipa-client
       - httpd
       - mod_auth_gssapi
       - mod_session
+      - mod_ssl
       - python3-mod_wsgi
       - python3-dns
       - python3-flask
@@ -35,6 +35,11 @@
     target: '/srv/venv/lib(64)?/.*\.so[0-9.]*'
     setype: httpd_sys_script_exec_t
 
+- name: Allow apache to access the source code dir
+  file:
+    name: /home/vagrant
+    mode: 0755
+
 - name: Create a directory for the virtualenv where Apache can see it
   file:
     name: /srv/venv
@@ -43,19 +48,24 @@
     owner: vagrant
     group: vagrant
 
-- name: Create the virtualenv and install poetry
-  pip:
-    name: poetry
-    virtualenv: /srv/venv
+# - name: Create the virtualenv and install poetry
+#   pip:
+#     #name: poetry
+#     virtualenv: /srv/venv
+#   become: yes
+#   become_user: vagrant
+
+- name: Create the virtualenv
+  command: python -m venv /srv/venv
   become: yes
   become_user: vagrant
 
-- name: Tell poetry not to create a virtualenv
-  shell: /srv/venv/bin/poetry config virtualenvs.create false
-  args:
-    chdir: /vagrant/
-  become: yes
-  become_user: vagrant
+# - name: Tell poetry not to create a virtualenv
+#   shell: /srv/venv/bin/poetry config virtualenvs.create false
+#   args:
+#     chdir: /home/vagrant/fasjson/
+#   become: yes
+#   become_user: vagrant
 
 # https://github.com/python-ldap/python-ldap/issues/432#issuecomment-974799221
 - name: Workaround for python-ldap and openldap 2.5+
@@ -64,9 +74,11 @@
     content: INPUT ( libldap.so )
 
 - name: Install python dependencies with poetry
-  shell: /srv/venv/bin/poetry install
+  shell: poetry install
   args:
-    chdir: /vagrant/
+    chdir: /home/vagrant/fasjson/
+  environment:
+    VIRTUAL_ENV: /srv/venv
   become: yes
   become_user: vagrant
 
@@ -75,7 +87,7 @@
 
 - name: Install the .bashrc
   copy:
-    src: .bashrc
+    src: bashrc
     dest: /home/vagrant/.bashrc
     mode: 0644
     owner: vagrant
@@ -89,55 +101,21 @@
     owner: vagrant
     group: vagrant
 
-- name: Uninstall any old clients
-  shell: ipa-client-install --uninstall --unattended
-  ignore_errors: yes
-
-- name: Enroll system as IPA client
-  shell: ipa-client-install --hostname fasjson.example.test --domain example.test --realm EXAMPLE.TEST --server ipa.example.test -p admin -w adminPassw0rd! -U -N --force-join
-
 - name: Copy the service setup script
-  copy:
+  template:
     src: setup-fasjson-service.sh
     dest: /srv/setup-fasjson-service.sh
     mode: 0755
 
 - name: kinit
-  shell: echo "adminPassw0rd!" | kinit admin@EXAMPLE.TEST
+  shell: echo "{{ ipa_admin_password }}" | kinit {{ ipa_admin_user }}@{{ krb_realm }}
 
 - name: Create the service in IPA
   command: bash /srv/setup-fasjson-service.sh
 
-- name: Get service keytab for HTTPd
-  shell: ipa-getkeytab -p HTTP/fasjson.example.test -k /var/lib/gssproxy/httpd.keytab
-  args:
-    creates: /var/lib/gssproxy/httpd.keytab
-
-- name: Set the correct permissions on keytab
-  file:
-    path: /var/lib/gssproxy/httpd.keytab
-    owner: root
-    group: root
-    mode: 0640
-
-- name: Copy gssproxy conf
-  copy:
-    src: config/gssproxy-fasjson.conf
-    dest: /etc/gssproxy/80-fasjson.conf
-    mode: 0644
-    owner: root
-    group: root
-
-- name: Enable and restart GSSProxy
-  systemd:
-    state: restarted
-    name: gssproxy
-    enabled: yes
-    daemon_reload: yes
-
 - name: Configure temporary files
   copy:
-    src: config/tmpfiles-fasjson.conf
+    src: tmpfiles.conf
     dest: /etc/tmpfiles.d/fasjson.conf
 
 - name: Create temporary file
@@ -152,6 +130,7 @@
     - httpd_can_connect_ldap
     - httpd_can_network_connect
     - httpd_use_fusefs
+    - httpd_read_user_content
 
 - name: Create Apache service
   file:
@@ -160,11 +139,19 @@
     mode: 0755
 
 - name: Copy configs for Apache
-  copy: src={{ item.src }} dest={{ item.dest }}
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
   with_items:
-    - src: "config/systemd-httpd-service-fasjson.conf"
+    - src: "systemd-service.conf"
       dest: "/etc/systemd/system/httpd.service.d/fasjson.conf"
-    - src: "config/httpd-fasjson.conf"
+
+- name: Copy templated configs for Apache
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - src: "httpd.conf"
       dest: "/etc/httpd/conf.d/fasjson.conf"
 
 - name: Enable and restart Apache
