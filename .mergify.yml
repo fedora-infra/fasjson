@@ -2,13 +2,11 @@ queue_rules:
   - name: default
     conditions:
       # Conditions to get out of the queue (= merged)
-      - status-success=Misc tests (lint)
-      - status-success=Misc tests (format)
-      - status-success=Misc tests (licenses)
-      - status-success=Misc tests (security)
-      - status-success=Misc tests (docs)
-      - status-success=Unit tests (py39-unittest)
-      - status-success=Unit tests (py310-unittest)
+      - status-success=Checks
+      - status-success=Licenses
+      - status-success=Documentation
+      - status-success=Unit tests (py39)
+      - status-success=Unit tests (py310)
 
 pull_request_rules:
 
@@ -23,10 +21,8 @@ pull_request_rules:
       - approved-reviews-by=@fedora-infra/authdev
       - "#changes-requested-reviews-by=0"
       - status-success=DCO
-      - status-success=Misc tests (lint)
-      - status-success=Misc tests (format)
-      - status-success=Misc tests (licenses)
-      - status-success=Misc tests (security)
-      - status-success=Misc tests (docs)
-      - status-success=Unit tests (py39-unittest)
-      - status-success=Unit tests (py310-unittest)
+      - status-success=Checks
+      - status-success=Licenses
+      - status-success=Documentation
+      - status-success=Unit tests (py39)
+      - status-success=Unit tests (py310)
