@@ -1,0 +1,1 @@
+Note that the `email__exact` search term is deprecated since email searches are never substring-based, so just use the `email` term
