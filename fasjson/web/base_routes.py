@@ -31,5 +31,5 @@ def readiness():
     try:
         client = ldap.initialize(current_app.config["FASJSON_LDAP_URI"])
         client.simple_bind_s()
-    except ldap.SERVER_DOWN:
-        raise HealthError("LDAP server is down")
+    except ldap.SERVER_DOWN as e:
+        raise HealthError("LDAP server is down") from e

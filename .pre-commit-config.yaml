@@ -1,50 +1,31 @@
 repos:
-  # - repo: https://github.com/asottile/pyupgrade
-  #   rev: v2.15.0
-  #   hooks:
-  #     - id: pyupgrade
-  #       args:
-  #         - --py36-plus
+  # Generic hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
 
+  # https://black.readthedocs.io/en/stable/integrations/source_version_control.html
   - repo: https://github.com/psf/black
     rev: 24.3.0
     hooks:
       - id: black
-        language_version: python3
-        args: ["--check"]
 
-  - repo: https://github.com/pycqa/flake8
-    rev: 7.0.0
+  # ruff
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    # ruff version.
+    rev: v0.3.5
     hooks:
-      - id: flake8
-
-  - repo: https://github.com/pycqa/isort
-    rev: 5.13.2
-    hooks:
-      - id: isort
-        args: ["-c", "--df"]
-
-  - repo: https://github.com/Lucas-C/pre-commit-hooks-bandit
-    rev: v1.0.6
-    hooks:
-      - id: python-bandit-vulnerability-check
-        alias: bandit
-        args: ["-r", "noggin/", "-x", "noggin/tests/", "-ll"]
-  # - repo: local
-  #   hooks:
-  #     - id: bandit-local
-  #       name: bandit
-  #       entry: bandit
-  #       args: ["-r", "noggin/", "-x", "noggin/tests/", "-ll"]
-  #       pass_filenames: false
-  #       language: system
+      - id: ruff
 
   - repo: https://github.com/myint/rstcheck
     rev: v6.2.1
     hooks:
       - id: rstcheck
-        #args: ["-r", "docs"]
-        additional_dependencies: [sphinx]
+        additional_dependencies: [sphinx, toml, myst-parser]
 
   - repo: local
     hooks:

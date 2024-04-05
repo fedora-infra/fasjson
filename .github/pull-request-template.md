@@ -8,7 +8,7 @@ Please include what has changed
 -->
 ## Proposed Changes
 
-* 
+*
 
 <!--
 Steps required to validate your changes

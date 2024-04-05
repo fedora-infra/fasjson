@@ -9,8 +9,7 @@ assignees: ''
 
 ## Acceptance Criteria
 
-* 
+*
 
 
 ## Definition of Done
-

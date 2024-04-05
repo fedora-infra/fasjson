@@ -89,7 +89,9 @@ def _mix_weight(records):
     while len(records) > 1:
         # Compute the sum of the weights of those RRs. Then choose a
         # uniform random number between 0 and the sum computed (inclusive).
-        urn = random.uniform(0, sum(rr.weight or noweight for rr in records))
+        urn = random.uniform(  # noqa: S311
+            0, sum(rr.weight or noweight for rr in records)
+        )
         # Select the RR whose running sum value is the first in the selected
         # order which is greater than or equal to the random number selected.
         acc = 0.0

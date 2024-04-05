@@ -25,4 +25,4 @@ def test_ldap_result_cmp(ldap_result):
 
 def test_ldap_result_cmp_invalid(ldap_result):
     with pytest.raises(ValueError):
-        ldap_result == ["a", "b", "c"]
+        assert ldap_result == ["a", "b", "c"]
