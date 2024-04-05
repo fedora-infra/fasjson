@@ -62,9 +62,7 @@ def test_groups_with_mask(client, gss_user, mock_ldap_client, mocker):
     )
     mock = mock_ldap_client(get_groups=mocker.Mock(return_value=result))
 
-    rv = client.get(
-        "/v1/groups/", headers={"X-Fields": "{groupname,description,uri}"}
-    )
+    rv = client.get("/v1/groups/", headers={"X-Fields": "{groupname,description,uri}"})
     assert 200 == rv.status_code
     assert rv.get_json() == {
         "result": [
@@ -108,11 +106,7 @@ def test_group_members_success(client, gss_user, mock_ldap_client):
     )
     rv = client.get("/v1/groups/admins/members/")
 
-    expected = {
-        "result": [
-            {"username": "admin", "uri": "http://localhost/v1/users/admin/"}
-        ]
-    }
+    expected = {"result": [{"username": "admin", "uri": "http://localhost/v1/users/admin/"}]}
     assert 200 == rv.status_code
     assert expected == rv.get_json()
 
@@ -172,11 +166,7 @@ def test_group_sponsors_success(client, gss_user, mock_ldap_client):
     )
     rv = client.get("/v1/groups/admins/sponsors/")
 
-    expected = {
-        "result": [
-            {"username": "admin", "uri": "http://localhost/v1/users/admin/"}
-        ]
-    }
+    expected = {"result": [{"username": "admin", "uri": "http://localhost/v1/users/admin/"}]}
     assert 200 == rv.status_code
     assert expected == rv.get_json()
 

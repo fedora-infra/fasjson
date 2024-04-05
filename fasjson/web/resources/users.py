@@ -17,9 +17,7 @@ api_v1 = Namespace("users", description="Users related operations")
 
 UserModel = api_v1.model(
     "User",
-    get_fields_from_ldap_model(
-        LDAPUserModel, "v1.users_user", {"locked": {"default": False}}
-    ),
+    get_fields_from_ldap_model(LDAPUserModel, "v1.users_user", {"locked": {"default": False}}),
 )
 
 

@@ -13,38 +13,20 @@ from .users import UserModel
 
 search_request_parser = page_request_parser.copy()
 search_request_parser.add_argument("email", help="The email to search for")
-search_request_parser.add_argument(
-    "email__exact", help="DEPRECATED: use email"
-)
-search_request_parser.add_argument(
-    "username", help="The username to search for"
-)
-search_request_parser.add_argument(
-    "ircnick", help="The ircnick to search for"
-)
-search_request_parser.add_argument(
-    "givenname", help="The first name to search for"
-)
-search_request_parser.add_argument(
-    "surname", help="The surname to search for"
-)
-search_request_parser.add_argument(
-    "human_name", help="The full human name to search for"
-)
-search_request_parser.add_argument(
-    "github_username", help="The username in GitHub.com"
-)
-search_request_parser.add_argument(
-    "gitlab_username", help="The username in GitLab.com"
-)
+search_request_parser.add_argument("email__exact", help="DEPRECATED: use email")
+search_request_parser.add_argument("username", help="The username to search for")
+search_request_parser.add_argument("ircnick", help="The ircnick to search for")
+search_request_parser.add_argument("givenname", help="The first name to search for")
+search_request_parser.add_argument("surname", help="The surname to search for")
+search_request_parser.add_argument("human_name", help="The full human name to search for")
+search_request_parser.add_argument("github_username", help="The username in GitHub.com")
+search_request_parser.add_argument("gitlab_username", help="The username in GitLab.com")
 search_request_parser.add_argument(
     "creation__before",
     help="Search for users created before this date",
     type=datetime_from_iso8601,
 )
-search_request_parser.add_argument(
-    "rhbzemail", help="The bugzilla email to search for"
-)
+search_request_parser.add_argument("rhbzemail", help="The bugzilla email to search for")
 search_request_parser.add_argument(
     "group", action="append", help="Users must be a member of this group"
 )

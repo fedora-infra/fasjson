@@ -15,13 +15,9 @@ def mock_ldap_client(mock_ipa_client):
 
 @pytest.fixture()
 def ldap_with_search_result(mock_ldap_client, gss_user):
-    def _mocker(
-        num, page_size, page_number, total_results, ldap_data_factory=None
-    ):
+    def _mocker(num, page_size, page_number, total_results, ldap_data_factory=None):
         ldap_data_factory = ldap_data_factory or get_user_ldap_data
-        data = [
-            ldap_data_factory(f"dummy-{idx + 1}") for idx in range(0, num)
-        ]
+        data = [ldap_data_factory(f"dummy-{idx + 1}") for idx in range(0, num)]
         result = LDAPResult(
             items=data,
             total=total_results,
@@ -35,9 +31,7 @@ def ldap_with_search_result(mock_ldap_client, gss_user):
 
 
 def test_search_user_success(client, ldap_with_search_result):
-    ldap_with_search_result(
-        num=9, page_size=40, page_number=1, total_results=9
-    )
+    ldap_with_search_result(num=9, page_size=40, page_number=1, total_results=9)
     rv = client.get("/v1/search/users/?username=dummy")
 
     expected = [get_user_api_output(f"dummy-{idx}") for idx in range(1, 10)]
@@ -54,9 +48,7 @@ def test_search_user_success(client, ldap_with_search_result):
 
 
 def test_search_user_not_found(client, ldap_with_search_result):
-    ldap_with_search_result(
-        num=0, page_size=40, page_number=1, total_results=0
-    )
+    ldap_with_search_result(num=0, page_size=40, page_number=1, total_results=0)
     rv = client.get("/v1/search/users/?username=somethingobscure")
     expected = {
         "result": [],
@@ -98,9 +90,7 @@ def test_search_user_short_search_term(client, gss_user, mock_ldap_client):
 def test_search_user_page_size_too_big(client, gss_user, mock_ldap_client):
     mock_ldap_client(search_users=lambda *a, **kw: None)
 
-    rv = client.get(
-        "/v1/search/users/?username=somethinginsignificant&page_size=123"
-    )
+    rv = client.get("/v1/search/users/?username=somethinginsignificant&page_size=123")
 
     expected = {
         "page_size": 123,
@@ -113,9 +103,7 @@ def test_search_user_page_size_too_big(client, gss_user, mock_ldap_client):
 def test_search_user_page_size_zero(client, gss_user, mock_ldap_client):
     mock_ldap_client(search_users=lambda *a, **kw: None)
 
-    rv = client.get(
-        "/v1/search/users/?username=somethinginsignificant&page_size=0"
-    )
+    rv = client.get("/v1/search/users/?username=somethinginsignificant&page_size=0")
 
     expected = {
         "page_size": 0,
@@ -126,9 +114,7 @@ def test_search_user_page_size_zero(client, gss_user, mock_ldap_client):
 
 
 def test_search_user_page_size_none(client, ldap_with_search_result):
-    ldap_with_search_result(
-        num=0, page_size=40, page_number=1, total_results=0
-    )
+    ldap_with_search_result(num=0, page_size=40, page_number=1, total_results=0)
     rv = client.get("/v1/search/users/?username=somethinginsignificant")
 
     expected = {
@@ -145,12 +131,8 @@ def test_search_user_page_size_none(client, ldap_with_search_result):
 
 
 def test_search_user_outside_page_range(client, ldap_with_search_result):
-    ldap_with_search_result(
-        num=0, page_size=2, page_number=6, total_results=9
-    )
-    rv = client.get(
-        "/v1/search/users/?username=dummy&page_number=6&page_size=2"
-    )
+    ldap_with_search_result(num=0, page_size=2, page_number=6, total_results=9)
+    rv = client.get("/v1/search/users/?username=dummy&page_number=6&page_size=2")
 
     expected = {
         "result": [],
@@ -202,9 +184,7 @@ def test_search_user_private(client, ldap_with_search_result):
 
 
 def test_search_json_body(client, ldap_with_search_result):
-    ldap_with_search_result(
-        num=0, page_size=1, page_number=1, total_results=0
-    )
+    ldap_with_search_result(num=0, page_size=1, page_number=1, total_results=0)
     rv = client.get("/v1/search/users/", json={"username": "dummy"})
 
     assert 200 == rv.status_code
@@ -219,23 +199,15 @@ def test_search_json_body(client, ldap_with_search_result):
 
 def test_search_bad_json_body(client, ldap_with_search_result):
     # This should trigger the error handling in AnyJsonRequest
-    ldap_with_search_result(
-        num=0, page_size=1, page_number=1, total_results=0
-    )
-    rv = client.get(
-        "/v1/search/users/", data="bad-json", content_type="application/json"
-    )
+    ldap_with_search_result(num=0, page_size=1, page_number=1, total_results=0)
+    rv = client.get("/v1/search/users/", data="bad-json", content_type="application/json")
 
     assert 400 == rv.status_code
-    assert rv.get_json() == {
-        "message": "At least one search term must be provided."
-    }
+    assert rv.get_json() == {"message": "At least one search term must be provided."}
 
 
 def test_search_user_gitlab(client, ldap_with_search_result):
-    mocked = ldap_with_search_result(
-        num=1, page_size=40, page_number=1, total_results=1
-    )
+    mocked = ldap_with_search_result(num=1, page_size=40, page_number=1, total_results=1)
     rv = client.get("/v1/search/users/?gitlab_username=dummy")
 
     expected = [get_user_api_output("dummy-1")]
@@ -255,9 +227,7 @@ def test_search_user_gitlab(client, ldap_with_search_result):
 
 
 def test_search_user_by_group(client, ldap_with_search_result):
-    mocked = ldap_with_search_result(
-        num=1, page_size=40, page_number=1, total_results=1
-    )
+    mocked = ldap_with_search_result(num=1, page_size=40, page_number=1, total_results=1)
     rv = client.get("/v1/search/users/?group=dummy")
 
     expected = [get_user_api_output("dummy-1")]

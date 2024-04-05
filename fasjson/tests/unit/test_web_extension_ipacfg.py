@@ -88,9 +88,7 @@ def test_ipacfg_default_paths(app_with_filtered_config):
             # config files. It's fine, ignore it.
             if os.path.exists("/etc/ipa/default.conf"):
                 raise
-        assert (
-            app.config["FASJSON_IPA_CONFIG_PATH"] == "/etc/ipa/default.conf"
-        )
+        assert app.config["FASJSON_IPA_CONFIG_PATH"] == "/etc/ipa/default.conf"
         assert app.config["FASJSON_IPA_CA_CERT_PATH"] == "/etc/ipa/ca.crt"
 
 
@@ -119,9 +117,7 @@ def test_already_loaded(mocker, app):
     with app.test_request_context("/v1/"):
         app.preprocess_request()
         assert app.config["FASJSON_IPA_CONFIG_LOADED"] is True
-        configparser = mocker.patch(
-            "fasjson.web.extensions.flask_ipacfg.configparser"
-        )
+        configparser = mocker.patch("fasjson.web.extensions.flask_ipacfg.configparser")
         IPAConfig(app)._load_config()
         configparser.ConfigParser.assert_not_called()
 
@@ -161,9 +157,7 @@ def test_dns_query():
 def test_dns_query_same_prio_same_weight():
     names = ["ldap1", "ldap2", "ldap3"]
     resolver = mock.Mock()
-    resolver.resolve.return_value = _make_dns_answer(
-        [{"name": name} for name in names]
-    )
+    resolver.resolve.return_value = _make_dns_answer([{"name": name} for name in names])
     result = query_srv("_ldap._tcp.example.com", resolver)
     result_names = [str(r.target) for r in result]
     assert set(result_names) == set(names)
@@ -188,9 +182,7 @@ def test_dns_query_duplicates():
 
 def test_mix_weight():
     total = 100
-    records = _make_dns_answer(
-        [{"name": f"ldap-{idx}", "weight": idx} for idx in range(total)]
-    )
+    records = _make_dns_answer([{"name": f"ldap-{idx}", "weight": idx} for idx in range(total)])
     result = _mix_weight(records)
     result_names = [str(r.target) for r in result]
     # Uh, I don't really know how to check for weighted randomness.

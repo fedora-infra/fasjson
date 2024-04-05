@@ -42,7 +42,7 @@ myst-parser = "*"
 
 
 [tool.black]
-line-length = 78
+line-length = 100
 
 
 [tool.ruff]

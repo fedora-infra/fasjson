@@ -59,6 +59,4 @@ def test_me_error(client, gss_env):
     assert 403 == rv.status_code
     assert "message" in res
     assert res["message"].startswith("Invalid credentials")
-    assert res["message"].endswith(
-        "Minor (2529639107): No credentials cache found)"
-    )
+    assert res["message"].endswith("Minor (2529639107): No credentials cache found)")

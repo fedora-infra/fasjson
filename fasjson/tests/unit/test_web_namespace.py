@@ -15,9 +15,7 @@ def test_schema(client, gss_user):
 
 
 def test_ldap_local_error(client, gss_user, mocker):
-    mocker.patch(
-        "fasjson.web.resources.me.ldap_client", side_effect=ldap.LOCAL_ERROR
-    )
+    mocker.patch("fasjson.web.resources.me.ldap_client", side_effect=ldap.LOCAL_ERROR)
     rv = client.get("/v1/me/")
     assert rv.status_code == 500
     body = json.loads(rv.data)
@@ -26,9 +24,7 @@ def test_ldap_local_error(client, gss_user, mocker):
 
 
 def test_ldap_server_error(client, gss_user, mocker):
-    mocker.patch(
-        "fasjson.web.resources.me.ldap_client", side_effect=ldap.SERVER_DOWN
-    )
+    mocker.patch("fasjson.web.resources.me.ldap_client", side_effect=ldap.SERVER_DOWN)
     rv = client.get("/v1/me/")
     assert rv.status_code == 500
     body = json.loads(rv.data)

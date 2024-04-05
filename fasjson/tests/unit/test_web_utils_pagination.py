@@ -56,9 +56,7 @@ def test_paged_marshal(app, ldap_result, page_output):
 
 
 def test_paged_marshal_with_mask_header(app, ldap_result, page_output):
-    with app.test_request_context(
-        "/", headers={"X-Fields": "{groupname,mailing_list}"}
-    ):
+    with app.test_request_context("/", headers={"X-Fields": "{groupname,mailing_list}"}):
         output = paged_marshal(ldap_result, GroupModel)
 
     expected = {
@@ -73,9 +71,7 @@ def test_paged_marshal_with_mask_header(app, ldap_result, page_output):
 
 def test_paged_marshal_with_mask_arg(app, ldap_result, page_output):
     with app.test_request_context("/"):
-        output = paged_marshal(
-            ldap_result, GroupModel, mask="{groupname,mailing_list}"
-        )
+        output = paged_marshal(ldap_result, GroupModel, mask="{groupname,mailing_list}")
 
     expected = {
         "groupname": "group1",

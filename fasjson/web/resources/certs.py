@@ -42,12 +42,8 @@ CertModel = api_v1.model(
 
 create_request_parser = reqparse.RequestParser()
 create_request_parser.add_argument("user", required=True, help="User name.")
-create_request_parser.add_argument(
-    "csr", required=True, help="Certificate Signing Request."
-)
-create_request_parser.add_argument(
-    "profile", required=False, help="Certificate Profile."
-)
+create_request_parser.add_argument("csr", required=True, help="Certificate Signing Request.")
+create_request_parser.add_argument("profile", required=False, help="Certificate Profile.")
 
 
 @api_v1.route("/")
@@ -61,9 +57,7 @@ class Certs(Resource):
         args = create_request_parser.parse_args()
         client = rpc_client()
         profile = args["profile"] or current_app.config["CERTIFICATE_PROFILE"]
-        result = client.cert_request(
-            args["csr"], o_principal=args["user"], o_profile_id=profile
-        )
+        result = client.cert_request(args["csr"], o_principal=args["user"], o_profile_id=profile)
         return result["result"]
 
 

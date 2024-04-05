@@ -18,13 +18,9 @@ class IPAConfig:
 
     def init_app(self, app):
         if "FASJSON_IPA_CONFIG_PATH" not in app.config:
-            app.config.setdefault(
-                "FASJSON_IPA_CONFIG_PATH", "/etc/ipa/default.conf"
-            )
+            app.config.setdefault("FASJSON_IPA_CONFIG_PATH", "/etc/ipa/default.conf")
         if "FASJSON_IPA_CA_CERT_PATH" not in app.config:
-            app.config.setdefault(
-                "FASJSON_IPA_CA_CERT_PATH", "/etc/ipa/ca.crt"
-            )
+            app.config.setdefault("FASJSON_IPA_CA_CERT_PATH", "/etc/ipa/ca.crt")
         try:
             self._load_config(app)
         except FileNotFoundError:
@@ -41,16 +37,10 @@ class IPAConfig:
         with open(_app.config["FASJSON_IPA_CONFIG_PATH"]) as f:
             p.read_file(f)
 
-        _app.config.setdefault(
-            "FASJSON_IPA_BASEDN", p.get("global", "basedn")
-        )
-        _app.config.setdefault(
-            "FASJSON_IPA_DOMAIN", p.get("global", "domain")
-        )
+        _app.config.setdefault("FASJSON_IPA_BASEDN", p.get("global", "basedn"))
+        _app.config.setdefault("FASJSON_IPA_DOMAIN", p.get("global", "domain"))
         _app.config.setdefault("FASJSON_IPA_REALM", p.get("global", "realm"))
-        _app.config.setdefault(
-            "FASJSON_IPA_SERVER", p.get("global", "server", fallback=None)
-        )
+        _app.config.setdefault("FASJSON_IPA_SERVER", p.get("global", "server", fallback=None))
         _app.config.setdefault("FASJSON_IPA_CONFIG_LOADED", True)
 
     def _detect_ldap(self) -> None:
@@ -61,9 +51,7 @@ class IPAConfig:
         try:
             answers = query_srv(f"_ldap._tcp.{domain}")
         except DNSException:
-            servers.append(
-                "ldap://" + current_app.config["FASJSON_IPA_SERVER"]
-            )
+            servers.append("ldap://" + current_app.config["FASJSON_IPA_SERVER"])
         else:
             for answer in answers:
                 server = str(answer.target).rstrip(".")
@@ -89,9 +77,7 @@ def _mix_weight(records):
     while len(records) > 1:
         # Compute the sum of the weights of those RRs. Then choose a
         # uniform random number between 0 and the sum computed (inclusive).
-        urn = random.uniform(  # noqa: S311
-            0, sum(rr.weight or noweight for rr in records)
-        )
+        urn = random.uniform(0, sum(rr.weight or noweight for rr in records))  # noqa: S311
         # Select the RR whose running sum value is the first in the selected
         # order which is greater than or equal to the random number selected.
         acc = 0.0

@@ -22,9 +22,7 @@ class Namespace(RestXNamespace):
             full_marshal_kwargs = marshal_kwargs.copy()
             full_marshal_kwargs["envelope"] = "result"
             doc = {
-                "responses": {
-                    "200": (description, [model], full_marshal_kwargs)
-                },
+                "responses": {"200": (description, [model], full_marshal_kwargs)},
                 # Mask values can't be determined outside app context
                 "__mask__": marshal_kwargs.get("mask", True),
             }
@@ -33,9 +31,7 @@ class Namespace(RestXNamespace):
             @wraps(func)
             def wrapper(*args, **kwargs):
                 result = func(*args, **kwargs)
-                return paged_marshal(
-                    result, model, ordered=self.ordered, **marshal_kwargs
-                )
+                return paged_marshal(result, model, ordered=self.ordered, **marshal_kwargs)
 
             return wrapper
 
@@ -49,9 +45,7 @@ class Namespace(RestXNamespace):
 
         def decorator(func):
             doc = {
-                "responses": {
-                    "200": (description, field, {"envelope": "result"})
-                },
+                "responses": {"200": (description, field, {"envelope": "result"})},
             }
             func.__apidoc__ = merge(getattr(func, "__apidoc__", {}), doc)
 
@@ -69,7 +63,5 @@ class Namespace(RestXNamespace):
 
     def add_resource(self, resource, *urls, **kwargs):
         """Each API endpoint can return 401 if authentication is not successful."""
-        self.response(401, "Unauthorized. You need to be logged in.")(
-            resource
-        )
+        self.response(401, "Unauthorized. You need to be logged in.")(resource)
         return super().add_resource(resource, *urls, **kwargs)

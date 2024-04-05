@@ -28,7 +28,5 @@ class Me(Resource):
         client = ldap_client()
         result = client.whoami()
         if "username" in result:
-            result["uri"] = url_for(
-                "v1.users_user", username=result["username"], _external=True
-            )
+            result["uri"] = url_for("v1.users_user", username=result["username"], _external=True)
         return result

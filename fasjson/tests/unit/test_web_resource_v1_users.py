@@ -83,9 +83,7 @@ def test_user_with_mask(client, gss_user, mock_ldap_client):
     data = get_user_ldap_data("dummy")
     mock_ldap_client(get_user=lambda u, attrs: data)
 
-    rv = client.get(
-        "/v1/users/dummy/", headers={"X-Fields": "{username,human_name}"}
-    )
+    rv = client.get("/v1/users/dummy/", headers={"X-Fields": "{username,human_name}"})
 
     expected = {
         key: value
@@ -115,9 +113,7 @@ def test_users_with_mask(client, gss_user, mock_ldap_client):
     result = LDAPResult(items=data)
     mock_ldap_client(get_users=lambda attrs, page_size, page_number: result)
 
-    rv = client.get(
-        "/v1/users/", headers={"X-Fields": "{username,human_name}"}
-    )
+    rv = client.get("/v1/users/", headers={"X-Fields": "{username,human_name}"})
 
     expected = [
         {
@@ -143,8 +139,7 @@ def test_user_groups_success(client, gss_user, mock_ldap_client):
     assert 200 == rv.status_code
     assert rv.get_json() == {
         "result": [
-            {"groupname": name, "uri": f"http://localhost/v1/groups/{name}/"}
-            for name in groups
+            {"groupname": name, "uri": f"http://localhost/v1/groups/{name}/"} for name in groups
         ]
     }
 
@@ -172,9 +167,7 @@ def test_user_groups_with_mask(client, gss_user, mock_ldap_client):
     )
     assert 200 == rv.status_code
     assert rv.get_json() == {
-        "result": [
-            {"groupname": name, "irc": [f"#{name}"]} for name in groups
-        ]
+        "result": [{"groupname": name, "irc": [f"#{name}"]} for name in groups]
     }
 
 
@@ -199,9 +192,7 @@ def test_user_agreements_success(client, gss_user, mock_ldap_client):
 
     rv = client.get("/v1/users/dummy/agreements/")
     assert 200 == rv.status_code
-    assert rv.get_json() == {
-        "result": [{"name": name} for name in agreements]
-    }
+    assert rv.get_json() == {"result": [{"name": name} for name in agreements]}
 
 
 def test_user_agreements_error(client, gss_user, mock_ldap_client):

@@ -14,9 +14,7 @@ def test_app_gss_forbidden_error(client):
     body = json.loads(rv.data)
     assert "message" in body
     assert body["message"].startswith("Invalid credentials")
-    assert body["message"].endswith(
-        "Minor (2529639107): No credentials cache found)"
-    )
+    assert body["message"].endswith("Minor (2529639107): No credentials cache found)")
 
 
 def test_app_default_unauthorized_error(client, mocker):

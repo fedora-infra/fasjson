@@ -58,9 +58,7 @@ class Group(Resource):
     def get(self, groupname):
         """Fetch a group given their name"""
         client = ldap_client()
-        res = client.get_group(
-            groupname, attrs=get_attrs_from_mask(GroupModel)
-        )
+        res = client.get_group(groupname, attrs=get_attrs_from_mask(GroupModel))
         if res is None:
             api_v1.abort(404, "Group not found", groupname=groupname)
         return res
@@ -104,9 +102,7 @@ class GroupSponsors(Resource):
         if group is None:
             api_v1.abort(404, "Group not found", groupname=groupname)
 
-        return client.get_group_sponsors(
-            groupname, attrs=get_attrs_from_mask(SponsorModel)
-        )
+        return client.get_group_sponsors(groupname, attrs=get_attrs_from_mask(SponsorModel))
 
 
 @api_v1.route("/<name:groupname>/is-member/<name:username>")

@@ -11,9 +11,7 @@ from importlib import import_module
 from fasjson.web.app import create_app
 
 
-directory = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), "..", "_api"
-)
+directory = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "_api")
 
 
 def _generate_spec(api_version):

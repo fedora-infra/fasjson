@@ -6,9 +6,7 @@ from flask_restx import marshal, reqparse
 
 page_request_parser = reqparse.RequestParser()
 page_request_parser.add_argument("page_size", type=int, help="Page size.")
-page_request_parser.add_argument(
-    "page_number", type=int, default=1, help="Page number."
-)
+page_request_parser.add_argument("page_number", type=int, default=1, help="Page number.")
 
 
 def add_page_data(output, result, model):

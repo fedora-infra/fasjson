@@ -11,9 +11,7 @@ USER_DN_RE = re.compile("^uid=([^,]+)")
 
 
 class LDAPResult:
-    def __init__(
-        self, items=None, total=None, page_size=None, page_number=None
-    ):
+    def __init__(self, items=None, total=None, page_size=None, page_number=None):
         self.items = items or []
         self.total = total or len(self.items)
         self.page_size = page_size
@@ -41,14 +39,10 @@ def _get_filter_string(attribute, value, substring_match):
 
 
 class LDAP:
-    def __init__(
-        self, uri, basedn, login="", timeout=ldap.NO_LIMIT, trace_level=0
-    ):
+    def __init__(self, uri, basedn, login="", timeout=ldap.NO_LIMIT, trace_level=0):
         self.basedn = basedn
         ldap.set_option(ldap.OPT_REFERRALS, 0)
-        self.conn = ldap.ldapobject.ReconnectLDAPObject(
-            uri, retry_max=3, trace_level=trace_level
-        )
+        self.conn = ldap.ldapobject.ReconnectLDAPObject(uri, retry_max=3, trace_level=trace_level)
         self.conn.protocol_version = 3
         self.conn.timeout = timeout
         self.conn.sasl_gssapi_bind_s(authz_id=login)
@@ -88,12 +82,7 @@ class LDAP:
 
     def get_group_members(self, groupname, attrs, page_size, page_number):
         group_dn = GroupModel.get_sub_dn_for(groupname)
-        filters = (
-            "(&"
-            f"(memberOf={group_dn},{self.basedn})"
-            f"{UserModel.filters}"
-            ")"
-        )
+        filters = "(&" f"(memberOf={group_dn},{self.basedn})" f"{UserModel.filters}" ")"
         return self.search(
             model=UserModel,
             filters=filters,
@@ -113,10 +102,7 @@ class LDAP:
             filters=filters,
             scope=ldap.SCOPE_SUBTREE,
         )
-        if (
-            not sponsors_result.items
-            or "sponsors" not in sponsors_result.items[0]
-        ):
+        if not sponsors_result.items or "sponsors" not in sponsors_result.items[0]:
             return []
         return self._sponsors_to_users(sponsors_result, attrs)
 
@@ -223,9 +209,7 @@ class LDAP:
 
     def get_user_agreements(self, username, page_size, page_number):
         dn = UserModel.get_sub_dn_for(username)
-        filters = (
-            f"(&(memberUser={dn},{self.basedn}){AgreementModel.filters})"
-        )
+        filters = f"(&(memberUser={dn},{self.basedn}){AgreementModel.filters})"
         return self.search(
             model=AgreementModel,
             filters=filters,
@@ -253,10 +237,7 @@ class LDAP:
             if term in UserModel.always_exact_match:
                 substring_match = False
             if term == "group":
-                filter = [
-                    f"{GroupModel.get_sub_dn_for(name)},{self.basedn}"
-                    for name in filter
-                ]
+                filter = [f"{GroupModel.get_sub_dn_for(name)},{self.basedn}" for name in filter]
 
             try:
                 attribute = attrs_map[term]
@@ -267,11 +248,7 @@ class LDAP:
             if not isinstance(filter, list):
                 filter = [filter]
             for filter_item in filter:
-                filter_string.append(
-                    _get_filter_string(
-                        attribute, filter_item, substring_match
-                    )
-                )
+                filter_string.append(_get_filter_string(attribute, filter_item, substring_match))
 
         if filters.get("creation__before"):
             filter_value = ldap.filter.escape_filter_chars(
@@ -347,10 +324,7 @@ class LDAP:
             # Find out which items we need for this page
             first = (page_number - 1) * page_size
             last = first + page_size
-            pkeys_page = [
-                item[model.primary_key][0].decode("utf-8")
-                for item in pkeys[first:last]
-            ]
+            pkeys_page = [item[model.primary_key][0].decode("utf-8") for item in pkeys[first:last]]
             if not pkeys_page:
                 return LDAPResult(
                     items=[],
@@ -359,9 +333,7 @@ class LDAP:
                     total=total,
                 )
             # Now adjust the filters to only get items on this page
-            entries_filters = [
-                f"({model.primary_key}={item})" for item in pkeys_page
-            ]
+            entries_filters = [f"({model.primary_key}={item})" for item in pkeys_page]
             filters = f"(&{filters}(|{''.join(entries_filters)}))"
         items = self._do_search(
             base_dn=base_dn,

@@ -144,9 +144,7 @@ def changelog_github_links(app, docname, source):
         return
     github_issue_re = re.compile(r"#(\d+)")
     for docnr, doc in enumerate(source):
-        source[docnr] = github_issue_re.sub(
-            r"[#\1](" + github_url + r"/issues/\1)", doc
-        )
+        source[docnr] = github_issue_re.sub(r"[#\1](" + github_url + r"/issues/\1)", doc)
 
 
 def setup(app):

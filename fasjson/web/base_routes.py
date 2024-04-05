@@ -7,11 +7,7 @@ from flask_healthz import HealthError
 
 def root():
     blueprints = sorted(
-        [
-            name
-            for name in current_app.blueprints
-            if re.match("^v[0-9]+$", name)
-        ],
+        [name for name in current_app.blueprints if re.match("^v[0-9]+$", name)],
         key=lambda name: int(name[1:]),
     )
     apis = [

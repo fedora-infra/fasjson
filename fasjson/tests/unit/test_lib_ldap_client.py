@@ -89,9 +89,7 @@ def test_get_groups_with_attrs(mock_connection, mocker):
 
     ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
 
-    ldap.get_groups(
-        ["groupname", "url", "unknown"], page_number=1, page_size=0
-    )
+    ldap.get_groups(["groupname", "url", "unknown"], page_number=1, page_size=0)
     mock_connection.search_ext.assert_called_once()
     assert mock_connection.search_ext.call_args[1]["attrlist"] == [
         "cn",
@@ -120,30 +118,18 @@ def test_get_group_members(mock_connection):
 
     ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
 
-    result = ldap.get_group_members(
-        "admins", ["username"], page_number=1, page_size=0
-    )
-    expected = LDAPResult(
-        items=[{"username": "admin"}], total=1, page_size=0, page_number=1
-    )
+    result = ldap.get_group_members("admins", ["username"], page_number=1, page_size=0)
+    expected = LDAPResult(items=[{"username": "admin"}], total=1, page_size=0, page_number=1)
     assert result == expected
 
 
 def test_get_group_sponsors(mock_connection):
-    mocked = [
-        {
-            "memberManager": [
-                b"uid=admin,cn=users,cn=accounts,dc=example,dc=test"
-            ]
-        }
-    ]
+    mocked = [{"memberManager": [b"uid=admin,cn=users,cn=accounts,dc=example,dc=test"]}]
     mocked_conversion = [{"username": "admin"}]
     mock_connection.result3 = _single_page_result_factory(mocked)
 
     ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
-    with mock.patch.object(
-        ldap, "_sponsors_to_users", side_effect=[mocked_conversion]
-    ):
+    with mock.patch.object(ldap, "_sponsors_to_users", side_effect=[mocked_conversion]):
         result = ldap.get_group_sponsors(groupname="admins")
 
     expected = [{"username": "admin"}]
@@ -151,13 +137,7 @@ def test_get_group_sponsors(mock_connection):
 
 
 def test_get_group_sponsors_empty(mock_connection):
-    mocked = [
-        {
-            "memberManager": [
-                b"uid=admin,cn=users,cn=accounts,dc=example,dc=test"
-            ]
-        }
-    ]
+    mocked = [{"memberManager": [b"uid=admin,cn=users,cn=accounts,dc=example,dc=test"]}]
     mocked_conversion = LDAPResult()
     mock_connection.result3 = _single_page_result_factory(mocked)
 
@@ -182,13 +162,7 @@ def test_sponsors_to_users(mock_connection):
     ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
 
     sponsors_dn = LDAPResult(
-        items=[
-            {
-                "sponsors": [
-                    "uid=admin,cn=users,cn=accounts,dc=example,dc=test"
-                ]
-            }
-        ]
+        items=[{"sponsors": ["uid=admin,cn=users,cn=accounts,dc=example,dc=test"]}]
     )
 
     result = ldap._sponsors_to_users(sponsors_dn, attrs=None)
@@ -214,13 +188,7 @@ def test_list_sponsors_uid(mock_connection):
 
     ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
     sponsors_dn = LDAPResult(
-        items=[
-            {
-                "sponsors": [
-                    "cn=translators,cn=groups,cn=accounts,dc=example,dc=test"
-                ]
-            }
-        ]
+        items=[{"sponsors": ["cn=translators,cn=groups,cn=accounts,dc=example,dc=test"]}]
     )
     result = ldap._list_sponsors_uid(sponsors_dn, attrs=None)
 
@@ -371,15 +339,11 @@ def test_get_user_groups(mock_connection):
         for result in results:
             yield _single_page_result_factory(result)(1)
 
-    mock_connection.result3 = mock.Mock(
-        side_effect=result_mock(mocked_user, mocked_groups)
-    )
+    mock_connection.result3 = mock.Mock(side_effect=result_mock(mocked_user, mocked_groups))
 
     ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
 
-    result = ldap.get_user_groups(
-        username="dummy", attrs=["groupname"], page_number=1, page_size=0
-    )
+    result = ldap.get_user_groups(username="dummy", attrs=["groupname"], page_number=1, page_size=0)
     expected = LDAPResult(
         items=[
             {"groupname": "testgroup"},
@@ -396,9 +360,7 @@ def test_get_user_groups_no_group(mock_connection):
     mock_connection.result3 = _single_page_result_factory([{}])
     ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
 
-    result = ldap.get_user_groups(
-        username="dummy", attrs=["groupname"], page_number=1, page_size=0
-    )
+    result = ldap.get_user_groups(username="dummy", attrs=["groupname"], page_number=1, page_size=0)
 
     expected = LDAPResult(
         items=[],
@@ -418,9 +380,7 @@ def test_get_user_agreements(mock_connection):
 
     ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
 
-    result = ldap.get_user_agreements(
-        username="dummy", page_number=1, page_size=0
-    )
+    result = ldap.get_user_agreements(username="dummy", page_number=1, page_size=0)
     expected = LDAPResult(
         items=[{"name": "FPCA"}, {"name": "CentOS"}],
         total=2,
@@ -510,9 +470,7 @@ def test_search_users(mock_connection):
         ),
     ],
 )
-def test_search_users_filters(
-    mock_connection, mocker, query, expected_filter
-):
+def test_search_users_filters(mock_connection, mocker, query, expected_filter):
     mock_connection.result3 = _single_page_result_factory([])
     mock_connection.search_ext = mocker.Mock(return_value=1)
 
@@ -534,9 +492,7 @@ def test_get_paged_search_filters(mock_connection):
     mocked = []
 
     ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
-    with mock.patch.object(
-        ldap, "_do_search", side_effect=[mocked]
-    ) as do_search:
+    with mock.patch.object(ldap, "_do_search", side_effect=[mocked]) as do_search:
         result = ldap.search_users(
             attrs=None,
             page_number=2,
@@ -558,14 +514,10 @@ def test_get_paged_search_filters(mock_connection):
 
 
 def test_get_paged_groups(mock_connection):
-    mocked = [
-        {"cn": [f"group-{idx}".encode("ascii")]} for idx in range(1, 12)
-    ]
+    mocked = [{"cn": [f"group-{idx}".encode("ascii")]} for idx in range(1, 12)]
 
     ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
-    with mock.patch.object(
-        ldap, "_do_search", side_effect=[mocked, mocked[3:6]]
-    ) as do_search:
+    with mock.patch.object(ldap, "_do_search", side_effect=[mocked, mocked[3:6]]) as do_search:
         result = ldap.get_groups(attrs=None, page_number=2, page_size=3)
 
     called_filters = [call[1]["filters"] for call in do_search.call_args_list]
@@ -590,9 +542,7 @@ def test_get_paged_search_no_results(mock_connection):
     mocked = []
 
     ldap = LDAP("ldap://dummy.com", basedn="dc=example,dc=test")
-    with mock.patch.object(
-        ldap, "_do_search", side_effect=[mocked]
-    ) as do_search:
+    with mock.patch.object(ldap, "_do_search", side_effect=[mocked]) as do_search:
         result = ldap.search_users(
             attrs=None,
             page_number=2,

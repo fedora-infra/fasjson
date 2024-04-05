@@ -74,9 +74,7 @@ def test_cert_success(client, gss_user, mock_rpc_client):
 
 def test_cert_404(client, gss_user, mock_rpc_client, mocker):
     mock_rpc_client(
-        cert_show=mocker.Mock(
-            side_effect=BadRequest(message="Error message", code=4301)
-        )
+        cert_show=mocker.Mock(side_effect=BadRequest(message="Error message", code=4301))
     )
     rv = client.get("/v1/certs/42/")
     assert 404 == rv.status_code
@@ -89,9 +87,7 @@ def test_cert_404(client, gss_user, mock_rpc_client, mocker):
 
 def test_cert_error(client, gss_user, mock_rpc_client, mocker):
     mock_rpc_client(
-        cert_show=mocker.Mock(
-            side_effect=BadRequest(message="Error message", code=4242)
-        )
+        cert_show=mocker.Mock(side_effect=BadRequest(message="Error message", code=4242))
     )
     rv = client.get("/v1/certs/42/")
     assert 400 == rv.status_code
@@ -129,9 +125,7 @@ def test_cert_post_with_profile_id(client, gss_user, mock_rpc_client, mocker):
     )
 
 
-def test_cert_post_with_configured_profile_id(
-    app, client, gss_user, mock_rpc_client, mocker
-):
+def test_cert_post_with_configured_profile_id(app, client, gss_user, mock_rpc_client, mocker):
     app.config["CERTIFICATE_PROFILE"] = "cert-profile"
     data = _get_cert_rpc_data(42)
     rpc_client = mock_rpc_client(cert_request=mocker.Mock(return_value=data))
