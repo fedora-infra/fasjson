@@ -40,4 +40,4 @@ sphinxcontrib-napoleon
 sphinxcontrib-openapi
 myst-parser
 mistune<3.0.3
-docutils<0.21
+docutils<0.22
