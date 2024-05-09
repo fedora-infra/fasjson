@@ -1,12 +1,12 @@
 aniso8601==9.0.1
 attrs==23.2.0
-blinker==1.8.1
+blinker==1.8.2
 certifi==2024.2.2
 cffi==1.16.0
 charset-normalizer==3.3.2
 click==8.1.7
 colorama==0.4.6
-cryptography==42.0.6
+cryptography==42.0.7
 decorator==5.1.1
 dnspython==2.6.1
 flask-healthz==1.0.1
