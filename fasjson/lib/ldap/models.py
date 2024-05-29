@@ -83,8 +83,8 @@ class UserModel(Model):
         "groups": Converter("memberof", multivalued=True),
         "github_username": Converter("fasGitHubUsername"),
         "gitlab_username": Converter("fasGitLabUsername"),
-        "website": Converter("fasWebsiteURL"),
-        "rssurl": Converter("fasRssURL"),
+        "website": Converter("fasWebsiteURL", multivalued=True),
+        "rssurl": Converter("fasRssURL", multivalued=True),
         "pronouns": Converter("fasPronoun", multivalued=True),
         "rhbzemail": Converter("fasRHBZEmail"),
     }

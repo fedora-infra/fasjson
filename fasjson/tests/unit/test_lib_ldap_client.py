@@ -295,10 +295,10 @@ def test_get_user(mock_connection):
         "timezone": "UTC",
         "github_username": "admin",
         "gitlab_username": "admin",
-        "website": "http://admin.example.com",
+        "website": ["http://admin.example.com"],
         "pronouns": ["they/them/theirs"],
         "rhbzemail": "admin@rhbz_example.test",
-        "rssurl": "http://admin.example.com/feed",
+        "rssurl": ["http://admin.example.com/feed"],
     }
     assert expected == ldap.get_user("admin")
 
