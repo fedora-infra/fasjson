@@ -16,10 +16,10 @@ def get_user_ldap_data(name):
         "is_private": False,
         "github_username": name,
         "gitlab_username": name,
-        "website": f"{name}.example.com",
+        "website": [f"{name}.example.com"],
         "pronouns": ["they/them/theirs"],
         "rhbzemail": f"{name}@rhbz_example.test",
-        "rssurl": f"{name}.example.com/feed",
+        "rssurl": [f"{name}.example.com/feed"],
     }
 
 
