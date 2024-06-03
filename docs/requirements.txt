@@ -32,7 +32,7 @@ requests==2.32.3
 sspilib==0.1.0
 urllib3==2.2.1
 werkzeug==3.0.3
-zipp==3.19.0
+zipp==3.19.1
 toml
 pytest
 sphinx
