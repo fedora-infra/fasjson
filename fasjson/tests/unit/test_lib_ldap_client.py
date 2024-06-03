@@ -11,10 +11,11 @@ from fasjson.lib.ldap.client import LDAP, LDAPResult
 @pytest.fixture
 def mock_connection(mocker):
     conn_factory = mocker.patch("ldap.ldapobject.ReconnectLDAPObject")
+    search_ext_mock = mock.Mock(return_value=1)
     return_value = types.SimpleNamespace(
         protocol_version=3,
         set_option=lambda a, b: a,
-        search_ext=lambda *a, **kw: 1,
+        search_ext=search_ext_mock,
         # sasl_interactive_bind_s=lambda s, n: "",
         sasl_gssapi_bind_s=lambda authz_id: "",
     )
@@ -354,6 +355,9 @@ def test_get_user_groups(mock_connection):
         page_number=1,
     )
     assert result == expected
+    mock_connection.search_ext.assert_called()
+    attrs_list = mock_connection.search_ext.call_args_list[0][1]["attrlist"]
+    assert "memberof" in attrs_list
 
 
 def test_get_user_groups_no_group(mock_connection):

@@ -185,7 +185,7 @@ class LDAP:
         return result.items[0]
 
     def get_user_groups(self, username, attrs, page_size, page_number):
-        user = self.get_user(username, ["memberof"])
+        user = self.get_user(username, ["groups"])
         groups_filters = [
             f"({dn.split(',')[0]})"
             for dn in user.get("groups", [])
