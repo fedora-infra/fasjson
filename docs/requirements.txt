@@ -1,7 +1,7 @@
 aniso8601==9.0.1
 attrs==23.2.0
 blinker==1.8.2
-certifi==2024.2.2
+certifi==2024.6.2
 cffi==1.16.0
 charset-normalizer==3.3.2
 click==8.1.7
@@ -32,7 +32,7 @@ requests==2.32.3
 sspilib==0.1.0
 urllib3==2.2.1
 werkzeug==3.0.3
-zipp==3.19.1
+zipp==3.19.2
 toml
 pytest
 sphinx
