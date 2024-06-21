@@ -103,7 +103,19 @@ class UserModel(Model):
         "rssurl",
         "pronouns",
     ]
-    always_exact_match = ["email", "group"]
+    # Fields that do not have a SUBSTR index in the schema
+    # https://github.com/fedora-infra/freeipa-fas/blob/dev/schema.d/89-fasschema.ldif
+    always_exact_match = [
+        "email",
+        "creation",
+        "rhbzemail",
+        "github_username",
+        "gitlab_username",
+        "website",
+        "is_private",
+        "rssurl",
+        "group",
+    ]
 
     @classmethod
     def anonymize(cls, user):
