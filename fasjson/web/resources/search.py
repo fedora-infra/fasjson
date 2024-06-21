@@ -83,7 +83,8 @@ class SearchUsers(Resource):
         A simple function to validate the provided arguments.
         Checks:
             - At least one search term must be provided
-            - All provided search terms must be greater than 3 characters in length
+            - All provided search terms must be greater than 3 characters in length if we are
+              doing a substring match
         """
         if not any(search_args.values()):
             api_v1.abort(400, "At least one search term must be provided.")
@@ -92,7 +93,13 @@ class SearchUsers(Resource):
                 continue  # It's a datetime already
             if search_term == "group":
                 continue  # These may be smaller than 3 chars, and will be matched exactly anyway.
-            if search_value and len(search_value) < 3:
+            # For substring matches, we want at least 3 chars
+            if (
+                search_value
+                and not search_term.endswith("__exact")
+                and search_term not in LDAPUserModel.always_exact_match
+                and len(search_value) < 3
+            ):
                 api_v1.abort(
                     400,
                     "Search term must be at least 3 characters long.",
