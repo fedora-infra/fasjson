@@ -83,10 +83,12 @@ class UserModel(Model):
         "groups": Converter("memberof", multivalued=True),
         "github_username": Converter("fasGitHubUsername"),
         "gitlab_username": Converter("fasGitLabUsername"),
-        "website": Converter("fasWebsiteURL", multivalued=True),
-        "rssurl": Converter("fasRssURL", multivalued=True),
         "pronouns": Converter("fasPronoun", multivalued=True),
         "rhbzemail": Converter("fasRHBZEmail"),
+        "website": Converter("fasWebsiteURL"),
+        "rssurl": Converter("fasRssURL"),
+        "websites": Converter("fasWebsiteURL", multivalued=True),
+        "rssurls": Converter("fasRssURL", multivalued=True),
     }
     hidden_fields = ["groups"]
     private_fields = [
@@ -99,9 +101,11 @@ class UserModel(Model):
         "gpgkeyids",
         "github_username",
         "gitlab_username",
+        "pronouns",
         "website",
         "rssurl",
-        "pronouns",
+        "websites",
+        "rssurls",
     ]
     # Fields that do not have a SUBSTR index in the schema
     # https://github.com/fedora-infra/freeipa-fas/blob/dev/schema.d/89-fasschema.ldif

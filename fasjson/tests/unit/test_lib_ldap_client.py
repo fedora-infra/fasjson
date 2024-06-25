@@ -274,10 +274,10 @@ def test_get_user(mock_connection):
             "nsAccountLock": [b"false"],
             "fasGitHubUsername": [b"admin"],
             "fasGitLabUsername": [b"admin"],
-            "fasWebsiteURL": [b"http://admin.example.com"],
             "fasPronoun": [b"they/them/theirs"],
             "fasRHBZEmail": [b"admin@rhbz_example.test"],
-            "fasRssURL": [b"http://admin.example.com/feed"],
+            "fasWebsiteURL": [b"https://admin.example.com"],
+            "fasRssURL": [b"https://admin.example.com/feed"],
         }
     ]
     mock_connection.result3 = _single_page_result_factory(mocked)
@@ -295,10 +295,12 @@ def test_get_user(mock_connection):
         "timezone": "UTC",
         "github_username": "admin",
         "gitlab_username": "admin",
-        "website": ["http://admin.example.com"],
         "pronouns": ["they/them/theirs"],
         "rhbzemail": "admin@rhbz_example.test",
-        "rssurl": ["http://admin.example.com/feed"],
+        "website": "https://admin.example.com",
+        "rssurl": "https://admin.example.com/feed",
+        "websites": ["https://admin.example.com"],
+        "rssurls": ["https://admin.example.com/feed"],
     }
     assert expected == ldap.get_user("admin")
 
