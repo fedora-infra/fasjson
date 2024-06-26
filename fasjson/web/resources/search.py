@@ -27,6 +27,8 @@ search_request_parser.add_argument(
     type=datetime_from_iso8601,
 )
 search_request_parser.add_argument("rhbzemail", help="The bugzilla email to search for")
+search_request_parser.add_argument("website", help="The website URLs to search for")
+search_request_parser.add_argument("rssurl", help="The RSS URLs to search for")
 search_request_parser.add_argument(
     "group", action="append", help="Users must be a member of this group"
 )
