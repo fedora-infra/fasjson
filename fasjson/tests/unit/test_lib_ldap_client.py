@@ -444,27 +444,38 @@ def test_search_users(mock_connection):
 @pytest.mark.parametrize(
     "query,expected_filter",
     [
+        # empty value
         ({"username": ""}, ""),
+        # substring match
         ({"username": "something"}, "(uid=*something*)"),
-        ({"username__exact": "something"}, "(uid=something)"),
         ({"human_name": "something"}, "(displayName=*something*)"),
+        # exact match
+        ({"username__exact": "something"}, "(uid=something)"),
         ({"human_name__exact": "something"}, "(displayName=something)"),
         (
             {"github_username__exact": "something"},
             "(fasGitHubUsername=something)",
         ),
+        # __before match
         (
             {"creation__before": datetime.datetime(2042, 1, 1)},
             "(fasCreationTime<=20420101000000Z)",
         ),
+        # Always exact match
         (
             {"rhbzemail": "something"},
-            "(fasRHBZEmail=*something*)",
+            "(fasRHBZEmail=something)",
         ),
         (
             {"rhbzemail__exact": "something"},
             "(fasRHBZEmail=something)",
         ),
+        # Presence match
+        (
+            {"rhbzemail": "*"},
+            "(fasRHBZEmail=*)",
+        ),
+        # Groups
         (
             {"group": ["something"]},
             "(memberof=cn=something,cn=groups,cn=accounts,dc=example,dc=test)",

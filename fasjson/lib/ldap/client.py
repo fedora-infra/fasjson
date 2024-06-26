@@ -32,6 +32,10 @@ class LDAPResult:
 
 
 def _get_filter_string(attribute, value, substring_match):
+    if value == "*":
+        # Presence match
+        return f"({attribute}=*)"
+
     value = ldap.filter.escape_filter_chars(value, 0)
     if substring_match:
         value = f"*{value}*"
