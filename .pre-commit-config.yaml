@@ -10,14 +10,14 @@ repos:
 
   # https://black.readthedocs.io/en/stable/integrations/source_version_control.html
   - repo: https://github.com/psf/black
-    rev: 24.4.2
+    rev: 24.8.0
     hooks:
       - id: black
 
   # ruff
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     # ruff version.
-    rev: v0.5.5
+    rev: v0.5.6
     hooks:
       - id: ruff
 
