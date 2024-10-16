@@ -21,10 +21,12 @@ def test_app_default_unauthorized_error(client, mocker):
     creds_factory = mocker.patch("gssapi.Credentials")
     creds_factory.return_value = types.SimpleNamespace(lifetime=0)
     rv = client.get("/")
-    body = json.loads(rv.data)
-
     assert rv.status_code == 401
-    assert body == {"message": "Credential lifetime has expired"}
+    assert "WWW-Authenticate" in rv.headers
+    assert rv.headers.get("WWW-Authenticate") == "Negotiate"
+    assert rv.headers["Content-Type"] == "application/json"
+    body = json.loads(rv.data)
+    assert body == {"message": "Re-authentication is necessary."}
 
 
 def test_app_default_notfound_error(client, gss_user):
