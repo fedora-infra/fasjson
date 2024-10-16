@@ -684,13 +684,13 @@ flask = ">=2.0.0,<4.0.0"
 
 [[package]]
 name = "flask-mod-auth-gssapi"
-version = "1.1.0"
+version = "1.1.1"
 description = "A Flask extention to make use of the authentication provided by the mod_auth_gssapi extention of Apache's HTTPd."
 optional = false
 python-versions = "<4.0.0,>=3.8.0"
 files = [
-    {file = "flask_mod_auth_gssapi-1.1.0-py3-none-any.whl", hash = "sha256:810c902f8f2c74485201ac851bf3ebee4b0c5843480b2a7424527a577f96db0d"},
-    {file = "flask_mod_auth_gssapi-1.1.0.tar.gz", hash = "sha256:4a40fb9b77fb2e27acd2af04c8190d533cdbc460070d8da1405a5427629067c6"},
+    {file = "flask_mod_auth_gssapi-1.1.1-py3-none-any.whl", hash = "sha256:30e0fae0c092d8d94c89fb27de43b722b60e18a8bd557f5c932301e14687efd7"},
+    {file = "flask_mod_auth_gssapi-1.1.1.tar.gz", hash = "sha256:1479dc3d9dc0cef88bb3f93013eb3cdcf574c2df1447543e414371575e2b111d"},
 ]
 
 [package.dependencies]
