@@ -1,21 +1,6 @@
 queue_rules:
   - name: default
-    conditions:
-      # Conditions to get out of the queue (= merged)
-      - status-success=Checks
-      - status-success=Licenses
-      - status-success=Documentation
-      - status-success=Unit tests (py39)
-      - status-success=Unit tests (py310)
-
-pull_request_rules:
-
-  - name: Merge on approval
-    actions:
-      queue:
-        name: default
-        method: rebase
-    conditions:
+    queue_conditions:
       - label!=WIP
       - -draft
       - approved-reviews-by=@fedora-infra/authdev
@@ -26,3 +11,18 @@ pull_request_rules:
       - status-success=Documentation
       - status-success=Unit tests (py39)
       - status-success=Unit tests (py310)
+    merge_conditions:
+      # Conditions to get out of the queue (= merged)
+      - status-success=Checks
+      - status-success=Licenses
+      - status-success=Documentation
+      - status-success=Unit tests (py39)
+      - status-success=Unit tests (py310)
+    merge_method: rebase
+
+pull_request_rules:
+
+  - name: refactored queue action rule
+    conditions: []
+    actions:
+      queue:
