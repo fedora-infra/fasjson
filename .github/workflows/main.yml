@@ -5,13 +5,11 @@ on:
     branches:
       - stable
       - develop
-      - dev
     tags:
   pull_request:
     branches:
       - stable
       - develop
-      - dev
 
 jobs:
 

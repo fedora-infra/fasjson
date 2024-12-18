@@ -108,7 +108,7 @@ class UserModel(Model):
         "rssurls",
     ]
     # Fields that do not have a SUBSTR index in the schema
-    # https://github.com/fedora-infra/freeipa-fas/blob/dev/schema.d/89-fasschema.ldif
+    # https://github.com/fedora-infra/freeipa-fas/blob/develop/schema.d/89-fasschema.ldif
     always_exact_match = [
         "email",
         "creation",
@@ -121,7 +121,7 @@ class UserModel(Model):
         "group",
     ]
     # Fields that do not have a SUBSTR index in the schema
-    # https://github.com/fedora-infra/freeipa-fas/blob/dev/schema.d/89-fasschema.ldif
+    # https://github.com/fedora-infra/freeipa-fas/blob/develop/schema.d/89-fasschema.ldif
     always_exact_match = [
         "email",
         "group",
