@@ -5,7 +5,8 @@ import pytest
 
 from fasjson.lib.ldap.client import LDAPResult
 from fasjson.lib.ldap.models import UserModel
-from fasjson.tests.unit.utils import get_user_api_output, get_user_ldap_data
+
+from .utils import get_user_api_output, get_user_ldap_data
 
 
 @pytest.fixture

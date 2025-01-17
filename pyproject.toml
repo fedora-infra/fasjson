@@ -57,7 +57,7 @@ lines-after-imports = 2
 order-by-type = false
 
 [tool.ruff.lint.per-file-ignores]
-"fasjson/tests/*" = ["S101", "E501"]
+"tests/*" = ["S101", "E501"]
 "news/get-authors.py" = ["S602", "S603", "S607"]
 
 
@@ -80,7 +80,7 @@ exclude_lines = [
 ]
 omit = [
     "fasjson/__init__.py",
-    "fasjson/tests/*",
+    "tests/*",
 ]
 
 
@@ -145,7 +145,7 @@ issue_format = "{issue}"
 
 [tool.pytest.ini_options]
 testpaths = [
-    "fasjson/tests/unit",
+    "tests/unit",
 ]
 
 [build-system]
