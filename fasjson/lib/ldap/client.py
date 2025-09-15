@@ -395,7 +395,7 @@ class LDAP:
                 attrlist=attrs,
                 serverctrls=[page_control],
             )
-            rtype, rdata, rmsgid, serverctrls = self.conn.result3(msgid)
+            _rtype, rdata, _rmsgid, serverctrls = self.conn.result3(msgid)
             results.extend(obj for dn, obj in rdata)
             for ctrl in serverctrls:
                 if isinstance(ctrl, SimplePagedResultsControl):
