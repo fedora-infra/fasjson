@@ -55,7 +55,7 @@ class SearchUsers(Resource):
             attrs=get_attrs_from_mask(UserModel),
             page_size=page_size,
             page_number=page_number,
-            **search_args
+            **search_args,
         )
         result.items = [maybe_anonymize(user) for user in result.items]
         return result
