@@ -8,6 +8,41 @@ This project uses [*towncrier*](https://towncrier.readthedocs.io/) and the chang
 
 <!-- towncrier release notes start -->
 
+## v1.7.0
+
+Released on 2025-11-14.
+
+### Features
+
+- Support presence match in the search endpoint. For example, use `ircnick=*` to get users who have defined an IRC nick. (#presence-match)
+- Add the possibility to search users by GitLab usernames (#645)
+- Make `rssurl` and `website` multivalued fields (#719)
+- Add a multivalued `group` search term for users, to select only those in the specified groups
+- Allow searching for RSS URLs and websites
+
+### Bug Fixes
+
+- Fixup `get_user_groups()` after 6698d1c8
+
+### Development Improvements
+
+- Move the tests out of the main python package (#734)
+- Make the Vagrant VM use Tinystage instead of its own instance of FreeIPA
+- Switch to ruff instead of flake8+isort+bandit+pyupgrade
+
+### Other Changes
+
+- Note that the `email__exact` search term is deprecated since email searches are never substring-based, so just use the `email` term (#6698d1c)
+
+### Contributors
+
+Many thanks to the contributors of bug reports, pull requests, and pull request
+reviews for this release:
+
+- Aurélien Bompard
+- Pedro Moura
+- Ryan Lerch
+
 ## v1.6.0
 
 Released on 2023-09-21.
