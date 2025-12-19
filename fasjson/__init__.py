@@ -1,7 +1,4 @@
-try:
-    from importlib.metadata import PackageNotFoundError, version
-except ImportError:
-    from importlib_metadata import PackageNotFoundError, version
+from importlib.metadata import PackageNotFoundError, version
 
 
 # Set the version
@@ -10,7 +7,10 @@ try:
 except PackageNotFoundError:
     import os
 
-    import toml
+    import tomllib
 
-    pyproject = toml.load(os.path.join(os.path.dirname(__file__), "..", "pyproject.toml"))
-    __version__ = pyproject["tool"]["poetry"]["version"]
+    with open(
+        os.path.join(os.path.dirname(__file__), "..", "pyproject.toml"), "rb"
+    ) as pyproject_fh:
+        pyproject = tomllib.load(pyproject_fh)
+    __version__ = pyproject["project"]["version"]

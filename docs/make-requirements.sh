@@ -18,8 +18,6 @@ for exclude in ${excluded}; do
     sed -i -e "/^${exclude}==/d" "${output}"
 done
 
-# Add toml to parse the version in conf.py
-echo toml >> "${output}"
 # Add pytest because it is imported in the source code
 echo pytest >> "${output}"
 # Add Sphinx dependencies

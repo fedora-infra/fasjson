@@ -33,7 +33,6 @@ sspilib==0.5.0
 typing-extensions==4.15.0
 urllib3==2.6.2
 werkzeug==3.1.4
-toml
 pytest
 sphinx
 sphinxcontrib-napoleon
