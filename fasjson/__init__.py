@@ -1,6 +1,5 @@
 from importlib.metadata import PackageNotFoundError, version
 
-
 # Set the version
 try:
     __version__ = version("fasjson")

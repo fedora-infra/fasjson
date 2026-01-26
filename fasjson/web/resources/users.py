@@ -12,7 +12,6 @@ from fasjson.web.utils.pagination import page_request_parser
 
 from .base import Namespace
 
-
 api_v1 = Namespace("users", description="Users related operations")
 
 UserModel = api_v1.model(

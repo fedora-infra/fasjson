@@ -6,7 +6,6 @@ from fasjson.web.utils.ipa import rpc_client
 
 from .base import Namespace
 
-
 api_v1 = Namespace("certs", description="Certificates related operations")
 
 
