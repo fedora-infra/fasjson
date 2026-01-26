@@ -11,7 +11,6 @@ from fasjson.web.utils.pagination import page_request_parser
 
 from .base import Namespace
 
-
 api_v1 = Namespace("groups", description="Groups related operations")
 
 GroupModel = api_v1.model(

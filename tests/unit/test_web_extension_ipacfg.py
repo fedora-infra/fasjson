@@ -13,7 +13,6 @@ from fasjson.web.extensions.flask_ipacfg import (
     sort_prio_weight,
 )
 
-
 TEST_IPACFG = """
 [global]
 basedn = dc=testing

@@ -7,7 +7,6 @@ from ..resources.search import api_v1 as search
 from ..resources.users import api_v1 as users
 from .base import FasJsonApi
 
-
 blueprint = Blueprint("v1", __name__, url_prefix="/v1")
 api = FasJsonApi(blueprint, version="1.0")
 

@@ -5,7 +5,6 @@ from ldap.controls.pagedresults import SimplePagedResultsControl
 
 from .models import AgreementModel, GroupModel, SponsorModel, UserModel
 
-
 GROUP_DN_RE = re.compile("^cn=([^,]+)")
 USER_DN_RE = re.compile("^uid=([^,]+)")
 

@@ -1,7 +1,6 @@
 from flask import Blueprint
 from flask_restx import abort, Api, Resource
 
-
 blueprint = Blueprint("errors", __name__, url_prefix="/errors")
 api = Api(blueprint, title="Webserver errors", doc=False, add_specs=False)
 

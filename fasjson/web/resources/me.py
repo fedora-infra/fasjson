@@ -5,7 +5,6 @@ from fasjson.web.utils.ipa import ldap_client
 
 from .base import Namespace
 
-
 api_v1 = Namespace("me", description="Information about the connected user")
 
 MeModel = api_v1.model(

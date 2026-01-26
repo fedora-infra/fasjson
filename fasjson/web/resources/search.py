@@ -10,7 +10,6 @@ from fasjson.web.utils.request_parsing import add_exact_arguments
 from .base import Namespace
 from .users import UserModel
 
-
 search_request_parser = page_request_parser.copy()
 search_request_parser.add_argument("email", help="The email to search for")
 search_request_parser.add_argument("email__exact", help="DEPRECATED: use email")
