@@ -1,4 +1,4 @@
-FROM quay.io/fedora/fedora:40
+FROM quay.io/fedora/fedora:44
 LABEL \
   name="fasjson" \
   vendor="Fedora Infrastructure" \
